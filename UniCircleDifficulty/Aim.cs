@@ -12,15 +12,14 @@ namespace UniCircleDifficulty
         // TODO:
         // - Slider support
         //      Add slider support, for slider tick aim, angle from slider end with last tick, distance and speed from slider end, etc..
-        //      may cause problems with maps like big black where sliders can be tapped like circles, perhaps check for ticks
+        //      May cause problems with maps like big black where sliders can be tapped like circles, perhaps check for ticks instead.
         // - Spacing changes?
-        //      Contemplate spacing changes affecting the raw aim difficulty of a pattern, ie. same speed, but massive distance change.
-        //      perhaps change anglediff to awkwardness and include spacing changes. would buff cutstreams/accelerating streams and decronstruction star triples
-        // - Buff spaced streams
-        //      There is added difficulty with spaced streams, as they require flowing which meaning they are harder to tap accuratly.
-        //      This is not part of speed, nor accuracy, since the required skill (consistant movement) is aim.
-        //      Also, since perfection of other skills is assumed, this means all notes are being tapped at their exact offset.
-        //      Buff should be applied as part of the bonus difficulty for low snappiness. Same (similar) function can be used.
+        //      Create (awkwardness?) to account for massive time-distance equality changes.
+        //      Would buff cutstreams/accelerating streams and deconstruction star style triples.
+
+        // Bonus constants
+        private const double angle_diff_weight = 0.3;
+        private const double steady_diff_weight = 0.2;
 
         // Snappiness constants
         private const double snap_threshold = 100;
@@ -82,7 +81,7 @@ namespace UniCircleDifficulty
         }
 
         // Calculate the degree to which the angle affects the difficulty of a jump
-        // Range: [1, 2]
+        // Multiplier of raw difficulty
         protected override double CalculateBonusDiff()
         {
             if (HitObjectC == null) // This is the second object in the map
@@ -97,14 +96,36 @@ namespace UniCircleDifficulty
                 return 0;
             }
 
-            double prevDelay = HitObjectB.Time - HitObjectC.Time;   // previous because between object A and B
+            double prevDelay = HitObjectB.Time - HitObjectC.Time;   // previous because between object B and C
             double snappiness = Snappiness(prevDelay);
 
+            double angleDifficulty = AngleDifficulty(angle, snappiness);
+            double steadinessDifficulty = SteadinessDifficulty(snappiness);
+
+            return 1 + 0.3 * angleDifficulty + 0.2 * steadinessDifficulty;
+        }
+
+        // Difficulty of angle depending on snappiness
+        // Range: [0, 1]
+        private static double AngleDifficulty(double angle, double snappiness)
+        {
             // Difficulty of angles depends on how they are played, wide angles are harder when snapping into, but opposite when flowing into
             // Higher snappiness will result in higher reward for high (more flat) angles, reverse for low snappiness
-            double angleDifficulty = (angle * snappiness - Math.PI * (0.5 * snappiness - 0.5)) / Math.PI;
+            return (angle * snappiness - Math.PI * (0.5 * snappiness - 0.5)) / Math.PI;
+        }
 
-            return 1 + angleDifficulty * 0.3;
+        // Difficulty of aiming notes steadily in time with their offsets.
+        // Most relevent for spaced streams
+        // Range: [0, 1]
+        private static double SteadinessDifficulty(double snappiness)
+        {
+            // High snappiness give no bonus
+            // Low snappiness (streams) gain a bonus based on (spacing?)
+            return Math.Pow(snappiness - 1, 2) / 4;
+
+            // PPv2 buffed spaced streams proportionally to tapping speed,
+            //  whereas we are buffing them proportionally to aim speed.
+            // This may need to be changed later to scale with tapping speed.
         }
 
         // Estimate the degree of snappiness in the aim between two objects based on delay. -1 = flow, 1 = snap
