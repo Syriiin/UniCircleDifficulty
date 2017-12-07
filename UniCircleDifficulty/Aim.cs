@@ -21,13 +21,10 @@ namespace UniCircleDifficulty
         //      This is not part of speed, nor accuracy, since the required skill (consistant movement) is aim.
         //      Also, since perfection of other skills is assumed, this means all notes are being tapped at their exact offset.
         //      Buff should be applied as part of the bonus difficulty for low snappiness. Same (similar) function can be used.
-        // - Reform snappiness to use sigmoid
-        //      Will also require either transforming to fit same range, or modifying bonus function.
-        //      Modifying bonus function is prefered, since it will be reformed anyway.
 
         // Snappiness constants
         private const double snap_threshold = 100;
-        private const double snap_leniency = 2.5;
+        private const double snap_curve_harshness = 0.3;  // Higher = quicker change
 
         // Shortcuts for readability
         private HitObject HitObjectC => GetHitObject(2);
@@ -115,7 +112,7 @@ namespace UniCircleDifficulty
         // Range: [-1, 1]
         private static double Snappiness(double delay)
         {
-            return 2 * Math.Atan(snap_leniency * (delay - snap_threshold)) / Math.PI;
+            return Math.Tanh(snap_curve_harshness * (delay - snap_threshold));
         }
     }
 }
