@@ -6,20 +6,26 @@ using UniCircleTools.Beatmaps;
 
 namespace UniCircleDifficulty
 {
+    /// <summary>
+    /// Represents a specific skill that adds difficulty to a beatmap
+    /// </summary>
     abstract class Skill
     {
-        private const double diff_weight = 0.9;
-
         /// <summary>
-        /// Portion excertion decays to in 1 second
+        /// Base weight for calculating difficulty totals
         /// </summary>
-        protected abstract double ExcertionDecayBase { get; }
+        private const double diff_weight = 0.9;
         
         /// <summary>
         /// Value that represents the current difficulty, including lingering difficulty. 
         /// This value is taken as the raw difficulty at a given point. Similar to strain in ppv2
         /// </summary>
-        protected double _excertion = 0;
+        private double _excertion = 0;
+
+        /// <summary>
+        /// Portion excertion decays to in 1 second
+        /// </summary>
+        protected abstract double ExcertionDecayBase { get; }
 
         /// <summary>
         /// List of objects this skill uses in processing
@@ -39,6 +45,11 @@ namespace UniCircleDifficulty
         private List<double> _diffList = new List<double>();
 
         /// <summary>
+        /// Multiplier to scale difficulty rating to a consistent value range across skills
+        /// </summary>
+        protected abstract double SkillMultiplier { get; }
+
+        /// <summary>
         /// Current total difficulty value based on <see cref="_diffList"/>
         /// </summary>
         public double Value
@@ -53,7 +64,7 @@ namespace UniCircleDifficulty
                 {
                     total += diffValues[i] * Math.Pow(diff_weight, i);
                 }
-                return total;
+                return Math.Sqrt(total) * SkillMultiplier;
             }
         }
 
@@ -90,7 +101,7 @@ namespace UniCircleDifficulty
         protected double CalculateDiff()
         {
             _excertion += CalculateRawDiff();
-            return Math.Pow(_excertion, CalculateBonusDiff());
+            return _excertion * CalculateBonusDiff();
         }
 
         /// <summary>
@@ -100,9 +111,9 @@ namespace UniCircleDifficulty
         protected abstract double CalculateRawDiff();
 
         /// <summary>
-        /// Calculates the bonus difficulty value which affects the value added to <see cref="_diffList"/>
+        /// Calculates the bonus difficulty multiplier which affects the value added to <see cref="_diffList"/>
         /// </summary>
-        /// <returns>Bonus difficulty value of the current object</returns>
+        /// <returns>Bonus difficulty multiplier of the current object</returns>
         protected virtual double CalculateBonusDiff() => 1;
 
         /// <summary>
@@ -110,6 +121,6 @@ namespace UniCircleDifficulty
         /// </summary>
         /// <param name="time">Decay time</param>
         /// <returns>Amount decayed over time</returns>
-        protected double ExcertionDecay(double time) => Math.Pow(ExcertionDecayBase, time / 1000);
+        private double ExcertionDecay(double time) => Math.Pow(ExcertionDecayBase, time / 1000);
     }
 }

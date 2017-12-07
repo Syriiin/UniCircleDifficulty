@@ -25,8 +25,13 @@ namespace UniCircleDifficulty
             Accuracy accuracy = new Accuracy();
             Reading reading = new Reading();
 
-            //aim.ProcessHitObjectSequence(_beatmap.HitObjects);
+            aim.ProcessHitObjectSequence(_beatmap.HitObjects);
             speed.ProcessHitObjectSequence(_beatmap.HitObjects);
+
+            Console.WriteLine("AIM: " + aim.Value);
+            Console.WriteLine("SPEED: " + speed.Value);
+            Console.WriteLine("ACCURACY: " + accuracy.Value);
+            Console.WriteLine("READING: " + reading.Value);
 
             return aim.Value + speed.Value + accuracy.Value + reading.Value;
         }

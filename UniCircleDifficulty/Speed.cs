@@ -4,6 +4,9 @@ using UniCircleTools.Beatmaps;
 
 namespace UniCircleDifficulty
 {
+    /// <summary>
+    /// Skill representing the difficulty of keeping up with tapping speed of notes
+    /// </summary>
     class Speed : Skill
     {
         // Shortcuts for readability
@@ -12,6 +15,8 @@ namespace UniCircleDifficulty
 
         // Excertion decay rate
         protected override double ExcertionDecayBase => 0.3;
+
+        protected override double SkillMultiplier => 5;
 
         public override void ProcessHitObject(HitObject hitObject)
         {
@@ -39,15 +44,9 @@ namespace UniCircleDifficulty
 
         protected override double CalculateRawDiff()
         {
+            // In ppv2, higher spaced objects are worth more to reward spaced streams.
+            // This can is really part of aim, and thus speed is not concerned with it.
             return 1.0 / (HitObjectA.Time - HitObjectB.Time);
-        }
-
-        protected override double CalculateBonusDiff()
-        {
-            // In ppv2, lower time is worth more for higher spaced objects. 
-            // This can be done in bonus difficulty if desired, but perhaps shouldnt be, since its somewhat regarding aim.
-            // But at the same time, it is only using aim to define another value, same as snappiness. Perhaps the same method should be done here.
-            return 1;
         }
     }
 }

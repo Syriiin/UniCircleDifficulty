@@ -4,16 +4,26 @@ using UniCircleTools.Beatmaps;
 
 namespace UniCircleDifficulty
 {
+    /// <summary>
+    /// Skill representing the difficulty of moving your cursor between notes
+    /// </summary>
     class Aim : Skill
     {
         // TODO:
-        // - Add slider support, for slider tick aim, angle from slider end with last tick, distance and speed from slider end, etc..
+        // - Slider support
+        //      Add slider support, for slider tick aim, angle from slider end with last tick, distance and speed from slider end, etc..
         //      may cause problems with maps like big black where sliders can be tapped like circles, perhaps check for ticks
-        // - Contemplate spacing changes affecting the raw aim difficulty of a pattern, ie. same speed, but massive distance change.
+        // - Spacing changes?
+        //      Contemplate spacing changes affecting the raw aim difficulty of a pattern, ie. same speed, but massive distance change.
         //      perhaps change anglediff to awkwardness and include spacing changes. would buff cutstreams/accelerating streams and decronstruction star triples
-        // - Make jump difficulty add to excertion value, not angle difficulty
-        //      by not adding angle difficulty and other types of non raw difficulty, we dont need to worry about excertion getting higher for the wrong reasons
-        //      this also means that technically difficult sections dont require a large excertion to be worth alot, since we can make angle difficulty worth more
+        // - Buff spaced streams
+        //      There is added difficulty with spaced streams, as they require flowing which meaning they are harder to tap accuratly.
+        //      This is not part of speed, nor accuracy, since the required skill (consistant movement) is aim.
+        //      Also, since perfection of other skills is assumed, this means all notes are being tapped at their exact offset.
+        //      Buff should be applied as part of the bonus difficulty for low snappiness. Same (similar) function can be used.
+        // - Reform snappiness to use sigmoid
+        //      Will also require either transforming to fit same range, or modifying bonus function.
+        //      Modifying bonus function is prefered, since it will be reformed anyway.
 
         // Snappiness constants
         private const double snap_threshold = 100;
@@ -26,6 +36,8 @@ namespace UniCircleDifficulty
 
         // Excertion decay rate
         protected override double ExcertionDecayBase => 0.15;
+
+        protected override double SkillMultiplier => 0.5;
 
         public override void ProcessHitObject(HitObject hitObject)
         {
