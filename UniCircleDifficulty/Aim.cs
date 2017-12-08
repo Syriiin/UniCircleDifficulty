@@ -15,7 +15,7 @@ namespace UniCircleDifficulty
         //      May cause problems with maps like big black where sliders can be tapped like circles, perhaps check for ticks instead.
         // - Spacing changes?
         //      Create (awkwardness?) to account for massive time-distance equality changes.
-        //      Would buff cutstreams/accelerating streams and deconstruction star style triples.
+        //      Would buff cutstreams/accelerating streams, deconstruction star style triples, worldwide choppers hard part, etc...
 
         // Bonus constants
         private const double angle_diff_weight = 0.3;
@@ -43,17 +43,17 @@ namespace UniCircleDifficulty
                 return;
             }
 
-            if (_currentObjects.Count == 3)
-            {
-                _currentObjects.RemoveAt(0);
-            }
-
             _currentObjects.Add(hitObject);
 
             if (_currentObjects.Count == 1) // This is the first object in the map
             {
                 // No aim difficulty, since we havent aimed anything yet
                 return;
+            }
+
+            if (_currentObjects.Count == 4)
+            {
+                _currentObjects.RemoveAt(0);
             }
 
             base.ProcessHitObject(hitObject);
