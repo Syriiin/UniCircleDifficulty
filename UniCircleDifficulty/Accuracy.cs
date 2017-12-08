@@ -13,6 +13,19 @@ namespace UniCircleDifficulty
 
         protected override double SkillMultiplier => 1;
 
+        public override void ProcessHitObject(HitObject hitObject)
+        {
+            if (hitObject is Spinner)
+            {
+                // Spinners are not considered in accuracy
+                return;
+            }
+
+            // TODO: Remove finished objects from _currentObjects here
+
+            base.ProcessHitObject(hitObject);
+        }
+
         protected override double CalculateRawDiff()
         {
             // Raw difficulty is hit window for 300 (everything else is bad for accuracy)

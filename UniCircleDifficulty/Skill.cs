@@ -86,6 +86,14 @@ namespace UniCircleDifficulty
         /// <param name="hitObject">HitObject to process</param>
         public virtual void ProcessHitObject(HitObject hitObject)
         {
+            _currentObjects.Add(hitObject);
+
+            if (_currentObjects.Count == 1)
+            {
+                // No difficulty, since this is the first object of the map
+                return;
+            }
+
             // Decay excertion
             _excertion *= ExcertionDecay(GetHitObject(0).Time - GetHitObject(1).Time);
             

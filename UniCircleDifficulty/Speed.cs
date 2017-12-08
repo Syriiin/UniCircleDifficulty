@@ -26,15 +26,7 @@ namespace UniCircleDifficulty
                 return;
             }
 
-            _currentObjects.Add(hitObject);
-
-            if (_currentObjects.Count == 1) // This is the first object in the map
-            {
-                // No speed difficulty, since we have only tapped 1 note
-                return;
-            }
-
-            if (_currentObjects.Count == 3)
+            if (_currentObjects.Count == 2)
             {
                 _currentObjects.RemoveAt(0);
             }
