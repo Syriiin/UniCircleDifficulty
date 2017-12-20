@@ -2,7 +2,7 @@
 
 using UniCircleTools.Beatmaps;
 
-namespace UniCircleDifficulty
+namespace UniCircleDifficulty.Skills.Aiming
 {
     /// <summary>
     /// Skill representing the difficulty of moving your cursor between notes

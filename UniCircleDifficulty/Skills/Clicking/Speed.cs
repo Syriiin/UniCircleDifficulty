@@ -2,7 +2,7 @@
 
 using UniCircleTools.Beatmaps;
 
-namespace UniCircleDifficulty
+namespace UniCircleDifficulty.Skills.Clicking
 {
     /// <summary>
     /// Skill representing the difficulty of keeping up with tapping speed of notes

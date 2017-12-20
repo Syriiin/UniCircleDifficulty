@@ -2,7 +2,7 @@
 
 using UniCircleTools.Beatmaps;
 
-namespace UniCircleDifficulty
+namespace UniCircleDifficulty.Skills.Reading
 {
     /// <summary>
     /// Skill representing the difficulty of identifying rhythmic and visual patterns in notes

@@ -3,6 +3,11 @@
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
+using UniCircleDifficulty.Skills;
+using UniCircleDifficulty.Skills.Aiming;
+using UniCircleDifficulty.Skills.Clicking;
+using UniCircleDifficulty.Skills.Reading;
+
 namespace UniCircleDifficulty
 {
     public class DifficultyCalculator
