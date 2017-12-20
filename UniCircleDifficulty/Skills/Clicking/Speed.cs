@@ -11,8 +11,8 @@ namespace UniCircleDifficulty.Skills.Clicking
     class Speed : Skill
     {
         // Shortcuts for readability
-        private HitObject HitObjectB => GetHitObject(1);
-        private HitObject HitObjectA => GetHitObject(0);
+        private ClickPoint ClickPointB => GetDifficultyPoint(1) as ClickPoint;
+        private ClickPoint ClickPointA => GetDifficultyPoint(0) as ClickPoint;
 
         // Excertion decay rate
         protected override double ExcertionDecayBase => 0.3;
@@ -27,19 +27,33 @@ namespace UniCircleDifficulty.Skills.Clicking
                 return;
             }
 
-            if (_currentObjects.Count == 2)
-            {
-                _currentObjects.RemoveAt(0);
-            }
+            // Construct diff points from hitobject and call ProcessDifficultyPoint with them
+            throw new NotImplementedException();
+        }
 
-            base.ProcessHitObject(hitObject);
+        protected override void UpdateDifficultyPoints(DifficultyPoint diffPoint)
+        {
+            // Add diffPoint to currentDiffPoints
+            _currentDiffPoints.Add(diffPoint as ClickPoint);
+
+            // Update pool
+            if (_currentDiffPoints.Count == 2)
+            {
+                _currentDiffPoints.RemoveAt(0);
+            }
         }
 
         protected override double CalculateRawDiff()
         {
             // In ppv2, higher spaced objects are worth more to reward spaced streams.
             // This can is really part of aim, and thus speed is not concerned with it.
-            return 1.0 / (HitObjectA.Time - HitObjectB.Time);
+            return 1.0 / (ClickPointA.Time - ClickPointB.Time);
+        }
+
+        protected override double CalculateBonusDiff()
+        {
+            // Accuracy difficulty
+            return base.CalculateBonusDiff();
         }
 
         public Speed(Mods mods) : base(mods) { }

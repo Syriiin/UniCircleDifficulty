@@ -27,9 +27,9 @@ namespace UniCircleDifficulty.Skills.Aiming
         private const double snap_curve_harshness = 0.3;  // Higher = quicker change
 
         // Shortcuts for readability
-        private HitObject HitObjectC => GetHitObject(2);
-        private HitObject HitObjectB => GetHitObject(1);
-        private HitObject HitObjectA => GetHitObject(0);
+        private AimPoint AimPointC => GetDifficultyPoint(2) as AimPoint;
+        private AimPoint AimPointB => GetDifficultyPoint(1) as AimPoint;
+        private AimPoint AimPointA => GetDifficultyPoint(0) as AimPoint;
 
         // Excertion decay rate
         protected override double ExcertionDecayBase => 0.15;
@@ -44,21 +44,27 @@ namespace UniCircleDifficulty.Skills.Aiming
                 return;
             }
 
-            if (_currentObjects.Count == 3)
-            {
-                _currentObjects.RemoveAt(0);
-            }
+            // Construct diff points from hitobject and call ProcessDifficultyPoint with them
+            throw new NotImplementedException();
+        }
 
-            base.ProcessHitObject(hitObject);
+        protected override void UpdateDifficultyPoints(DifficultyPoint diffPoint)
+        {
+            _currentDiffPoints.Add(diffPoint as AimPoint);
+
+            if (_currentDiffPoints.Count == 3)
+            {
+                _currentDiffPoints.RemoveAt(0);
+            }
         }
 
         // Calculate the raw difficulty of a jump, that is, only concerning the distance and time between the objects
         protected override double CalculateRawDiff()
         {
             // Average CS (to support possible lazer variable CS)
-            double avgRadius = (HitObjectB.Radius + HitObjectA.Radius) / 2;
+            double avgRadius = (AimPointB.Radius + AimPointA.Radius) / 2;
             // Ratio of distance to CS
-            double distanceRatio = Utils.Distance(HitObjectB, HitObjectA) / avgRadius;
+            double distanceRatio = Utils.Distance(AimPointB, AimPointA) / avgRadius;
             // Normalised distance at radius 52
             double distance = distanceRatio * 52;
 
@@ -68,7 +74,7 @@ namespace UniCircleDifficulty.Skills.Aiming
                 return 0;
             }
 
-            double delay = HitObjectA.Time - HitObjectB.Time;
+            double delay = AimPointA.Time - AimPointB.Time;
 
             return distance / delay;
         }
@@ -77,19 +83,19 @@ namespace UniCircleDifficulty.Skills.Aiming
         // Multiplier of raw difficulty
         protected override double CalculateBonusDiff()
         {
-            if (HitObjectC == null) // This is the second object in the map
+            if (AimPointC == null) // This is the second object in the map
             {
                 // No angle difficulty, since there is no angle
                 return 0;
             }
             
-            double angle = Utils.Angle(HitObjectC, HitObjectB, HitObjectA);
+            double angle = Utils.Angle(AimPointC, AimPointB, AimPointA);
             if (double.IsNaN(angle))
             {
                 return 0;
             }
 
-            double prevDelay = HitObjectB.Time - HitObjectC.Time;   // previous because between object B and C
+            double prevDelay = AimPointB.Time - AimPointC.Time;   // previous because between object B and C
             double snappiness = Snappiness(prevDelay);
 
             double angleDifficulty = AngleDifficulty(angle, snappiness);

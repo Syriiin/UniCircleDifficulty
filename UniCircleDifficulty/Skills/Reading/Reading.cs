@@ -17,6 +17,21 @@ namespace UniCircleDifficulty.Skills.Reading
 
         protected override double SkillMultiplier => 1;
 
+        public override void ProcessHitObject(HitObject hitObject)
+        {
+            // Construct diff points from hitobject and call ProcessDifficultyPoint with them
+            throw new NotImplementedException();
+        }
+
+        protected override void UpdateDifficultyPoints(DifficultyPoint diffPoint)
+        {
+            // Add diffPoint to currentDiffPoints
+            _currentDiffPoints.Add(diffPoint);
+
+            // Update pool
+            throw new NotImplementedException();
+        }
+
         protected override double CalculateRawDiff()
         {
             throw new NotImplementedException();
