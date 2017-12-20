@@ -1,5 +1,6 @@
 ﻿using System;
 
+using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
 namespace UniCircleDifficulty.Skills.Clicking
@@ -40,5 +41,7 @@ namespace UniCircleDifficulty.Skills.Clicking
             // This can is really part of aim, and thus speed is not concerned with it.
             return 1.0 / (HitObjectA.Time - HitObjectB.Time);
         }
+
+        public Speed(Mods mods) : base(mods) { }
     }
 }

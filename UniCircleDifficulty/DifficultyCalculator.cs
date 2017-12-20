@@ -13,7 +13,6 @@ namespace UniCircleDifficulty
     public class DifficultyCalculator
     {
         private Beatmap _beatmap;
-        private Mods _mods;
         private bool _calculated;
 
         private Aim _aim;
@@ -40,30 +39,23 @@ namespace UniCircleDifficulty
         public DifficultyCalculator(Beatmap beatmap, Mods mods = Mods.None)
         {
             _beatmap = beatmap;
-            _mods = mods;
+            _aim = new Aim(mods);
+            _speed = new Speed(mods);
+            _accuracy = new Accuracy(mods);
+            _reading = new Reading(mods);
             _calculated = false;
-            PreprocessBeatmap();
         }
 
         public void CalculateDifficulty()
         {
             // Calculates skill difficulties
-            _aim = new Aim();
-            _speed = new Speed();
-            _accuracy = new Accuracy();
-            _reading = new Reading();
 
             _aim.ProcessHitObjectSequence(_beatmap.HitObjects);
             _speed.ProcessHitObjectSequence(_beatmap.HitObjects);
-            _accuracy.ProcessHitObjectSequence(_beatmap.HitObjects);
-            _reading.ProcessHitObjectSequence(_beatmap.HitObjects);
+            //_accuracy.ProcessHitObjectSequence(_beatmap.HitObjects);
+            //_reading.ProcessHitObjectSequence(_beatmap.HitObjects);
 
             _calculated = true;
-        }
-
-        private void PreprocessBeatmap()
-        {
-            // Modify beatmap in alignment with map changing mods
         }
     }
 }

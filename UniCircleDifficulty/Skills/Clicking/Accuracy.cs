@@ -1,5 +1,6 @@
 ﻿using System;
 
+using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
 namespace UniCircleDifficulty.Skills.Clicking
@@ -38,5 +39,7 @@ namespace UniCircleDifficulty.Skills.Clicking
             // Bonus is rhythm complexity
             return 0;
         }
+
+        public Accuracy(Mods mods) : base(mods) { }
     }
 }

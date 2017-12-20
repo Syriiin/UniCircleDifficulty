@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
 namespace UniCircleDifficulty.Skills
@@ -16,6 +17,11 @@ namespace UniCircleDifficulty.Skills
         /// </summary>
         private const double diff_weight = 0.9;
         
+        /// <summary>
+        /// Mods to consider in hitobject processing
+        /// </summary>
+        private Mods _mods;
+
         /// <summary>
         /// Value that represents the current difficulty, including lingering difficulty. 
         /// This value is taken as the raw difficulty at a given point. Similar to strain in ppv2
@@ -130,5 +136,10 @@ namespace UniCircleDifficulty.Skills
         /// <param name="time">Decay time</param>
         /// <returns>Amount decayed over time</returns>
         private double ExcertionDecay(double time) => Math.Pow(ExcertionDecayBase, time / 1000);
+
+        public Skill(Mods mods = Mods.None)
+        {
+            _mods = mods;
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 
+using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
 namespace UniCircleDifficulty.Skills.Reading
@@ -20,5 +21,7 @@ namespace UniCircleDifficulty.Skills.Reading
         {
             throw new NotImplementedException();
         }
+
+        public Reading(Mods mods) : base(mods) { }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 
+using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
 namespace UniCircleDifficulty.Skills.Aiming
@@ -127,5 +128,7 @@ namespace UniCircleDifficulty.Skills.Aiming
         {
             return Math.Tanh(snap_curve_harshness * (delay - snap_threshold));
         }
+
+        public Aim(Mods mods) : base(mods) { }
     }
 }
