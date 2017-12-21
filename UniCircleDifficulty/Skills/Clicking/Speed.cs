@@ -27,8 +27,13 @@ namespace UniCircleDifficulty.Skills.Clicking
                 return;
             }
 
-            // Construct diff points from hitobject and call ProcessDifficultyPoint with them
-            throw new NotImplementedException();
+            // Construct click point from hitobject and call ProcessDifficultyPoint with them
+            ClickPoint clickPoint = new ClickPoint
+            {
+                Time = hitObject.Time
+            };
+
+            UpdateDifficultyPoints(clickPoint);
         }
 
         protected override void UpdateDifficultyPoints(ClickPoint clickPoint)

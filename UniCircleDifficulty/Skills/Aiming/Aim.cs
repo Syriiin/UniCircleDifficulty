@@ -44,8 +44,18 @@ namespace UniCircleDifficulty.Skills.Aiming
                 return;
             }
 
-            // Construct diff points from hitobject and call ProcessDifficultyPoint with them
-            throw new NotImplementedException();
+            // Construct aim points from hitobject and call ProcessDifficultyPoint with them
+            AimPoint aimPoint = new AimPoint
+            {
+                Time = hitObject.Time,
+                X = hitObject.X,
+                Y = hitObject.Y,
+                Radius = hitObject.Radius
+            };
+
+            // TODO: Process sliderticks into aim points when they are implemented
+
+            UpdateDifficultyPoints(aimPoint);
         }
 
         protected override void UpdateDifficultyPoints(AimPoint aimPoint)
