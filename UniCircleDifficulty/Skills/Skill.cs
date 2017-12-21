@@ -10,7 +10,7 @@ namespace UniCircleDifficulty.Skills
     /// <summary>
     /// Represents a specific skill that adds difficulty to a beatmap
     /// </summary>
-    abstract class Skill
+    abstract class Skill<TDiffPoint> where TDiffPoint : DifficultyPoint
     {
         /// <summary>
         /// Base weight for calculating difficulty totals
@@ -36,14 +36,14 @@ namespace UniCircleDifficulty.Skills
         /// <summary>
         /// List of <see cref="DifficultyPoint"/>s this skill needs to calculate difficulty for the latest point
         /// </summary>
-        protected List<DifficultyPoint> _currentDiffPoints = new List<DifficultyPoint>();
+        protected List<TDiffPoint> _currentDiffPoints = new List<TDiffPoint>();
 
         /// <summary>
         /// Shortcut method for accessing <see cref="_currentDiffPoints"/> with reverse indexing
         /// </summary>
         /// <param name="objectNum">Reverse index of object to return</param>
         /// <returns></returns>
-        protected DifficultyPoint GetDifficultyPoint(int objectNum) => _currentDiffPoints.ElementAtOrDefault(_currentDiffPoints.Count - (1 + objectNum));
+        protected TDiffPoint GetDifficultyPoint(int objectNum) => _currentDiffPoints.ElementAtOrDefault(_currentDiffPoints.Count - (1 + objectNum));
 
         /// <summary>
         /// List of difficulty values after processing each object
@@ -87,16 +87,16 @@ namespace UniCircleDifficulty.Skills
         }
 
         /// <summary>
-        /// Converts <see cref="HitObject"/>s into <see cref="DifficultyPoint"/>s and calls <see cref="ProcessDifficultyPoint(DifficultyPoint)"/> with them
+        /// Converts <see cref="HitObject"/>s into <see cref="DifficultyPoint"/>s and calls <see cref="ProcessDifficultyPoint(TDiffPoint)"/> with them
         /// </summary>
         /// <param name="hitObject">HitObject to process</param>
         public abstract void ProcessHitObject(HitObject hitObject);
 
         /// <summary>
-        /// Processes DifficultyPoint and calculates difficulty
+        /// Processes <see cref="DifficultyPoint"/> and calculates difficulty
         /// </summary>
         /// <param name="diffPoint"></param>
-        protected void ProcessDifficultyPoint(DifficultyPoint diffPoint)
+        protected void ProcessDifficultyPoint(TDiffPoint diffPoint)
         {
             // Update diffpoint pool (happens in subclass before calling this)
             UpdateDifficultyPoints(diffPoint);
@@ -113,7 +113,7 @@ namespace UniCircleDifficulty.Skills
         /// Add <see cref="DifficultyPoint"/> to <see cref="_currentDiffPoints"/> and remove any now irrelevent points
         /// </summary>
         /// <param name="diffPoint"><see cref="DifficultyPoint"/> to add</param>
-        protected abstract void UpdateDifficultyPoints(DifficultyPoint diffPoint);
+        protected abstract void UpdateDifficultyPoints(TDiffPoint diffPoint);
 
         /// <summary>
         /// Calculates difficulty based on <see cref="_currentDiffPoints"/>

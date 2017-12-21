@@ -8,7 +8,7 @@ namespace UniCircleDifficulty.Skills.Reading
     /// <summary>
     /// Skill representing the difficulty of identifying rhythmic and visual patterns in notes
     /// </summary>
-    class Reading : Skill
+    class Reading : Skill<VisualPoint>
     {
         // Density, distance, overlap, visual mods
         
@@ -19,14 +19,14 @@ namespace UniCircleDifficulty.Skills.Reading
 
         public override void ProcessHitObject(HitObject hitObject)
         {
-            // Construct diff points from hitobject and call ProcessDifficultyPoint with them
+            // Construct visual points from hitobject and call ProcessDifficultyPoint with them
             throw new NotImplementedException();
         }
 
-        protected override void UpdateDifficultyPoints(DifficultyPoint diffPoint)
+        protected override void UpdateDifficultyPoints(VisualPoint visualPoint)
         {
             // Add diffPoint to currentDiffPoints
-            _currentDiffPoints.Add(diffPoint);
+            _currentDiffPoints.Add(visualPoint);
 
             // Update pool
             throw new NotImplementedException();

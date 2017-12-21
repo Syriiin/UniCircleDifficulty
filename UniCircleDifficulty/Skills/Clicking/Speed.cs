@@ -8,11 +8,11 @@ namespace UniCircleDifficulty.Skills.Clicking
     /// <summary>
     /// Skill representing the difficulty of keeping up with tapping speed of notes
     /// </summary>
-    class Speed : Skill
+    class Speed : Skill<ClickPoint>
     {
         // Shortcuts for readability
-        private ClickPoint ClickPointB => GetDifficultyPoint(1) as ClickPoint;
-        private ClickPoint ClickPointA => GetDifficultyPoint(0) as ClickPoint;
+        private ClickPoint ClickPointB => GetDifficultyPoint(1);
+        private ClickPoint ClickPointA => GetDifficultyPoint(0);
 
         // Excertion decay rate
         protected override double ExcertionDecayBase => 0.3;
@@ -31,10 +31,10 @@ namespace UniCircleDifficulty.Skills.Clicking
             throw new NotImplementedException();
         }
 
-        protected override void UpdateDifficultyPoints(DifficultyPoint diffPoint)
+        protected override void UpdateDifficultyPoints(ClickPoint clickPoint)
         {
             // Add diffPoint to currentDiffPoints
-            _currentDiffPoints.Add(diffPoint as ClickPoint);
+            _currentDiffPoints.Add(clickPoint);
 
             // Update pool
             if (_currentDiffPoints.Count == 2)

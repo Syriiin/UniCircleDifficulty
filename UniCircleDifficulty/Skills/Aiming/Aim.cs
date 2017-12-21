@@ -8,7 +8,7 @@ namespace UniCircleDifficulty.Skills.Aiming
     /// <summary>
     /// Skill representing the difficulty of moving your cursor between notes
     /// </summary>
-    class Aim : Skill
+    class Aim : Skill<AimPoint>
     {
         // TODO:
         // - Slider support
@@ -27,9 +27,9 @@ namespace UniCircleDifficulty.Skills.Aiming
         private const double snap_curve_harshness = 0.3;  // Higher = quicker change
 
         // Shortcuts for readability
-        private AimPoint AimPointC => GetDifficultyPoint(2) as AimPoint;
-        private AimPoint AimPointB => GetDifficultyPoint(1) as AimPoint;
-        private AimPoint AimPointA => GetDifficultyPoint(0) as AimPoint;
+        private AimPoint AimPointC => GetDifficultyPoint(2);
+        private AimPoint AimPointB => GetDifficultyPoint(1);
+        private AimPoint AimPointA => GetDifficultyPoint(0);
 
         // Excertion decay rate
         protected override double ExcertionDecayBase => 0.15;
@@ -48,9 +48,9 @@ namespace UniCircleDifficulty.Skills.Aiming
             throw new NotImplementedException();
         }
 
-        protected override void UpdateDifficultyPoints(DifficultyPoint diffPoint)
+        protected override void UpdateDifficultyPoints(AimPoint aimPoint)
         {
-            _currentDiffPoints.Add(diffPoint as AimPoint);
+            _currentDiffPoints.Add(aimPoint);
 
             if (_currentDiffPoints.Count == 3)
             {
