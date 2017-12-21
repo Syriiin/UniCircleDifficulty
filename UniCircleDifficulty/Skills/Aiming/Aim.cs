@@ -55,14 +55,14 @@ namespace UniCircleDifficulty.Skills.Aiming
 
             // TODO: Process sliderticks into aim points when they are implemented
 
-            UpdateDifficultyPoints(aimPoint);
+            ProcessDifficultyPoint(aimPoint);
         }
 
         protected override void UpdateDifficultyPoints(AimPoint aimPoint)
         {
             _currentDiffPoints.Add(aimPoint);
 
-            if (_currentDiffPoints.Count == 3)
+            if (_currentDiffPoints.Count == 4)
             {
                 _currentDiffPoints.RemoveAt(0);
             }
@@ -71,6 +71,11 @@ namespace UniCircleDifficulty.Skills.Aiming
         // Calculate the raw difficulty of a jump, that is, only concerning the distance and time between the objects
         protected override double CalculateRawDiff()
         {
+            if (AimPointB == null)  // First object, thus no difficulty
+            {
+                return 0;
+            }
+
             // Average CS (to support possible lazer variable CS)
             double avgRadius = (AimPointB.Radius + AimPointA.Radius) / 2;
             // Ratio of distance to CS
@@ -96,13 +101,13 @@ namespace UniCircleDifficulty.Skills.Aiming
             if (AimPointC == null) // This is the second object in the map
             {
                 // No angle difficulty, since there is no angle
-                return 0;
+                return 1;
             }
             
             double angle = Utils.Angle(AimPointC, AimPointB, AimPointA);
             if (double.IsNaN(angle))
             {
-                return 0;
+                return 1;
             }
 
             double prevDelay = AimPointB.Time - AimPointC.Time;   // previous because between object B and C

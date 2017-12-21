@@ -33,7 +33,7 @@ namespace UniCircleDifficulty.Skills.Clicking
                 Time = hitObject.Time
             };
 
-            UpdateDifficultyPoints(clickPoint);
+            ProcessDifficultyPoint(clickPoint);
         }
 
         protected override void UpdateDifficultyPoints(ClickPoint clickPoint)
@@ -42,7 +42,7 @@ namespace UniCircleDifficulty.Skills.Clicking
             _currentDiffPoints.Add(clickPoint);
 
             // Update pool
-            if (_currentDiffPoints.Count == 2)
+            if (_currentDiffPoints.Count == 3)
             {
                 _currentDiffPoints.RemoveAt(0);
             }
@@ -50,6 +50,11 @@ namespace UniCircleDifficulty.Skills.Clicking
 
         protected override double CalculateRawDiff()
         {
+            if (ClickPointB == null)  // First object, thus no difficulty
+            {
+                return 0;
+            }
+
             // In ppv2, higher spaced objects are worth more to reward spaced streams.
             // This can is really part of aim, and thus speed is not concerned with it.
             return 1.0 / (ClickPointA.Time - ClickPointB.Time);

@@ -98,11 +98,11 @@ namespace UniCircleDifficulty.Skills
         /// <param name="diffPoint"></param>
         protected void ProcessDifficultyPoint(TDiffPoint diffPoint)
         {
-            // Update diffpoint pool (happens in subclass before calling this)
+            // Update diffpoint pool
             UpdateDifficultyPoints(diffPoint);
 
             // Decay excertion
-            _excertion *= ExcertionDecay(GetDifficultyPoint(0).Time - GetDifficultyPoint(1).Time);
+            _excertion *= ExcertionDecay(GetDifficultyPoint(0).Time - GetDifficultyPoint(1)?.Time ?? 0);
 
             // Calculate difficulty of point
             double pointDiff = CalculateDiff();
