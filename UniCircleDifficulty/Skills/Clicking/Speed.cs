@@ -30,7 +30,7 @@ namespace UniCircleDifficulty.Skills.Clicking
             // Construct click point from hitobject and call ProcessDifficultyPoint with them
             ClickPoint clickPoint = new ClickPoint
             {
-                Time = hitObject.Time
+                Time = hitObject.Time / Utils.ModClockRate(_mods)
             };
 
             ProcessDifficultyPoint(clickPoint);

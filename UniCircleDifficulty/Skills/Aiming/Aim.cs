@@ -47,11 +47,16 @@ namespace UniCircleDifficulty.Skills.Aiming
             // Construct aim points from hitobject and call ProcessDifficultyPoint with them
             AimPoint aimPoint = new AimPoint
             {
-                Time = hitObject.Time,
+                Time = hitObject.Time / Utils.ModClockRate(_mods),
                 X = hitObject.X,
                 Y = hitObject.Y,
-                Radius = hitObject.Radius
+                Radius = Utils.ModRadius(hitObject.Difficulty.CS, _mods)
             };
+
+            if (_mods.HasFlag(Mods.HardRock))
+            {
+                aimPoint.Y = -aimPoint.Y + 384; // Flip notes (even though it technically doesnt matter since EVERYTHING is flipped)
+            }
 
             // TODO: Process sliderticks into aim points when they are implemented
 
