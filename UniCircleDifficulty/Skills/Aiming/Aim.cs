@@ -1,13 +1,14 @@
 ﻿using System;
 
+using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
-namespace UniCircleDifficulty
+namespace UniCircleDifficulty.Skills.Aiming
 {
     /// <summary>
     /// Skill representing the difficulty of moving your cursor between notes
     /// </summary>
-    class Aim : Skill
+    class Aim : Skill<AimPoint>
     {
         // TODO:
         // - Slider support
@@ -26,9 +27,9 @@ namespace UniCircleDifficulty
         private const double snap_curve_harshness = 0.3;  // Higher = quicker change
 
         // Shortcuts for readability
-        private HitObject HitObjectC => GetHitObject(2);
-        private HitObject HitObjectB => GetHitObject(1);
-        private HitObject HitObjectA => GetHitObject(0);
+        private AimPoint AimPointC => GetDifficultyPoint(2);
+        private AimPoint AimPointB => GetDifficultyPoint(1);
+        private AimPoint AimPointA => GetDifficultyPoint(0);
 
         // Excertion decay rate
         protected override double ExcertionDecayBase => 0.15;
@@ -43,21 +44,47 @@ namespace UniCircleDifficulty
                 return;
             }
 
-            if (_currentObjects.Count == 3)
+            // Construct aim points from hitobject and call ProcessDifficultyPoint with them
+            AimPoint aimPoint = new AimPoint
             {
-                _currentObjects.RemoveAt(0);
+                Time = hitObject.Time / Utils.ModClockRate(_mods),
+                X = hitObject.X,
+                Y = hitObject.Y,
+                Radius = Utils.ModRadius(hitObject.Difficulty.CS, _mods)
+            };
+
+            if (_mods.HasFlag(Mods.HardRock))
+            {
+                aimPoint.Y = -aimPoint.Y + 384; // Flip notes (even though it technically doesnt matter since EVERYTHING is flipped)
             }
 
-            base.ProcessHitObject(hitObject);
+            // TODO: Process sliderticks into aim points when they are implemented
+
+            ProcessDifficultyPoint(aimPoint);
+        }
+
+        protected override void UpdateDifficultyPoints(AimPoint aimPoint)
+        {
+            _currentDiffPoints.Add(aimPoint);
+
+            if (_currentDiffPoints.Count == 4)
+            {
+                _currentDiffPoints.RemoveAt(0);
+            }
         }
 
         // Calculate the raw difficulty of a jump, that is, only concerning the distance and time between the objects
         protected override double CalculateRawDiff()
         {
+            if (AimPointB == null)  // First object, thus no difficulty
+            {
+                return 0;
+            }
+
             // Average CS (to support possible lazer variable CS)
-            double avgRadius = (HitObjectB.Radius + HitObjectA.Radius) / 2;
+            double avgRadius = (AimPointB.Radius + AimPointA.Radius) / 2;
             // Ratio of distance to CS
-            double distanceRatio = Utils.Distance(HitObjectB, HitObjectA) / avgRadius;
+            double distanceRatio = Utils.Distance(AimPointB, AimPointA) / avgRadius;
             // Normalised distance at radius 52
             double distance = distanceRatio * 52;
 
@@ -67,7 +94,7 @@ namespace UniCircleDifficulty
                 return 0;
             }
 
-            double delay = HitObjectA.Time - HitObjectB.Time;
+            double delay = AimPointA.Time - AimPointB.Time;
 
             return distance / delay;
         }
@@ -76,19 +103,19 @@ namespace UniCircleDifficulty
         // Multiplier of raw difficulty
         protected override double CalculateBonusDiff()
         {
-            if (HitObjectC == null) // This is the second object in the map
+            if (AimPointC == null) // This is the second object in the map
             {
                 // No angle difficulty, since there is no angle
-                return 0;
+                return 1;
             }
             
-            double angle = Utils.Angle(HitObjectC, HitObjectB, HitObjectA);
+            double angle = Utils.Angle(AimPointC, AimPointB, AimPointA);
             if (double.IsNaN(angle))
             {
-                return 0;
+                return 1;
             }
 
-            double prevDelay = HitObjectB.Time - HitObjectC.Time;   // previous because between object B and C
+            double prevDelay = AimPointB.Time - AimPointC.Time;   // previous because between object B and C
             double snappiness = Snappiness(prevDelay);
 
             double angleDifficulty = AngleDifficulty(angle, snappiness);
@@ -127,5 +154,7 @@ namespace UniCircleDifficulty
         {
             return Math.Tanh(snap_curve_harshness * (delay - snap_threshold));
         }
+
+        public Aim(Mods mods) : base(mods) { }
     }
 }

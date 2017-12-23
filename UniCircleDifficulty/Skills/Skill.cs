@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
-namespace UniCircleDifficulty
+namespace UniCircleDifficulty.Skills
 {
     /// <summary>
     /// Represents a specific skill that adds difficulty to a beatmap
     /// </summary>
-    abstract class Skill
+    abstract class Skill<TDiffPoint> where TDiffPoint : DifficultyPoint
     {
         /// <summary>
         /// Base weight for calculating difficulty totals
@@ -17,27 +18,32 @@ namespace UniCircleDifficulty
         private const double diff_weight = 0.9;
         
         /// <summary>
+        /// Mods to consider in hitobject processing
+        /// </summary>
+        protected Mods _mods;
+
+        /// <summary>
         /// Value that represents the current difficulty, including lingering difficulty. 
         /// This value is taken as the raw difficulty at a given point. Similar to strain in ppv2
         /// </summary>
         private double _excertion = 0;
 
         /// <summary>
-        /// Portion excertion decays to in 1 second
+        /// Fraction excertion decays to in 1 second
         /// </summary>
         protected abstract double ExcertionDecayBase { get; }
 
         /// <summary>
-        /// List of objects this skill uses in processing
+        /// List of <see cref="DifficultyPoint"/>s this skill needs to calculate difficulty for the latest point
         /// </summary>
-        protected List<HitObject> _currentObjects = new List<HitObject>();
+        protected List<TDiffPoint> _currentDiffPoints = new List<TDiffPoint>();
 
         /// <summary>
-        /// Shortcut method for accessing <see cref="_currentObjects"/> with reverse indexing
+        /// Shortcut method for accessing <see cref="_currentDiffPoints"/> with reverse indexing
         /// </summary>
         /// <param name="objectNum">Reverse index of object to return</param>
         /// <returns></returns>
-        protected HitObject GetHitObject(int objectNum) => _currentObjects.ElementAtOrDefault(_currentObjects.Count - (1 + objectNum));
+        protected TDiffPoint GetDifficultyPoint(int objectNum) => _currentDiffPoints.ElementAtOrDefault(_currentDiffPoints.Count - (1 + objectNum));
 
         /// <summary>
         /// List of difficulty values after processing each object
@@ -69,7 +75,7 @@ namespace UniCircleDifficulty
         }
 
         /// <summary>
-        /// Process multiple HitObjects in order provided by the passed IEnumerable
+        /// Process multiple <see cref="HitObject"/>s in order provided by the passed <see cref="IEnumerable{HitObject}"/>
         /// </summary>
         /// <param name="hitObjects">Collection of HitObjects to process</param>
         public void ProcessHitObjectSequence(IEnumerable<HitObject> hitObjects)
@@ -81,29 +87,36 @@ namespace UniCircleDifficulty
         }
 
         /// <summary>
-        /// Process next HitObject in sequence. Recommended to use ProcessHitObjectSequence if you are simply looping and passing HitObjects without extra logic.
+        /// Converts <see cref="HitObject"/>s into <see cref="DifficultyPoint"/>s and calls <see cref="ProcessDifficultyPoint(TDiffPoint)"/> with them
         /// </summary>
         /// <param name="hitObject">HitObject to process</param>
-        public virtual void ProcessHitObject(HitObject hitObject)
-        {
-            _currentObjects.Add(hitObject);
+        public abstract void ProcessHitObject(HitObject hitObject);
 
-            if (_currentObjects.Count == 1)
-            {
-                // No difficulty, since this is the first object of the map
-                return;
-            }
+        /// <summary>
+        /// Processes <see cref="DifficultyPoint"/> and calculates difficulty
+        /// </summary>
+        /// <param name="diffPoint"></param>
+        protected void ProcessDifficultyPoint(TDiffPoint diffPoint)
+        {
+            // Update diffpoint pool
+            UpdateDifficultyPoints(diffPoint);
 
             // Decay excertion
-            _excertion *= ExcertionDecay(GetHitObject(0).Time - GetHitObject(1).Time);
-            
-            // Calculate difficulty of object
-            double objectDiff = CalculateDiff();
-            _diffList.Add(objectDiff);
+            _excertion *= ExcertionDecay(GetDifficultyPoint(0).Time - GetDifficultyPoint(1)?.Time ?? 0);
+
+            // Calculate difficulty of point
+            double pointDiff = CalculateDiff();
+            _diffList.Add(pointDiff);
         }
 
         /// <summary>
-        /// Calculates difficulty based on the objects in <see cref="_currentObjects"/>
+        /// Add <see cref="DifficultyPoint"/> to <see cref="_currentDiffPoints"/> and remove any now irrelevent points
+        /// </summary>
+        /// <param name="diffPoint"><see cref="DifficultyPoint"/> to add</param>
+        protected abstract void UpdateDifficultyPoints(TDiffPoint diffPoint);
+
+        /// <summary>
+        /// Calculates difficulty based on <see cref="_currentDiffPoints"/>
         /// </summary>
         /// <returns>Total difficulty of the current object</returns>
         protected double CalculateDiff()
@@ -130,5 +143,10 @@ namespace UniCircleDifficulty
         /// <param name="time">Decay time</param>
         /// <returns>Amount decayed over time</returns>
         private double ExcertionDecay(double time) => Math.Pow(ExcertionDecayBase, time / 1000);
+
+        public Skill(Mods mods = Mods.None)
+        {
+            _mods = mods;
+        }
     }
 }
