@@ -4,7 +4,7 @@ using System.Text;
 
 namespace UniCircleDifficulty.Skills.Aiming
 {
-    class AimPoint : DifficultyPoint
+    class AimPoint : DifficultyPoint, ICircle
     {
         public double X { get; set; }
         public double Y { get; set; }

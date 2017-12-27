@@ -1,15 +1,31 @@
 ﻿using System;
 
 using UniCircleTools;
-using UniCircleDifficulty.Skills.Aiming;
+using UniCircleDifficulty.Skills;
 
 namespace UniCircleDifficulty
 {
     static class Utils
     {
-        public static double Distance(AimPoint aimPointA, AimPoint aimPointB)
+        /// <summary>
+        /// Calculate normalised distance of 2 circles with circle size 52
+        /// </summary>
+        /// <param name="circleA">1st circle</param>
+        /// <param name="circleB">2nd circle</param>
+        /// <returns>Normalised distance</returns>
+        public static double NormalisedDistance(ICircle circleA, ICircle circleB)
         {
-            return Distance(aimPointA.X, aimPointA.Y, aimPointB.X, aimPointB.Y);
+            // Average CS (to support possible lazer variable CS)
+            double avgRadius = (circleB.Radius + circleA.Radius) / 2;
+            // Ratio of distance to CS
+            double distanceRatio = Distance(circleB, circleA) / avgRadius;
+            // Normalised distance at radius 52
+            return distanceRatio * 52;
+        }
+
+        public static double Distance(ICircle circleA, ICircle circleB)
+        {
+            return Distance(circleA.X, circleA.Y, circleB.X, circleB.Y);
         }
         public static double Distance(double x1, double y1, double x2, double y2)
         {
@@ -20,13 +36,13 @@ namespace UniCircleDifficulty
         /// <summary>
         /// Calculate the angle formed by 3 <see cref="AimPoint"/>s in radians
         /// </summary>
-        /// <param name="aimPointA">1st point</param>
-        /// <param name="aimPointB">2nd point</param>
-        /// <param name="aimPointC">3rd point</param>
+        /// <param name="circleA">1st point</param>
+        /// <param name="circleB">2nd point</param>
+        /// <param name="circleC">3rd point</param>
         /// <returns>Inner angle in radians</returns>
-        public static double Angle(AimPoint aimPointA, AimPoint aimPointB, AimPoint aimPointC)
+        public static double Angle(ICircle circleA, ICircle circleB, ICircle circleC)
         {
-            return Angle(aimPointA.X, aimPointA.Y, aimPointB.X, aimPointB.Y, aimPointC.X, aimPointC.Y);
+            return Angle(circleA.X, circleA.Y, circleB.X, circleB.Y, circleC.X, circleC.Y);
         }
         public static double Angle(double x1, double y1, double x2, double y2, double x3, double y3)
         {

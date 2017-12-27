@@ -80,14 +80,10 @@ namespace UniCircleDifficulty.Skills.Aiming
             {
                 return 0;
             }
-
-            // Average CS (to support possible lazer variable CS)
-            double avgRadius = (AimPointB.Radius + AimPointA.Radius) / 2;
-            // Ratio of distance to CS
-            double distanceRatio = Utils.Distance(AimPointB, AimPointA) / avgRadius;
+            
             // Normalised distance at radius 52
-            double distance = distanceRatio * 52;
-
+            double distance = Utils.NormalisedDistance(AimPointA, AimPointB);
+            
             if (distance == 0)
             {
                 // No movement means no aim (although there is still stacking but that can be ignored for the most part)
