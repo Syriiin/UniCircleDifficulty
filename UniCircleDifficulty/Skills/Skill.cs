@@ -26,7 +26,7 @@ namespace UniCircleDifficulty.Skills
         /// Value that represents the current difficulty, including lingering difficulty. 
         /// This value is taken as the raw difficulty at a given point. Similar to strain in ppv2
         /// </summary>
-        private double _excertion = 0;
+        private double _excertion = 1;
 
         /// <summary>
         /// Fraction excertion decays to in 1 second
