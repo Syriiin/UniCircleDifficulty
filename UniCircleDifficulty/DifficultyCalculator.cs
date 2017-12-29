@@ -49,7 +49,7 @@ namespace UniCircleDifficulty
 
             _aim.ProcessHitObjectSequence(_beatmap.HitObjects);
             _clicking.ProcessHitObjectSequence(_beatmap.HitObjects);
-            //_reading.ProcessHitObjectSequence(_beatmap.HitObjects);
+            _reading.ProcessHitObjectSequence(_beatmap.HitObjects);
 
             _calculated = true;
         }
