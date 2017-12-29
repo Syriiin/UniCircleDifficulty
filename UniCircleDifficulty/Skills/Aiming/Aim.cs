@@ -27,9 +27,9 @@ namespace UniCircleDifficulty.Skills.Aiming
         private const double snap_curve_harshness = 0.3;  // Higher = quicker change
 
         // Shortcuts for readability
-        private AimPoint AimPointC => GetDifficultyPoint(2);
-        private AimPoint AimPointB => GetDifficultyPoint(1);
         private AimPoint AimPointA => GetDifficultyPoint(0);
+        private AimPoint AimPointB => GetDifficultyPoint(1);
+        private AimPoint AimPointC => GetDifficultyPoint(2);
 
         // Excertion decay rate
         protected override double ExcertionDecayBase => 0.15;

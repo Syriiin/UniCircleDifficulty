@@ -11,8 +11,8 @@ namespace UniCircleDifficulty.Skills.Clicking
     class Speed : Skill<ClickPoint>
     {
         // Shortcuts for readability
-        private ClickPoint ClickPointB => GetDifficultyPoint(1);
         private ClickPoint ClickPointA => GetDifficultyPoint(0);
+        private ClickPoint ClickPointB => GetDifficultyPoint(1);
 
         // Excertion decay rate
         protected override double ExcertionDecayBase => 0.3;
@@ -62,7 +62,7 @@ namespace UniCircleDifficulty.Skills.Clicking
 
         protected override double CalculateBonusDiff()
         {
-            // Accuracy difficulty
+            // Accuracy difficulty assuming perfect reading (essentially just changes in beat snapping)
             return base.CalculateBonusDiff();
         }
 
