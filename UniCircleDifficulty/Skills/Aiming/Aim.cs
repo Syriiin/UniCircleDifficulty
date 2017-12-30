@@ -126,7 +126,7 @@ namespace UniCircleDifficulty.Skills.Aiming
         {
             // Difficulty of angles depends on how they are played, wide angles are harder when snapping into, but opposite when flowing into
             // Higher snappiness will result in higher reward for high (more flat) angles, reverse for low snappiness
-            return (angle * snappiness - Math.PI * (0.5 * snappiness - 0.5)) / Math.PI;
+            return (snappiness * Math.Sin(angle - Math.PI / 2)) / 2 + 0.5;
         }
 
         // Difficulty of aiming notes steadily in time with their offsets.
