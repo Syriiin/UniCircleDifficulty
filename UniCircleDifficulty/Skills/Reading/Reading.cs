@@ -23,7 +23,7 @@ namespace UniCircleDifficulty.Skills.Reading
         //      Old mapping style
 
         // Reading doesn't really have lingering difficulty. If anything, it gets easier since you're getting used to the hard reading.
-        protected override double ExcertionDecayBase => 0;
+        protected override double ExertionDecayBase => 0;
 
         protected override double SkillMultiplier => 1;
 

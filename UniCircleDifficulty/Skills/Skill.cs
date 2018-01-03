@@ -26,12 +26,12 @@ namespace UniCircleDifficulty.Skills
         /// Value that represents the current difficulty, including lingering difficulty. 
         /// This value is taken as the raw difficulty at a given point. Similar to strain in ppv2
         /// </summary>
-        private double _excertion = 1;
+        private double _exertion = 1;
 
         /// <summary>
-        /// Fraction excertion decays to in 1 second
+        /// Fraction exertion decays to in 1 second
         /// </summary>
-        protected abstract double ExcertionDecayBase { get; }
+        protected abstract double ExertionDecayBase { get; }
 
         /// <summary>
         /// List of <see cref="DifficultyPoint"/>s this skill needs to calculate difficulty for the latest point
@@ -101,8 +101,8 @@ namespace UniCircleDifficulty.Skills
             // Update diffpoint pool
             UpdateDifficultyPoints(diffPoint);
 
-            // Decay excertion
-            _excertion *= ExcertionDecay(GetDifficultyPoint(0).Time - GetDifficultyPoint(1)?.Time ?? 0);
+            // Decay exertion
+            _exertion *= ExertionDecay(GetDifficultyPoint(0).Time - GetDifficultyPoint(1)?.Time ?? 0);
 
             // Calculate difficulty of point
             double pointDiff = CalculateDiff();
@@ -121,12 +121,12 @@ namespace UniCircleDifficulty.Skills
         /// <returns>Total difficulty of the current object</returns>
         protected double CalculateDiff()
         {
-            _excertion += CalculateRawDiff();
-            return _excertion * CalculateBonusDiff();
+            _exertion += CalculateRawDiff();
+            return _exertion * CalculateBonusDiff();
         }
 
         /// <summary>
-        /// Calculates the raw difficulty value which is added to <see cref="_excertion"/>
+        /// Calculates the raw difficulty value which is added to <see cref="_exertion"/>
         /// </summary>
         /// <returns>Raw difficulty value of the current object</returns>
         protected abstract double CalculateRawDiff();
@@ -138,11 +138,11 @@ namespace UniCircleDifficulty.Skills
         protected virtual double CalculateBonusDiff() => 1;
 
         /// <summary>
-        /// Calculate multiplier to decay <see cref="_excertion"/> by
+        /// Calculate multiplier to decay <see cref="_exertion"/> by
         /// </summary>
         /// <param name="time">Decay time</param>
         /// <returns>Amount decayed over time</returns>
-        private double ExcertionDecay(double time) => Math.Pow(ExcertionDecayBase, time / 1000);
+        private double ExertionDecay(double time) => Math.Pow(ExertionDecayBase, time / 1000);
 
         public Skill(Mods mods = Mods.None)
         {

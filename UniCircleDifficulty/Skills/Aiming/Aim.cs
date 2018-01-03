@@ -31,8 +31,8 @@ namespace UniCircleDifficulty.Skills.Aiming
         private AimPoint AimPointB => GetDifficultyPoint(1);
         private AimPoint AimPointC => GetDifficultyPoint(2);
 
-        // Excertion decay rate
-        protected override double ExcertionDecayBase => 0.15;
+        // Exertion decay rate
+        protected override double ExertionDecayBase => 0.15;
 
         protected override double SkillMultiplier => 0.5;
 

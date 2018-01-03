@@ -14,8 +14,8 @@ namespace UniCircleDifficulty.Skills.Clicking
         private ClickPoint ClickPointA => GetDifficultyPoint(0);
         private ClickPoint ClickPointB => GetDifficultyPoint(1);
 
-        // Excertion decay rate
-        protected override double ExcertionDecayBase => 0.3;
+        // Exertion decay rate
+        protected override double ExertionDecayBase => 0.3;
 
         protected override double SkillMultiplier => 5;
 
