@@ -48,22 +48,18 @@ namespace UniCircleDifficulty.Skills.Clicking
             }
         }
 
-        protected override double CalculateRawDiff()
+        // Energy exerted in a key press can be taken as a constant since there is no varying pressure or anything
+        protected override double CalculateEnergyExerted()
         {
-            if (ClickPointB == null)  // First object, thus no difficulty
-            {
-                return 0;
-            }
-
             // In ppv2, higher spaced objects are worth more to reward spaced streams.
             // This can is really part of aim, and thus speed is not concerned with it.
-            return 1.0 / (ClickPointA.Time - ClickPointB.Time);
+            return 1;
         }
 
-        protected override double CalculateBonusDiff()
+        protected override double CalculateBonusMultiplier()
         {
             // Accuracy difficulty assuming perfect reading (essentially just changes in beat snapping)
-            return base.CalculateBonusDiff();
+            return base.CalculateBonusMultiplier();
         }
 
         public Speed(Mods mods) : base(mods) { }

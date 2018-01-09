@@ -73,8 +73,8 @@ namespace UniCircleDifficulty.Skills.Aiming
             }
         }
 
-        // Calculate the raw difficulty of a jump, that is, only concerning the distance and time between the objects
-        protected override double CalculateRawDiff()
+        // Calculate the energy of a jump, that is, only concerning the distance between the objects
+        protected override double CalculateEnergyExerted()
         {
             if (AimPointB == null)  // First object, thus no difficulty
             {
@@ -84,20 +84,12 @@ namespace UniCircleDifficulty.Skills.Aiming
             // Normalised distance at radius 52
             double distance = Utils.NormalisedDistance(AimPointA, AimPointB);
             
-            if (distance == 0)
-            {
-                // No movement means no aim (although there is still stacking but that can be ignored for the most part)
-                return 0;
-            }
-
-            double delay = AimPointA.Time - AimPointB.Time;
-
-            return distance / delay;
+            return distance;
         }
 
         // Calculate the degree to which the angle affects the difficulty of a jump
         // Multiplier of raw difficulty
-        protected override double CalculateBonusDiff()
+        protected override double CalculateBonusMultiplier()
         {
             if (AimPointC == null) // This is the second object in the map
             {

@@ -42,7 +42,7 @@ namespace UniCircleDifficulty.Skills.Reading
             throw new NotImplementedException();
         }
 
-        protected override double CalculateRawDiff()
+        protected override double CalculateEnergyExerted()
         {
             throw new NotImplementedException();
             // Perhaps, for density each note should have a (focal weight) that determins how much it contributes to density

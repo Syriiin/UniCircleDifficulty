@@ -116,26 +116,34 @@ namespace UniCircleDifficulty.Skills
         protected abstract void UpdateDifficultyPoints(TDiffPoint diffPoint);
 
         /// <summary>
-        /// Calculates difficulty based on <see cref="_currentDiffPoints"/>
+        /// Calculates difficulty of latest active object in <see cref="_currentDiffPoints"/> with the rest as context
         /// </summary>
         /// <returns>Total difficulty of the current object</returns>
         protected double CalculateDiff()
         {
-            _exertion += CalculateRawDiff();
-            return _exertion * CalculateBonusDiff();
+            double energyExerted = CalculateEnergyExerted();
+            _exertion += energyExerted;
+
+            double delay = GetDifficultyPoint(0).Time - GetDifficultyPoint(1)?.Time ?? 0;
+            double rawDifficulty = energyExerted / Math.Pow(delay, 2);    // Experimental time squaring since exertion doesnt include time anymore
+
+            return rawDifficulty * CalculateBonusMultiplier() * _exertion;
         }
 
         /// <summary>
-        /// Calculates the raw difficulty value which is added to <see cref="_exertion"/>
+        /// Calculates the total energy exerted in the action described by the current difficulty point.
+        /// This value is added to <see cref="_exertion"/>.
+        /// This value is should be independant of time.
         /// </summary>
-        /// <returns>Raw difficulty value of the current object</returns>
-        protected abstract double CalculateRawDiff();
+        /// <returns>Total energy exerted during current point</returns>
+        protected abstract double CalculateEnergyExerted();
 
         /// <summary>
-        /// Calculates the bonus difficulty multiplier which affects the value added to <see cref="_diffList"/>
+        /// Calculates the bonus difficulty multiplier which affects the value added to <see cref="_diffList"/>.
+        /// This value accounts for semantic difficulty beyond
         /// </summary>
         /// <returns>Bonus difficulty multiplier of the current object</returns>
-        protected virtual double CalculateBonusDiff() => 1;
+        protected virtual double CalculateBonusMultiplier() => 1;
 
         /// <summary>
         /// Calculate multiplier to decay <see cref="_exertion"/> by
