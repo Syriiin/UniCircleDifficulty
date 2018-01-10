@@ -45,10 +45,12 @@ namespace UniCircleDifficulty.Skills
         /// <returns></returns>
         protected TDiffPoint GetDifficultyPoint(int objectNum) => _currentDiffPoints.ElementAtOrDefault(_currentDiffPoints.Count - (1 + objectNum));
 
+        private TDiffPoint CurrentDifficultyPoint => GetDifficultyPoint(0);
+
         /// <summary>
-        /// List of difficulty values after processing each object
+        /// List of calculated difficulty points
         /// </summary>
-        private List<double> _diffList = new List<double>();
+        private List<TDiffPoint> _calculatedPoints = new List<TDiffPoint>();
 
         /// <summary>
         /// Multiplier to scale difficulty rating to a consistent value range across skills
@@ -64,12 +66,17 @@ namespace UniCircleDifficulty.Skills
             {
                 // Perhaps instead each should be weighted against the max value
                 // ie. values closer to the max value should contribute more, meaning 5m 1* + 1m 3* makes a 3* map, but 5m 3* makes a 3.5* or something
-                List<double> diffValues = _diffList.OrderByDescending(d => d).ToList();
+                List<TDiffPoint> diffPoints = _calculatedPoints.OrderByDescending(d => d.Difficulty).ToList();
                 double total = 0;
-                for (int i = 0; i < diffValues.Count; i++)
+                double i = 0;
+
+                foreach (TDiffPoint diffPoint in diffPoints)
                 {
-                    total += diffValues[i] * Math.Pow(diff_weight, i);
+                    total += diffPoint.Difficulty * diffPoint.PriorExertion * Math.Pow(diff_weight, i);
+                    i += diffPoint.DeltaTime / 400;
                 }
+
+                // Apply difficulty curve and normalise with multiplier
                 return Math.Sqrt(total) * SkillMultiplier;
             }
         }
@@ -101,12 +108,13 @@ namespace UniCircleDifficulty.Skills
             // Update diffpoint pool
             UpdateDifficultyPoints(diffPoint);
 
-            // Decay exertion
-            _exertion *= ExertionDecay(GetDifficultyPoint(0).Time - GetDifficultyPoint(1)?.Time ?? 0);
+            // Calculate difficulty of point, add to exertion, and add to list
+            CalculateDiff();
+            _calculatedPoints.Add(diffPoint);
+            _exertion += diffPoint.EnergyExerted;
 
-            // Calculate difficulty of point
-            double pointDiff = CalculateDiff();
-            _diffList.Add(pointDiff);
+            // Decay exertion
+            _exertion *= ExertionDecay(diffPoint.DeltaTime);
         }
 
         /// <summary>
@@ -116,18 +124,13 @@ namespace UniCircleDifficulty.Skills
         protected abstract void UpdateDifficultyPoints(TDiffPoint diffPoint);
 
         /// <summary>
-        /// Calculates difficulty of latest active object in <see cref="_currentDiffPoints"/> with the rest as context
+        /// Calculates and sets difficulty of <see cref="CurrentDifficultyPoint"/> with the rest as context
         /// </summary>
-        /// <returns>Total difficulty of the current object</returns>
-        protected double CalculateDiff()
+        protected void CalculateDiff()
         {
-            double energyExerted = CalculateEnergyExerted();
-            _exertion += energyExerted;
-
-            double delay = GetDifficultyPoint(0).Time - GetDifficultyPoint(1)?.Time ?? 0;
-            double rawDifficulty = energyExerted / Math.Pow(delay, 2);    // Experimental time squaring since exertion doesnt include time anymore
-
-            return rawDifficulty * CalculateBonusMultiplier() * _exertion;
+            CurrentDifficultyPoint.EnergyExerted = CalculateEnergyExerted();
+            CurrentDifficultyPoint.BonusMultiplier = CalculateBonusMultiplier();
+            CurrentDifficultyPoint.PriorExertion = _exertion;
         }
 
         /// <summary>

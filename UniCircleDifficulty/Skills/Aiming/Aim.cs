@@ -34,7 +34,7 @@ namespace UniCircleDifficulty.Skills.Aiming
         // Exertion decay rate
         protected override double ExertionDecayBase => 0.15;
 
-        protected override double SkillMultiplier => 0.5;
+        protected override double SkillMultiplier => 1;
 
         public override void ProcessHitObject(HitObject hitObject)
         {
@@ -44,10 +44,13 @@ namespace UniCircleDifficulty.Skills.Aiming
                 return;
             }
 
+            double offset = hitObject.Time / Utils.ModClockRate(_mods);
+
             // Construct aim points from hitobject and call ProcessDifficultyPoint with them
             AimPoint aimPoint = new AimPoint
             {
-                Time = hitObject.Time / Utils.ModClockRate(_mods),
+                DeltaTime = offset - AimPointB?.Offset ?? offset,
+                Offset = offset,
                 X = hitObject.X,
                 Y = hitObject.Y,
                 Radius = Utils.ModRadius(hitObject.Difficulty.CS, _mods)
@@ -103,7 +106,7 @@ namespace UniCircleDifficulty.Skills.Aiming
                 return 1;
             }
 
-            double prevDelay = AimPointB.Time - AimPointC.Time;   // previous because between object B and C
+            double prevDelay = AimPointB.DeltaTime;   // previous because between object B and C
             double snappiness = Snappiness(prevDelay);
 
             double angleDifficulty = AngleDifficulty(angle, snappiness);

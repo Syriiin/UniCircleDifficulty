@@ -17,7 +17,7 @@ namespace UniCircleDifficulty.Skills.Clicking
         // Exertion decay rate
         protected override double ExertionDecayBase => 0.3;
 
-        protected override double SkillMultiplier => 5;
+        protected override double SkillMultiplier => 10;
 
         public override void ProcessHitObject(HitObject hitObject)
         {
@@ -27,10 +27,13 @@ namespace UniCircleDifficulty.Skills.Clicking
                 return;
             }
 
+            double offset = hitObject.Time / Utils.ModClockRate(_mods);
+
             // Construct click point from hitobject and call ProcessDifficultyPoint with them
             ClickPoint clickPoint = new ClickPoint
             {
-                Time = hitObject.Time / Utils.ModClockRate(_mods)
+                DeltaTime = offset - ClickPointB?.Offset ?? offset,
+                Offset = offset
             };
 
             ProcessDifficultyPoint(clickPoint);
