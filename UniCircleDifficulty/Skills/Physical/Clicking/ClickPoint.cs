@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace UniCircleDifficulty.Skills.Clicking
+namespace UniCircleDifficulty.Skills.Physical.Clicking
 {
     class ClickPoint : DifficultyPoint
     {

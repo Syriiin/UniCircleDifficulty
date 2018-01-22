@@ -23,17 +23,6 @@ namespace UniCircleDifficulty.Skills
         protected Mods _mods;
 
         /// <summary>
-        /// Value that represents the current difficulty, including lingering difficulty. 
-        /// This value is taken as the raw difficulty at a given point. Similar to strain in ppv2
-        /// </summary>
-        private double _exertion = 1;
-
-        /// <summary>
-        /// Fraction exertion decays to in 1 second
-        /// </summary>
-        protected abstract double ExertionDecayBase { get; }
-
-        /// <summary>
         /// List of <see cref="DifficultyPoint"/>s this skill needs to calculate difficulty for the latest point
         /// </summary>
         protected List<TDiffPoint> _currentDiffPoints = new List<TDiffPoint>();
@@ -44,8 +33,6 @@ namespace UniCircleDifficulty.Skills
         /// <param name="objectNum">Reverse index of object to return</param>
         /// <returns></returns>
         protected TDiffPoint GetDifficultyPoint(int objectNum) => _currentDiffPoints.ElementAtOrDefault(_currentDiffPoints.Count - (1 + objectNum));
-
-        private TDiffPoint CurrentDifficultyPoint => GetDifficultyPoint(0);
 
         /// <summary>
         /// List of calculated difficulty points
@@ -72,7 +59,7 @@ namespace UniCircleDifficulty.Skills
 
                 foreach (TDiffPoint diffPoint in diffPoints)
                 {
-                    total += diffPoint.Difficulty * diffPoint.PriorExertion * Math.Pow(diff_weight, i);
+                    total += diffPoint.Difficulty * Math.Pow(diff_weight, i);
                     i += diffPoint.DeltaTime / 400;
                 }
 
@@ -108,13 +95,9 @@ namespace UniCircleDifficulty.Skills
             // Update diffpoint pool
             UpdateDifficultyPoints(diffPoint);
 
-            // Calculate difficulty of point, add to exertion, and add to list
-            CalculateDiff();
+            // Calculate difficulty of point and add to list
+            CalculateDifficulty();
             _calculatedPoints.Add(diffPoint);
-            _exertion += diffPoint.EnergyExerted;
-
-            // Decay exertion
-            _exertion *= ExertionDecay(diffPoint.DeltaTime);
         }
 
         /// <summary>
@@ -124,36 +107,9 @@ namespace UniCircleDifficulty.Skills
         protected abstract void UpdateDifficultyPoints(TDiffPoint diffPoint);
 
         /// <summary>
-        /// Calculates and sets difficulty of <see cref="CurrentDifficultyPoint"/> with the rest as context
+        /// Calculates and sets difficulty of the current latest diff point with the rest as context
         /// </summary>
-        protected void CalculateDiff()
-        {
-            CurrentDifficultyPoint.EnergyExerted = CalculateEnergyExerted();
-            CurrentDifficultyPoint.BonusMultiplier = CalculateBonusMultiplier();
-            CurrentDifficultyPoint.PriorExertion = _exertion;
-        }
-
-        /// <summary>
-        /// Calculates the total energy exerted in the action described by the current difficulty point.
-        /// This value is added to <see cref="_exertion"/>.
-        /// This value is should be independant of time.
-        /// </summary>
-        /// <returns>Total energy exerted during current point</returns>
-        protected abstract double CalculateEnergyExerted();
-
-        /// <summary>
-        /// Calculates the bonus difficulty multiplier which affects the value added to <see cref="_diffList"/>.
-        /// This value accounts for semantic difficulty beyond
-        /// </summary>
-        /// <returns>Bonus difficulty multiplier of the current object</returns>
-        protected virtual double CalculateBonusMultiplier() => 1;
-
-        /// <summary>
-        /// Calculate multiplier to decay <see cref="_exertion"/> by
-        /// </summary>
-        /// <param name="time">Decay time</param>
-        /// <returns>Amount decayed over time</returns>
-        private double ExertionDecay(double time) => Math.Pow(ExertionDecayBase, time / 1000);
+        protected abstract void CalculateDifficulty();
 
         public Skill(Mods mods = Mods.None)
         {

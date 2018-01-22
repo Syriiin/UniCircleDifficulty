@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace UniCircleDifficulty.Skills.Aiming
+namespace UniCircleDifficulty.Skills.Physical.Aiming
 {
     class AimPoint : DifficultyPoint, ICircle
     {

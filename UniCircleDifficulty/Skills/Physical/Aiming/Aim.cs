@@ -3,12 +3,12 @@
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
-namespace UniCircleDifficulty.Skills.Aiming
+namespace UniCircleDifficulty.Skills.Physical.Aiming
 {
     /// <summary>
     /// Skill representing the difficulty of moving your cursor between notes
     /// </summary>
-    class Aim : Skill<AimPoint>
+    class Aim : PhysicalSkill<AimPoint>
     {
         // TODO:
         // - Slider support
@@ -32,7 +32,9 @@ namespace UniCircleDifficulty.Skills.Aiming
         private AimPoint AimPointC => GetDifficultyPoint(2);
 
         // Exertion decay rate
-        protected override double ExertionDecayBase => 0.15;
+        protected override double SpeedDecayBase => 0.15;
+        //protected override double StaminaDecayBase => 0.3;
+        protected override double StaminaDecayBase => 1;
 
         protected override double SkillMultiplier => 1;
 

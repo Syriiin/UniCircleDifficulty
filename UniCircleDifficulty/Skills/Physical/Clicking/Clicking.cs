@@ -3,19 +3,21 @@
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
-namespace UniCircleDifficulty.Skills.Clicking
+namespace UniCircleDifficulty.Skills.Physical.Clicking
 {
     /// <summary>
     /// Skill representing the difficulty of keeping up with tapping speed of notes
     /// </summary>
-    class Speed : Skill<ClickPoint>
+    class Clicking : PhysicalSkill<ClickPoint>
     {
         // Shortcuts for readability
         private ClickPoint ClickPointA => GetDifficultyPoint(0);
         private ClickPoint ClickPointB => GetDifficultyPoint(1);
 
         // Exertion decay rate
-        protected override double ExertionDecayBase => 0.3;
+        protected override double SpeedDecayBase => 0.3;
+        //protected override double StaminaDecayBase => 0.7;
+        protected override double StaminaDecayBase => 1;
 
         protected override double SkillMultiplier => 10;
 
@@ -65,6 +67,6 @@ namespace UniCircleDifficulty.Skills.Clicking
             return base.CalculateBonusMultiplier();
         }
 
-        public Speed(Mods mods) : base(mods) { }
+        public Clicking(Mods mods) : base(mods) { }
     }
 }
