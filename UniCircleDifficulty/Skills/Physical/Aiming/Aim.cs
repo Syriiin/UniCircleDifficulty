@@ -33,8 +33,7 @@ namespace UniCircleDifficulty.Skills.Physical.Aiming
 
         // Exertion decay rate
         protected override double SpeedDecayBase => 0.15;
-        //protected override double StaminaDecayBase => 0.3;
-        protected override double StaminaDecayBase => 1;
+        protected override double StaminaDecayBase => 0.3;
 
         protected override double SkillMultiplier => 1;
 

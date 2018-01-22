@@ -28,11 +28,11 @@ namespace UniCircleDifficulty.Skills.Physical
 
             // Add to exertion values
             _speed += energyExerted;
-            _stamina += energyExerted;
+            //_stamina += energyExerted;
 
             // Decay exertion values
             _speed *= SpeedDecay(diffPoint.DeltaTime);
-            _stamina *= StaminaDecay(diffPoint.DeltaTime);
+            //_stamina *= StaminaDecay(diffPoint.DeltaTime);
         }
 
         /// <summary>

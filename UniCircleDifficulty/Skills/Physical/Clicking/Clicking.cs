@@ -16,8 +16,7 @@ namespace UniCircleDifficulty.Skills.Physical.Clicking
 
         // Exertion decay rate
         protected override double SpeedDecayBase => 0.3;
-        //protected override double StaminaDecayBase => 0.7;
-        protected override double StaminaDecayBase => 1;
+        protected override double StaminaDecayBase => 0.7;
 
         protected override double SkillMultiplier => 10;
 
