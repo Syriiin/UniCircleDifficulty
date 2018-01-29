@@ -6,6 +6,9 @@ namespace UniCircleDifficulty
 {
     class DifficultyPoint
     {
-        public double Time { get; set; }
+        public double Difficulty { get; set; }
+
+        public double Offset { get; set; }
+        public double DeltaTime { get; set; }
     }
 }

@@ -23,17 +23,6 @@ namespace UniCircleDifficulty.Skills
         protected Mods _mods;
 
         /// <summary>
-        /// Value that represents the current difficulty, including lingering difficulty. 
-        /// This value is taken as the raw difficulty at a given point. Similar to strain in ppv2
-        /// </summary>
-        private double _excertion = 1;
-
-        /// <summary>
-        /// Fraction excertion decays to in 1 second
-        /// </summary>
-        protected abstract double ExcertionDecayBase { get; }
-
-        /// <summary>
         /// List of <see cref="DifficultyPoint"/>s this skill needs to calculate difficulty for the latest point
         /// </summary>
         protected List<TDiffPoint> _currentDiffPoints = new List<TDiffPoint>();
@@ -46,9 +35,9 @@ namespace UniCircleDifficulty.Skills
         protected TDiffPoint GetDifficultyPoint(int objectNum) => _currentDiffPoints.ElementAtOrDefault(_currentDiffPoints.Count - (1 + objectNum));
 
         /// <summary>
-        /// List of difficulty values after processing each object
+        /// List of calculated difficulty points
         /// </summary>
-        private List<double> _diffList = new List<double>();
+        private List<TDiffPoint> _calculatedPoints = new List<TDiffPoint>();
 
         /// <summary>
         /// Multiplier to scale difficulty rating to a consistent value range across skills
@@ -64,12 +53,17 @@ namespace UniCircleDifficulty.Skills
             {
                 // Perhaps instead each should be weighted against the max value
                 // ie. values closer to the max value should contribute more, meaning 5m 1* + 1m 3* makes a 3* map, but 5m 3* makes a 3.5* or something
-                List<double> diffValues = _diffList.OrderByDescending(d => d).ToList();
+                List<TDiffPoint> diffPoints = _calculatedPoints.OrderByDescending(d => d.Difficulty).ToList();
                 double total = 0;
-                for (int i = 0; i < diffValues.Count; i++)
+                double i = 0;
+
+                foreach (TDiffPoint diffPoint in diffPoints)
                 {
-                    total += diffValues[i] * Math.Pow(diff_weight, i);
+                    total += diffPoint.Difficulty * Math.Pow(diff_weight, i);
+                    i += diffPoint.DeltaTime / 400;
                 }
+
+                // Apply difficulty curve and normalise with multiplier
                 return Math.Sqrt(total) * SkillMultiplier;
             }
         }
@@ -101,12 +95,9 @@ namespace UniCircleDifficulty.Skills
             // Update diffpoint pool
             UpdateDifficultyPoints(diffPoint);
 
-            // Decay excertion
-            _excertion *= ExcertionDecay(GetDifficultyPoint(0).Time - GetDifficultyPoint(1)?.Time ?? 0);
-
-            // Calculate difficulty of point
-            double pointDiff = CalculateDiff();
-            _diffList.Add(pointDiff);
+            // Calculate difficulty of point and add to list
+            CalculateDifficulty();
+            _calculatedPoints.Add(diffPoint);
         }
 
         /// <summary>
@@ -116,33 +107,9 @@ namespace UniCircleDifficulty.Skills
         protected abstract void UpdateDifficultyPoints(TDiffPoint diffPoint);
 
         /// <summary>
-        /// Calculates difficulty based on <see cref="_currentDiffPoints"/>
+        /// Calculates and sets difficulty of the current latest diff point with the rest as context
         /// </summary>
-        /// <returns>Total difficulty of the current object</returns>
-        protected double CalculateDiff()
-        {
-            _excertion += CalculateRawDiff();
-            return _excertion * CalculateBonusDiff();
-        }
-
-        /// <summary>
-        /// Calculates the raw difficulty value which is added to <see cref="_excertion"/>
-        /// </summary>
-        /// <returns>Raw difficulty value of the current object</returns>
-        protected abstract double CalculateRawDiff();
-
-        /// <summary>
-        /// Calculates the bonus difficulty multiplier which affects the value added to <see cref="_diffList"/>
-        /// </summary>
-        /// <returns>Bonus difficulty multiplier of the current object</returns>
-        protected virtual double CalculateBonusDiff() => 1;
-
-        /// <summary>
-        /// Calculate multiplier to decay <see cref="_excertion"/> by
-        /// </summary>
-        /// <param name="time">Decay time</param>
-        /// <returns>Amount decayed over time</returns>
-        private double ExcertionDecay(double time) => Math.Pow(ExcertionDecayBase, time / 1000);
+        protected abstract void CalculateDifficulty();
 
         public Skill(Mods mods = Mods.None)
         {

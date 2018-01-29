@@ -3,12 +3,12 @@
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
-namespace UniCircleDifficulty.Skills.Aiming
+namespace UniCircleDifficulty.Skills.Physical.Aiming
 {
     /// <summary>
     /// Skill representing the difficulty of moving your cursor between notes
     /// </summary>
-    class Aim : Skill<AimPoint>
+    class Aim : PhysicalSkill<AimPoint>
     {
         // TODO:
         // - Slider support
@@ -31,10 +31,15 @@ namespace UniCircleDifficulty.Skills.Aiming
         private AimPoint AimPointB => GetDifficultyPoint(1);
         private AimPoint AimPointC => GetDifficultyPoint(2);
 
-        // Excertion decay rate
-        protected override double ExcertionDecayBase => 0.15;
+        // Exertion decay rate
+        protected override double SpeedDecayBase => 0.15;
+        protected override double StaminaDecayBase => 0.3;
 
-        protected override double SkillMultiplier => 0.5;
+        // Exertion weights
+        protected override double SpeedWeight => 1;
+        protected override double StaminaWeight => 1;
+
+        protected override double SkillMultiplier => 1;
 
         public override void ProcessHitObject(HitObject hitObject)
         {
@@ -44,10 +49,13 @@ namespace UniCircleDifficulty.Skills.Aiming
                 return;
             }
 
+            double offset = hitObject.Time / Utils.ModClockRate(_mods);
+
             // Construct aim points from hitobject and call ProcessDifficultyPoint with them
             AimPoint aimPoint = new AimPoint
             {
-                Time = hitObject.Time / Utils.ModClockRate(_mods),
+                DeltaTime = offset - AimPointB?.Offset ?? offset,
+                Offset = offset,
                 X = hitObject.X,
                 Y = hitObject.Y,
                 Radius = Utils.ModRadius(hitObject.Difficulty.CS, _mods)
@@ -73,8 +81,8 @@ namespace UniCircleDifficulty.Skills.Aiming
             }
         }
 
-        // Calculate the raw difficulty of a jump, that is, only concerning the distance and time between the objects
-        protected override double CalculateRawDiff()
+        // Calculate the energy of a jump, that is, only concerning the distance between the objects
+        protected override double CalculateEnergyExerted()
         {
             if (AimPointB == null)  // First object, thus no difficulty
             {
@@ -84,20 +92,12 @@ namespace UniCircleDifficulty.Skills.Aiming
             // Normalised distance at radius 52
             double distance = Utils.NormalisedDistance(AimPointA, AimPointB);
             
-            if (distance == 0)
-            {
-                // No movement means no aim (although there is still stacking but that can be ignored for the most part)
-                return 0;
-            }
-
-            double delay = AimPointA.Time - AimPointB.Time;
-
-            return distance / delay;
+            return distance;
         }
 
         // Calculate the degree to which the angle affects the difficulty of a jump
         // Multiplier of raw difficulty
-        protected override double CalculateBonusDiff()
+        protected override double CalculateSemanticBonus()
         {
             if (AimPointC == null) // This is the second object in the map
             {
@@ -111,7 +111,7 @@ namespace UniCircleDifficulty.Skills.Aiming
                 return 1;
             }
 
-            double prevDelay = AimPointB.Time - AimPointC.Time;   // previous because between object B and C
+            double prevDelay = AimPointB.DeltaTime;   // previous because between object B and C
             double snappiness = Snappiness(prevDelay);
 
             double angleDifficulty = AngleDifficulty(angle, snappiness);

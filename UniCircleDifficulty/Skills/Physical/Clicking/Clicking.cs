@@ -3,21 +3,26 @@
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
-namespace UniCircleDifficulty.Skills.Clicking
+namespace UniCircleDifficulty.Skills.Physical.Clicking
 {
     /// <summary>
     /// Skill representing the difficulty of keeping up with tapping speed of notes
     /// </summary>
-    class Speed : Skill<ClickPoint>
+    class Clicking : PhysicalSkill<ClickPoint>
     {
         // Shortcuts for readability
         private ClickPoint ClickPointA => GetDifficultyPoint(0);
         private ClickPoint ClickPointB => GetDifficultyPoint(1);
 
-        // Excertion decay rate
-        protected override double ExcertionDecayBase => 0.3;
+        // Exertion decay rate
+        protected override double SpeedDecayBase => 0.3;
+        protected override double StaminaDecayBase => 0.7;
 
-        protected override double SkillMultiplier => 5;
+        // Exertion weights
+        protected override double SpeedWeight => 1;
+        protected override double StaminaWeight => 1;
+
+        protected override double SkillMultiplier => 10;
 
         public override void ProcessHitObject(HitObject hitObject)
         {
@@ -27,10 +32,13 @@ namespace UniCircleDifficulty.Skills.Clicking
                 return;
             }
 
+            double offset = hitObject.Time / Utils.ModClockRate(_mods);
+
             // Construct click point from hitobject and call ProcessDifficultyPoint with them
             ClickPoint clickPoint = new ClickPoint
             {
-                Time = hitObject.Time / Utils.ModClockRate(_mods)
+                DeltaTime = offset - ClickPointB?.Offset ?? offset,
+                Offset = offset
             };
 
             ProcessDifficultyPoint(clickPoint);
@@ -48,24 +56,20 @@ namespace UniCircleDifficulty.Skills.Clicking
             }
         }
 
-        protected override double CalculateRawDiff()
+        // Energy exerted in a key press can be taken as a constant since there is no varying pressure or anything
+        protected override double CalculateEnergyExerted()
         {
-            if (ClickPointB == null)  // First object, thus no difficulty
-            {
-                return 0;
-            }
-
             // In ppv2, higher spaced objects are worth more to reward spaced streams.
             // This can is really part of aim, and thus speed is not concerned with it.
-            return 1.0 / (ClickPointA.Time - ClickPointB.Time);
+            return 1;
         }
 
-        protected override double CalculateBonusDiff()
+        protected override double CalculateSemanticBonus()
         {
             // Accuracy difficulty assuming perfect reading (essentially just changes in beat snapping)
-            return base.CalculateBonusDiff();
+            return base.CalculateSemanticBonus();
         }
 
-        public Speed(Mods mods) : base(mods) { }
+        public Clicking(Mods mods) : base(mods) { }
     }
 }

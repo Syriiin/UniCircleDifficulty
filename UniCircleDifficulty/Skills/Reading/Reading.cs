@@ -22,9 +22,6 @@ namespace UniCircleDifficulty.Skills.Reading
         //  - Changes in timing without changes in distance
         //      Old mapping style
 
-        // Reading doesn't really have lingering difficulty. If anything, it gets easier since you're getting used to the hard reading.
-        protected override double ExcertionDecayBase => 0;
-
         protected override double SkillMultiplier => 1;
 
         public override void ProcessHitObject(HitObject hitObject)
@@ -42,7 +39,7 @@ namespace UniCircleDifficulty.Skills.Reading
             throw new NotImplementedException();
         }
 
-        protected override double CalculateRawDiff()
+        protected override void CalculateDifficulty()
         {
             throw new NotImplementedException();
             // Perhaps, for density each note should have a (focal weight) that determins how much it contributes to density
