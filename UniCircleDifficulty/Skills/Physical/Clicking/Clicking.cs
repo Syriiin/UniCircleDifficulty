@@ -18,6 +18,10 @@ namespace UniCircleDifficulty.Skills.Physical.Clicking
         protected override double SpeedDecayBase => 0.3;
         protected override double StaminaDecayBase => 0.7;
 
+        // Exertion weights
+        protected override double SpeedWeight => 1;
+        protected override double StaminaWeight => 1;
+
         protected override double SkillMultiplier => 10;
 
         public override void ProcessHitObject(HitObject hitObject)
@@ -60,10 +64,10 @@ namespace UniCircleDifficulty.Skills.Physical.Clicking
             return 1;
         }
 
-        protected override double CalculateBonusMultiplier()
+        protected override double CalculateSemanticBonus()
         {
             // Accuracy difficulty assuming perfect reading (essentially just changes in beat snapping)
-            return base.CalculateBonusMultiplier();
+            return base.CalculateSemanticBonus();
         }
 
         public Clicking(Mods mods) : base(mods) { }

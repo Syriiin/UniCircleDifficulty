@@ -35,6 +35,10 @@ namespace UniCircleDifficulty.Skills.Physical.Aiming
         protected override double SpeedDecayBase => 0.15;
         protected override double StaminaDecayBase => 0.3;
 
+        // Exertion weights
+        protected override double SpeedWeight => 1;
+        protected override double StaminaWeight => 1;
+
         protected override double SkillMultiplier => 1;
 
         public override void ProcessHitObject(HitObject hitObject)
@@ -93,7 +97,7 @@ namespace UniCircleDifficulty.Skills.Physical.Aiming
 
         // Calculate the degree to which the angle affects the difficulty of a jump
         // Multiplier of raw difficulty
-        protected override double CalculateBonusMultiplier()
+        protected override double CalculateSemanticBonus()
         {
             if (AimPointC == null) // This is the second object in the map
             {

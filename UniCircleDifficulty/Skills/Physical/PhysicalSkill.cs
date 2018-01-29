@@ -6,33 +6,44 @@ using UniCircleTools;
 
 namespace UniCircleDifficulty.Skills.Physical
 {
-    abstract class PhysicalSkill<TDiffPoint> : Skill<TDiffPoint> where TDiffPoint : DifficultyPoint
+    abstract class PhysicalSkill<TDiffPoint> : Skill<TDiffPoint> where TDiffPoint : PhysicalPoint
     {
         // Fraction excertion values decay to in 1 second
         protected abstract double SpeedDecayBase { get; }
         protected abstract double StaminaDecayBase { get; }
 
+        // Weight of exertion values
+        protected abstract double SpeedWeight { get; }
+        protected abstract double StaminaWeight { get; }
+
         // Exertion values
-        private double _speed = 1;
-        private double _stamina = 1;
+        private double _speed = 0;
+        private double _stamina = 0;
 
         protected override void CalculateDifficulty()
         {
-            DifficultyPoint diffPoint = GetDifficultyPoint(0);
+            TDiffPoint diffPoint = GetDifficultyPoint(0);
             // Calculate difficulty and exertion values
             double energyExerted = CalculateEnergyExerted();
-            double bonusMultiplier = CalculateBonusMultiplier();
+            double semanticBonus = CalculateSemanticBonus();
             // Experimental deltatime squaring since exertion doesnt include time anymore.
-            // Also probably want to apply a transformation to exertion values?
-            diffPoint.Difficulty = energyExerted * bonusMultiplier * _speed * _stamina / Math.Pow(diffPoint.DeltaTime, 2);
+            double rawDifficulty = energyExerted / Math.Pow(diffPoint.DeltaTime, 2);
+            double speedBonus = _speed * SpeedWeight;
+            double staminaBonus = _stamina * StaminaWeight;
+
+            diffPoint.Difficulty = rawDifficulty * (semanticBonus + speedBonus + staminaBonus);
+
+            // Data points
+            diffPoint.CurrentSpeed = _speed;
+            diffPoint.CurrentStamina = _stamina;
 
             // Add to exertion values
             _speed += energyExerted;
-            //_stamina += energyExerted;
+            _stamina += energyExerted;
 
-            // Decay exertion values
+            // Decay exertion values (note this is done after exertion values are added so the current action is included in the decay)
             _speed *= SpeedDecay(diffPoint.DeltaTime);
-            //_stamina *= StaminaDecay(diffPoint.DeltaTime);
+            _stamina *= StaminaDecay(diffPoint.DeltaTime);
         }
 
         /// <summary>
@@ -44,11 +55,10 @@ namespace UniCircleDifficulty.Skills.Physical
         protected abstract double CalculateEnergyExerted();
 
         /// <summary>
-        /// Calculates the bonus difficulty multiplier which affects the value added to <see cref="_diffList"/>.
-        /// This value accounts for semantic difficulty beyond
+        /// Calculates the bonus difficulty of an object based on semantics
         /// </summary>
-        /// <returns>Bonus difficulty multiplier of the current object</returns>
-        protected virtual double CalculateBonusMultiplier() => 1;
+        /// <returns>Semantic difficulty multiplier of the current object</returns>
+        protected virtual double CalculateSemanticBonus() => 1;
 
         private double SpeedDecay(double time) => Math.Pow(SpeedDecayBase, time / 1000);
         private double StaminaDecay(double time) => Math.Pow(StaminaDecayBase, time / 1000);
