@@ -47,7 +47,7 @@ namespace UniCircleDifficulty.Skills.Reading
             // Construct visual points from hitobject and call ProcessDifficultyPoint with them
             VisualPoint visualPoint = new VisualPoint
             {
-                Time = hitObject.Time / Utils.ModClockRate(_mods),
+                Offset = hitObject.Time / Utils.ModClockRate(_mods),
                 ApproachTime = hitObject.Time / Utils.ModClockRate(_mods),
                 X = hitObject.X,
                 Y = hitObject.Y,
@@ -70,19 +70,23 @@ namespace UniCircleDifficulty.Skills.Reading
             _currentDiffPoints.Add(visualPoint);
 
             // Remove points that are no longer visible
-            double currentTime = visualPoint.Time - visualPoint.ApproachTime;   // Visual points are processed at the moment they first appear
-            _currentDiffPoints.RemoveAll(vp => vp.Time < currentTime);
+            double currentTime = visualPoint.Offset - visualPoint.ApproachTime;   // Visual points are processed at the moment they first appear
+            _currentDiffPoints.RemoveAll(vp => vp.Offset < currentTime);
         }
 
         protected override void CalculateDifficulty()
         {
+            VisualPoint visualPoint = VisualPointA;
+
             if (_currentDiffPoints.Count == 1)   // Not enough visual points to cause difficulty
             {
-                return 0;
+                visualPoint.Difficulty = 0;
+                return;
             }
 
             double speedBonus = 1;
-            return speedBonus * (AimReading() + RhythmicReading());
+
+            visualPoint.Difficulty = speedBonus * (AimReading() + RhythmicReading());
         }
 
         /// <summary>
@@ -143,8 +147,8 @@ namespace UniCircleDifficulty.Skills.Reading
             double distanceChangeWeight = DistanceChangeWeight(distanceAB, distanceBC);
 
             // Step 2: Determine timing change weight (low timing change = low, increases and caps out exponentially)
-            double delayAB = visualPointA.Time - visualPointB.Time;
-            double delayBC = visualPointB.Time - visualPointC.Time;
+            double delayAB = visualPointA.Offset - visualPointB.Offset;
+            double delayBC = visualPointB.Offset - visualPointC.Offset;
             double delayChangeWeight = DelayChangeWeight(delayAB, delayBC);
 
             // Step 3: Return diff
