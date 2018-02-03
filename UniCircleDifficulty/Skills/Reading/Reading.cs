@@ -11,8 +11,14 @@ namespace UniCircleDifficulty.Skills.Reading
     /// </summary>
     class Reading : Skill<VisualPoint>
     {
+        // Curve constants
+        private const double focal_distance_threshold = 100;
+        private const double focal_distance_curve_harshness = 0.05;  // Higher = quicker change
+
+        private const double overlap_threshold = 25;
+        private const double overlap_curve_harshness = 0.1;
+
         private const double rhythm_distance_curve_harshness = 7;
-        
         private const double rhythm_delay_curve_harshness = 10;
 
         // Shortcuts for readability
@@ -20,21 +26,13 @@ namespace UniCircleDifficulty.Skills.Reading
         private VisualPoint VisualPointB => GetDifficultyPoint(1);
         private VisualPoint VisualPointC => GetDifficultyPoint(2);
 
+        private double FocalTotal => _currentDiffPoints.Sum(vp => vp.FocalWeight);
         private double RhythmicFocalTotal => _currentDiffPoints.Sum(vp => vp.RhythmicFocalWeight);
 
-        // TODO:
-        //  - Density (aim reading)
-        //      Base difficulty, nothing is hard on low density
-        //      Simple streams are easy to read regardless of density
-        //  - Overlap (aim reading)
-        //      Overlapping notes that require movement away inbetween are hard
-        //  - Pattern changes (aim reading)
-        //      This is somewhat accounted for in overlap, but not the changing order
-        //      Repeating overlapping notes with different order
-        //  - Changes in timing without changes in distance (rhythm reading)
-        //      Old mapping style
+        private double AimReadingWeight => 1;
+        private double RhythmicReadingWeight => 1;
 
-        protected override double SkillMultiplier => 1;
+        protected override double SkillMultiplier => 0.1;
 
         public override void ProcessHitObject(HitObject hitObject)
         {
@@ -48,7 +46,7 @@ namespace UniCircleDifficulty.Skills.Reading
             VisualPoint visualPoint = new VisualPoint
             {
                 Offset = hitObject.Time / Utils.ModClockRate(_mods),
-                ApproachTime = hitObject.Time / Utils.ModClockRate(_mods),
+                ApproachTime = Utils.ModApproachTime(hitObject.Difficulty.AR, _mods) / Utils.ModClockRate(_mods),
                 X = hitObject.X,
                 Y = hitObject.Y,
                 Radius = Utils.ModRadius(hitObject.Difficulty.CS, _mods)
@@ -84,9 +82,11 @@ namespace UniCircleDifficulty.Skills.Reading
                 return;
             }
 
-            double speedBonus = 1;
+            double aimReading = AimReading() * AimReadingWeight;
+            double rhythmicReading = RhythmicReading() * RhythmicReadingWeight;
+            double speedBonus = SpeedBonus(visualPoint.ApproachTime);
 
-            visualPoint.Difficulty = speedBonus * (AimReading() + RhythmicReading());
+            visualPoint.Difficulty = speedBonus * (aimReading + rhythmicReading);
         }
 
         /// <summary>
@@ -95,21 +95,36 @@ namespace UniCircleDifficulty.Skills.Reading
         /// <returns>Difficulty as a double</returns>
         private double AimReading()
         {
-            return 0;
-            // Perhaps, for density each note should have a (focal weight) that determins how much it contributes to density
-            //  Stream notes have low focal weight
+            // Step 1: Assign point a focal weight
+            VisualPointA.FocalWeight = FocalWeight(VisualPointA, VisualPointB);
 
-            // Object density (total focal weight), visual density (focal weight with overlap considered), visual mods, quick reading bonus for fast circles
+            // Step 2: Search for nearest note
+            VisualPoint nearestPoint = _currentDiffPoints.Take(_currentDiffPoints.Count - 1).OrderBy(vp => Utils.NormalisedDistance(vp, VisualPointA)).FirstOrDefault();
 
-            // For the current hit object, it's reading difficulty is made up of many things:
-            //  - The desity (based on weighted sum of focal points currently on the screen)
-            //      But, individual notes of jumps have the same focal value as a single stream
-            //  - If there is another note currently active near this note that is not the immidiate previous one
-            //      If previous, it's just a stack, and that's not hard to read
-            //  - If part of a repeated pattern (with different order)
-            //      This will need more thought on how to detect
+            // Step 3: Calculate overlap bonus
+            double overlapBonus = OverlapBonus(VisualPointA, nearestPoint);
+            
+            return FocalTotal * VisualPointA.FocalWeight * overlapBonus;
+        }
 
-            // Difficulty of a note should take into account difficulty of all active notes (using dict or something)
+        // Focal weight of visual point A. Scales from 0 to 1 with distance
+        private static double FocalWeight(VisualPoint visualPointA, VisualPoint visualPointB)
+        {
+            double distance = Utils.NormalisedDistance(visualPointA, visualPointB);
+
+            return Math.Tanh((distance - focal_distance_threshold) * focal_distance_curve_harshness) / 2 + 0.5;
+        }
+
+        private static double OverlapBonus(VisualPoint visualPointA, VisualPoint visualPointB)
+        {
+            if (visualPointB == null)
+            {
+                return 1;
+            }
+
+            double distance = Utils.NormalisedDistance(visualPointA, visualPointB);
+
+            return Math.Tanh((distance - overlap_threshold) * overlap_curve_harshness) / -2 + 1.5;
         }
 
         /// <summary>
@@ -122,7 +137,7 @@ namespace UniCircleDifficulty.Skills.Reading
             // Rhythmic reading deals with timing changes where there is almost no distance change
             // Timing changes without distance changes (accounts for overlapping notes with varying timings)
 
-            // NOTE: I am unsure if this fits into the idea of map difficulty since identifiing rhythm is intended to be done through music. 
+            // NOTE: I am unsure if this fits into the idea of map difficulty since identifying rhythm is intended to be done through music. 
             //          However time-distance proportions are something that are a staple in almost all maps; so I'm not really sure if it should be relevent or not.
             
             if (_currentDiffPoints.Count < 3)   // Not enough visual points to cause rhythmic difficulty
@@ -176,6 +191,13 @@ namespace UniCircleDifficulty.Skills.Reading
                 delayChange = 1;
             }
             return -Math.Pow(Math.E, -rhythm_delay_curve_harshness * (delayChange - 1)) + 1;
+        }
+
+        private static double SpeedBonus(double approachTime)
+        {
+            // 2x bonus at ar11
+            // 1.082x bonus at ar10.3
+            return Math.Pow(Math.E, (-approachTime + 300) / 40) + 1;
         }
 
         public Reading(Mods mods) : base(mods) { }

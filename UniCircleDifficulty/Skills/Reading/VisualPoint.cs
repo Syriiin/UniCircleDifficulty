@@ -11,6 +11,7 @@ namespace UniCircleDifficulty.Skills.Reading
         public double Radius { get; set; }
         public double ApproachTime { get; set; }
 
+        public double FocalWeight { get; set; }
         public double RhythmicFocalWeight { get; set; }
     }
 }
