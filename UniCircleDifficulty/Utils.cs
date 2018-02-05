@@ -94,5 +94,26 @@ namespace UniCircleDifficulty
 
             return 64 * (1 - 0.7 * (cs - 5) / 5) / 2;
         }
+
+        public static double ModApproachTime(double ar, Mods mods)
+        {
+            if (mods.HasFlag(Mods.HardRock))
+            {
+                ar *= 1.4;
+            }
+            else if (mods.HasFlag(Mods.Easy))
+            {
+                ar *= 0.5;
+            }
+
+            if (ar <= 5)
+            {
+                return 1800 - (ar * 120);
+            }
+            else
+            {
+                return 1950 - (ar * 150);
+            }
+        }
     }
 }
