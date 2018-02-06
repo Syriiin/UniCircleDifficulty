@@ -3,7 +3,6 @@
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
-using UniCircleDifficulty.Skills;
 using UniCircleDifficulty.Skills.Physical.Aiming;
 using UniCircleDifficulty.Skills.Physical.Clicking;
 using UniCircleDifficulty.Skills.Reading;
@@ -12,16 +11,12 @@ namespace UniCircleDifficulty
 {
     public class DifficultyCalculator
     {
-        private Beatmap _beatmap;
+        public Beatmap Beatmap { get; private set; }
         private bool _calculated;
 
-        private Aim _aim;
-        private Clicking _clicking;
-        private Reading _reading;
-
-        public double AimDifficulty { get => _aim.Value; }
-        public double SpeedDifficulty { get => _clicking.Value; }
-        public double ReadingDifficulty { get => _reading.Value; }
+        public Aim Aiming { get; }
+        public Clicking Clicking { get; }
+        public Reading Reading { get; }
 
         public double Difficulty {
             get
@@ -30,16 +25,16 @@ namespace UniCircleDifficulty
                 {
                     CalculateDifficulty();
                 }
-                return AimDifficulty + SpeedDifficulty + ReadingDifficulty;
+                return Aiming.Value + Clicking.Value + Reading.Value;
             }
         }
 
         public DifficultyCalculator(Beatmap beatmap, Mods mods = Mods.None)
         {
-            _beatmap = beatmap;
-            _aim = new Aim(mods);
-            _clicking = new Clicking(mods);
-            _reading = new Reading(mods);
+            Beatmap = beatmap;
+            Aiming = new Aim(mods);
+            Clicking = new Clicking(mods);
+            Reading = new Reading(mods);
             _calculated = false;
         }
 
@@ -47,9 +42,9 @@ namespace UniCircleDifficulty
         {
             // Calculates skill difficulties
 
-            _aim.ProcessHitObjectSequence(_beatmap.HitObjects);
-            _clicking.ProcessHitObjectSequence(_beatmap.HitObjects);
-            _reading.ProcessHitObjectSequence(_beatmap.HitObjects);
+            Aiming.ProcessHitObjectSequence(Beatmap.HitObjects);
+            Clicking.ProcessHitObjectSequence(Beatmap.HitObjects);
+            Reading.ProcessHitObjectSequence(Beatmap.HitObjects);
 
             _calculated = true;
         }

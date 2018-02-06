@@ -8,7 +8,7 @@ namespace UniCircleDifficulty.Skills.Physical.Clicking
     /// <summary>
     /// Skill representing the difficulty of keeping up with tapping speed of notes
     /// </summary>
-    class Clicking : PhysicalSkill<ClickPoint>
+    public class Clicking : PhysicalSkill<ClickPoint>
     {
         // Shortcuts for readability
         private ClickPoint ClickPointA => GetDifficultyPoint(0);

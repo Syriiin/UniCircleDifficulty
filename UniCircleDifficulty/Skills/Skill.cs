@@ -10,7 +10,7 @@ namespace UniCircleDifficulty.Skills
     /// <summary>
     /// Represents a specific skill that adds difficulty to a beatmap
     /// </summary>
-    abstract class Skill<TDiffPoint> where TDiffPoint : DifficultyPoint
+    public abstract class Skill<TDiffPoint> where TDiffPoint : DifficultyPoint
     {
         /// <summary>
         /// Base weight for calculating difficulty totals
@@ -37,7 +37,7 @@ namespace UniCircleDifficulty.Skills
         /// <summary>
         /// List of calculated difficulty points
         /// </summary>
-        private List<TDiffPoint> _calculatedPoints = new List<TDiffPoint>();
+        public List<TDiffPoint> CalculatedPoints { get; } = new List<TDiffPoint>();
 
         /// <summary>
         /// Multiplier to scale difficulty rating to a consistent value range across skills
@@ -53,7 +53,7 @@ namespace UniCircleDifficulty.Skills
             {
                 // Perhaps instead each should be weighted against the max value
                 // ie. values closer to the max value should contribute more, meaning 5m 1* + 1m 3* makes a 3* map, but 5m 3* makes a 3.5* or something
-                List<TDiffPoint> diffPoints = _calculatedPoints.OrderByDescending(d => d.Difficulty).ToList();
+                List<TDiffPoint> diffPoints = CalculatedPoints.OrderByDescending(d => d.Difficulty).ToList();
                 double total = 0;
                 double i = 0;
 
@@ -97,7 +97,7 @@ namespace UniCircleDifficulty.Skills
 
             // Calculate difficulty of point and add to list
             CalculateDifficulty();
-            _calculatedPoints.Add(diffPoint);
+            CalculatedPoints.Add(diffPoint);
         }
 
         /// <summary>

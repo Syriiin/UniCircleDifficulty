@@ -4,7 +4,7 @@ using System.Text;
 
 namespace UniCircleDifficulty.Skills.Reading
 {
-    class VisualPoint : DifficultyPoint, ICircle
+    public class VisualPoint : DifficultyPoint, ICircle
     {
         public double X { get; set; }
         public double Y { get; set; }

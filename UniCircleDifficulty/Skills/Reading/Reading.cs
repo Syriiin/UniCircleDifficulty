@@ -9,7 +9,7 @@ namespace UniCircleDifficulty.Skills.Reading
     /// <summary>
     /// Skill representing the difficulty of identifying rhythmic and visual patterns in notes
     /// </summary>
-    class Reading : Skill<VisualPoint>
+    public class Reading : Skill<VisualPoint>
     {
         // Curve constants
         private const double focal_distance_threshold = 100;
