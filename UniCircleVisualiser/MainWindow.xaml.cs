@@ -110,43 +110,33 @@ namespace UniCircleVisualiser
             }
         }
 
+        private void CheckboxMod_Changed(object sender, RoutedEventArgs e)
+        {
+            InitaliseCalculator();
+        }
+
         private void CheckboxEZ_Checked(object sender, RoutedEventArgs e)
         {
             checkboxHR.IsChecked = false;
-            InitaliseCalculator();
+            CheckboxMod_Changed(sender, e);
         }
 
         private void CheckboxHR_Checked(object sender, RoutedEventArgs e)
         {
             checkboxEZ.IsChecked = false;
-            InitaliseCalculator();
+            CheckboxMod_Changed(sender, e);
         }
 
         private void CheckboxHT_Checked(object sender, RoutedEventArgs e)
         {
             checkboxDT.IsChecked = false;
-            InitaliseCalculator();
+            CheckboxMod_Changed(sender, e);
         }
 
         private void CheckboxDT_Checked(object sender, RoutedEventArgs e)
         {
             checkboxHT.IsChecked = false;
-            InitaliseCalculator();
-        }
-
-        private void CheckboxHD_Checked(object sender, RoutedEventArgs e)
-        {
-            InitaliseCalculator();
-        }
-
-        private void CheckboxFL_Checked(object sender, RoutedEventArgs e)
-        {
-            InitaliseCalculator();
-        }
-
-        private void CheckboxMod_Unchecked(object sender, RoutedEventArgs e)
-        {
-            InitaliseCalculator();
+            CheckboxMod_Changed(sender, e);
         }
     }
 }

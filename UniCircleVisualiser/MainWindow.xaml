@@ -13,18 +13,18 @@
             <!--Mods-->
             <StackPanel Orientation="Vertical" Margin="5">
                 <Label>Setting mods</Label>
-                <CheckBox Name="checkboxEZ" Unchecked="CheckboxMod_Unchecked" Checked="CheckboxEZ_Checked">EZ</CheckBox>
-                <CheckBox Name="checkboxHR" Unchecked="CheckboxMod_Unchecked" Checked="CheckboxHR_Checked">HR</CheckBox>
+                <CheckBox Name="checkboxEZ" Unchecked="CheckboxMod_Changed" Checked="CheckboxEZ_Checked">EZ</CheckBox>
+                <CheckBox Name="checkboxHR" Unchecked="CheckboxMod_Changed" Checked="CheckboxHR_Checked">HR</CheckBox>
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="5">
                 <Label>Time mods</Label>
-                <CheckBox Name="checkboxHT" Unchecked="CheckboxMod_Unchecked" Checked="CheckboxHT_Checked">HT</CheckBox>
-                <CheckBox Name="checkboxDT" Unchecked="CheckboxMod_Unchecked" Checked="CheckboxDT_Checked">DT</CheckBox>
+                <CheckBox Name="checkboxHT" Unchecked="CheckboxMod_Changed" Checked="CheckboxHT_Checked">HT</CheckBox>
+                <CheckBox Name="checkboxDT" Unchecked="CheckboxMod_Changed" Checked="CheckboxDT_Checked">DT</CheckBox>
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="5">
                 <Label>Visual mods</Label>
-                <CheckBox Name="checkboxHD" Unchecked="CheckboxMod_Unchecked" Checked="CheckboxHD_Checked">HD</CheckBox>
-                <CheckBox Name="checkboxFL" Unchecked="CheckboxMod_Unchecked" Checked="CheckboxFL_Checked">FL</CheckBox>
+                <CheckBox Name="checkboxHD" Unchecked="CheckboxMod_Changed" Checked="CheckboxMod_Changed">HD</CheckBox>
+                <CheckBox Name="checkboxFL" Unchecked="CheckboxMod_Changed" Checked="CheckboxMod_Changed">FL</CheckBox>
             </StackPanel>
             
             <!--Current beatmap-->
