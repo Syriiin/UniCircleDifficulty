@@ -14,7 +14,7 @@ namespace UniCircleDifficulty
         public Beatmap Beatmap { get; private set; }
         private bool _calculated;
 
-        public Aim Aiming { get; }
+        public Aiming Aiming { get; }
         public Clicking Clicking { get; }
         public Reading Reading { get; }
 
@@ -32,7 +32,7 @@ namespace UniCircleDifficulty
         public DifficultyCalculator(Beatmap beatmap, Mods mods = Mods.None)
         {
             Beatmap = beatmap;
-            Aiming = new Aim(mods);
+            Aiming = new Aiming(mods);
             Clicking = new Clicking(mods);
             Reading = new Reading(mods);
             _calculated = false;

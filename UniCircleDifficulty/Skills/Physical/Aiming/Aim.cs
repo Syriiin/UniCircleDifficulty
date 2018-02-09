@@ -8,7 +8,7 @@ namespace UniCircleDifficulty.Skills.Physical.Aiming
     /// <summary>
     /// Skill representing the difficulty of moving your cursor between notes
     /// </summary>
-    public class Aim : PhysicalSkill<AimPoint>
+    public class Aiming : PhysicalSkill<AimPoint>
     {
         // TODO:
         // - Slider support
@@ -151,6 +151,6 @@ namespace UniCircleDifficulty.Skills.Physical.Aiming
             return Math.Tanh(snap_curve_harshness * (delay - snap_threshold));
         }
 
-        public Aim(Mods mods) : base(mods) { }
+        public Aiming(Mods mods) : base(mods) { }
     }
 }
