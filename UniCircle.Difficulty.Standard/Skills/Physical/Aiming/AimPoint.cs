@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace UniCircleDifficulty.Skills.Physical.Aiming
+using UniCircleDifficulty.Skills.Physical;
+
+namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
 {
     public class AimPoint : PhysicalPoint, ICircle
     {

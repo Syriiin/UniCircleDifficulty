@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace UniCircleDifficulty
+namespace UniCircleDifficulty.Skills
 {
-    public class DifficultyPoint
+    public abstract class DifficultyPoint
     {
         public double Difficulty { get; set; }
 

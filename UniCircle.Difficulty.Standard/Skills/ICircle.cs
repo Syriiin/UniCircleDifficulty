@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace UniCircleDifficulty.Skills
+namespace UniCircle.Difficulty.Standard.Skills
 {
     interface ICircle
     {

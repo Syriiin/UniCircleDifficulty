@@ -10,7 +10,7 @@ namespace UniCircleDifficulty.Skills
     /// <summary>
     /// Represents a specific skill that adds difficulty to a beatmap
     /// </summary>
-    public abstract class Skill<TDiffPoint> where TDiffPoint : DifficultyPoint
+    public abstract class Skill<TDiffPoint> : ISkill where TDiffPoint : DifficultyPoint
     {
         /// <summary>
         /// Base weight for calculating difficulty totals
@@ -111,7 +111,13 @@ namespace UniCircleDifficulty.Skills
         /// </summary>
         protected abstract void CalculateDifficulty();
 
-        public Skill(Mods mods = Mods.None)
+        public virtual void Reset()
+        {
+            _currentDiffPoints.Clear();
+            CalculatedPoints.Clear();
+        }
+
+        public void SetMods(Mods mods)
         {
             _mods = mods;
         }

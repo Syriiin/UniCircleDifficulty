@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniCircleTools", "UniCircle
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniCircleVisualiser", "UniCircleVisualiser\UniCircleVisualiser.csproj", "{2E8807C5-4DDB-463A-970F-E85940A1B97C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniCircle.Difficulty.Standard", "UniCircle.Difficulty.Standard\UniCircle.Difficulty.Standard.csproj", "{C5A0F17F-7DDE-4E62-9F8A-E539CB56C4CC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{2E8807C5-4DDB-463A-970F-E85940A1B97C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E8807C5-4DDB-463A-970F-E85940A1B97C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E8807C5-4DDB-463A-970F-E85940A1B97C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5A0F17F-7DDE-4E62-9F8A-E539CB56C4CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5A0F17F-7DDE-4E62-9F8A-E539CB56C4CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5A0F17F-7DDE-4E62-9F8A-E539CB56C4CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5A0F17F-7DDE-4E62-9F8A-E539CB56C4CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

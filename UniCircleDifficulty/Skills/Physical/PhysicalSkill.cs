@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 using UniCircleTools;
 
@@ -63,6 +61,12 @@ namespace UniCircleDifficulty.Skills.Physical
         private double SpeedDecay(double time) => Math.Pow(SpeedDecayBase, time / 1000);
         private double StaminaDecay(double time) => Math.Pow(StaminaDecayBase, time / 1000);
 
-        public PhysicalSkill(Mods mods) : base(mods) { }
+        public override void Reset()
+        {
+            _speed = 0;
+            _stamina = 0;
+
+            base.Reset();
+        }
     }
 }

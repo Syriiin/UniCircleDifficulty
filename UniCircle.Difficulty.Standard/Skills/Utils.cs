@@ -1,9 +1,8 @@
 ﻿using System;
 
 using UniCircleTools;
-using UniCircleDifficulty.Skills;
 
-namespace UniCircleDifficulty
+namespace UniCircle.Difficulty.Standard.Skills
 {
     static class Utils
     {

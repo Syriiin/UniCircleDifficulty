@@ -1,52 +1,57 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
-using UniCircleDifficulty.Skills.Physical.Aiming;
-using UniCircleDifficulty.Skills.Physical.Clicking;
-using UniCircleDifficulty.Skills.Reading;
+using UniCircleDifficulty.Skills;
 
 namespace UniCircleDifficulty
 {
-    public class DifficultyCalculator
+    public abstract class DifficultyCalculator
     {
         public Beatmap Beatmap { get; private set; }
-        private bool _calculated;
 
-        public Aiming Aiming { get; }
-        public Clicking Clicking { get; }
-        public Reading Reading { get; }
+        protected List<ISkill> _skills = new List<ISkill>();
 
-        public double Difficulty {
-            get
+        public virtual double Difficulty => _skills.Sum(skill => skill.Value);
+
+        public void SetBeatmap(Beatmap beatmap)
+        {
+            Reset();
+            Beatmap = beatmap;
+        }
+
+        public void SetMods(Mods mods)
+        {
+            Reset();
+            foreach (ISkill skill in _skills)
             {
-                if (!_calculated)
-                {
-                    CalculateDifficulty();
-                }
-                return Aiming.Value + Clicking.Value + Reading.Value;
+                skill.SetMods(mods);
             }
         }
 
-        public DifficultyCalculator(Beatmap beatmap, Mods mods = Mods.None)
+        public void Reset()
         {
-            Beatmap = beatmap;
-            Aiming = new Aiming(mods);
-            Clicking = new Clicking(mods);
-            Reading = new Reading(mods);
-            _calculated = false;
+            foreach (ISkill skill in _skills)
+            {
+                skill.Reset();
+            }
         }
 
         public void CalculateDifficulty()
         {
+            if (Beatmap == null)
+            {
+                return;
+            }
+
             // Calculates skill difficulties
-
-            Aiming.ProcessHitObjectSequence(Beatmap.HitObjects);
-            Clicking.ProcessHitObjectSequence(Beatmap.HitObjects);
-            Reading.ProcessHitObjectSequence(Beatmap.HitObjects);
-
-            _calculated = true;
+            foreach (ISkill skill in _skills)
+            {
+                skill.ProcessHitObjectSequence(Beatmap.HitObjects);
+            }
         }
     }
 }

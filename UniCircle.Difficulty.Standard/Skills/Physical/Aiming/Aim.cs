@@ -1,9 +1,10 @@
 ﻿using System;
 
+using UniCircleDifficulty.Skills.Physical;
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
-namespace UniCircleDifficulty.Skills.Physical.Aiming
+namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
 {
     /// <summary>
     /// Skill representing the difficulty of moving your cursor between notes
@@ -150,7 +151,5 @@ namespace UniCircleDifficulty.Skills.Physical.Aiming
         {
             return Math.Tanh(snap_curve_harshness * (delay - snap_threshold));
         }
-
-        public Aiming(Mods mods) : base(mods) { }
     }
 }

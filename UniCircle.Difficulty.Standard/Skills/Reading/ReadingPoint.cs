@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace UniCircleDifficulty.Skills.Reading
+using UniCircleDifficulty.Skills;
+
+namespace UniCircle.Difficulty.Standard.Skills.Visual
 {
-    public class VisualPoint : DifficultyPoint, ICircle
+    public class ReadingPoint : DifficultyPoint, ICircle
     {
         public double X { get; set; }
         public double Y { get; set; }

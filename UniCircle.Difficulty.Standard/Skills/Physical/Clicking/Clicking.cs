@@ -1,9 +1,10 @@
 ﻿using System;
 
+using UniCircleDifficulty.Skills.Physical;
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
-namespace UniCircleDifficulty.Skills.Physical.Clicking
+namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
 {
     /// <summary>
     /// Skill representing the difficulty of keeping up with tapping speed of notes
@@ -69,7 +70,5 @@ namespace UniCircleDifficulty.Skills.Physical.Clicking
             // Accuracy difficulty assuming perfect reading (essentially just changes in beat snapping)
             return base.CalculateSemanticBonus();
         }
-
-        public Clicking(Mods mods) : base(mods) { }
     }
 }
