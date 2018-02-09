@@ -180,7 +180,7 @@
                 </ScrollViewer>
             </Border>
 
-            <DataGrid Grid.Column="1" Grid.Row="0" Name="dataGridAimPoint" AutoGenerateColumns="False">
+            <DataGrid Grid.Column="1" Grid.Row="0" Name="dataGridAimPoint" IsReadOnly="True" AutoGenerateColumns="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Offset" Binding="{Binding Offset, StringFormat={}{0:0}}" SortDirection="Ascending" />
                     <DataGridTextColumn Header="Speed" Binding="{Binding CurrentSpeed, StringFormat={}{0:n3}}" />
@@ -188,7 +188,7 @@
                     <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty, StringFormat={}{0:n3}}" />
                 </DataGrid.Columns>
             </DataGrid>
-            <DataGrid Grid.Column="1" Grid.Row="1" Name="dataGridClickPoint" AutoGenerateColumns="False">
+            <DataGrid Grid.Column="1" Grid.Row="1" Name="dataGridClickPoint" IsReadOnly="True" AutoGenerateColumns="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Offset" Binding="{Binding Offset, StringFormat={}{0:0}}" SortDirection="Ascending" />
                     <DataGridTextColumn Header="Speed" Binding="{Binding CurrentSpeed, StringFormat={}{0:n3}}" />
@@ -196,7 +196,7 @@
                     <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty, StringFormat={}{0:n3}}" />
                 </DataGrid.Columns>
             </DataGrid>
-            <DataGrid Grid.Column="1" Grid.Row="2" Name="dataGridVisualPoint" AutoGenerateColumns="False">
+            <DataGrid Grid.Column="1" Grid.Row="2" Name="dataGridVisualPoint" IsReadOnly="True" AutoGenerateColumns="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Offset" Binding="{Binding Offset, StringFormat={}{0:0}}" SortDirection="Ascending" />
                     <DataGridTextColumn Header="Density Weight" Binding="{Binding FocalWeight, StringFormat={}{0:n3}}" />
