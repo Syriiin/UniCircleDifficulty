@@ -4,7 +4,7 @@ using System.Text;
 
 namespace UniCircleDifficulty.Skills.Physical
 {
-    class PhysicalPoint : DifficultyPoint
+    public class PhysicalPoint : DifficultyPoint
     {
         // Data points
         public double CurrentSpeed { get; set; }

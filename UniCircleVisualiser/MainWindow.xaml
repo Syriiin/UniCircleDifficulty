@@ -1,0 +1,209 @@
+﻿<Window x:Class="UniCircleVisualiser.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UniCircleVisualiser"
+        mc:Ignorable="d"
+        Title="UniCircle Visualiser" MinHeight="400" MinWidth="800" Height="600" Width="1200" ResizeMode="CanResize">
+    <DockPanel Margin="5">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="5">
+            <Button Width="100" Margin="5" Click="OpenButton_Click">Open Beatmap</Button>
+            
+            <!--Mods-->
+            <StackPanel Orientation="Vertical" Margin="5">
+                <Label>Setting mods</Label>
+                <CheckBox Name="checkboxEZ" Unchecked="CheckboxMod_Changed" Checked="CheckboxEZ_Checked">EZ</CheckBox>
+                <CheckBox Name="checkboxHR" Unchecked="CheckboxMod_Changed" Checked="CheckboxHR_Checked">HR</CheckBox>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="5">
+                <Label>Time mods</Label>
+                <CheckBox Name="checkboxHT" Unchecked="CheckboxMod_Changed" Checked="CheckboxHT_Checked">HT</CheckBox>
+                <CheckBox Name="checkboxDT" Unchecked="CheckboxMod_Changed" Checked="CheckboxDT_Checked">DT</CheckBox>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="5">
+                <Label>Visual mods</Label>
+                <CheckBox Name="checkboxHD" Unchecked="CheckboxMod_Changed" Checked="CheckboxMod_Changed">HD</CheckBox>
+                <CheckBox Name="checkboxFL" Unchecked="CheckboxMod_Changed" Checked="CheckboxMod_Changed">FL</CheckBox>
+            </StackPanel>
+            
+            <!--Current beatmap-->
+            <TextBlock Name="textBlockOpenBeatmap" VerticalAlignment="Center" FontWeight="Bold" TextWrapping="WrapWithOverflow" />
+            
+            <!--Difficulty labels-->
+            <Label Name="labelAimingDifficulty" VerticalAlignment="Center" FontSize="14" />
+            <Label Name="labelClickingDifficulty" VerticalAlignment="Center" FontSize="14" />
+            <Label Name="labelReadingDifficulty" VerticalAlignment="Center" FontSize="14" />
+        </StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Grid.Row="0" BorderThickness="1" BorderBrush="Gainsboro">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="5">
+                        <!--Definitions-->
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--Skill title-->
+                        <Label Grid.Row="0" Grid.Column="0" FontWeight="Bold">Aiming</Label>
+                    
+                        <!--Skill variables-->
+                        <Label Grid.Row="1">Skill multiplier</Label>
+                        <TextBox Grid.Row="1" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="2">Speed decay</Label>
+                        <TextBox Grid.Row="2" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="3">Stamina decay</Label>
+                        <TextBox Grid.Row="3" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="4">Speed weight</Label>
+                        <TextBox Grid.Row="4" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="5">Stamina weight</Label>
+                        <TextBox Grid.Row="5" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="6">Angle weight</Label>
+                        <TextBox Grid.Row="6" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="7">Steadiness weight</Label>
+                        <TextBox Grid.Row="7" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="8">Snappiness threshold</Label>
+                        <TextBox Grid.Row="8" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="9">Snappiness harshness</Label>
+                        <TextBox Grid.Row="9" Grid.Column="1"></TextBox>
+                    </Grid>
+                </ScrollViewer>
+            </Border>
+
+            <Border Grid.Column="0" Grid.Row="1" BorderThickness="1" BorderBrush="Gainsboro">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="5">
+                        <!--Definitions-->
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--Skill title-->
+                        <Label Grid.Row="0" Grid.Column="0" FontWeight="Bold">Clicking</Label>
+
+                        <!--Skill variables-->
+                        <Label Grid.Row="1">Skill multiplier</Label>
+                        <TextBox Grid.Row="1" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="2">Speed decay</Label>
+                        <TextBox Grid.Row="2" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="3">Stamina decay</Label>
+                        <TextBox Grid.Row="3" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="4">Speed weight</Label>
+                        <TextBox Grid.Row="4" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="5">Stamina weight</Label>
+                        <TextBox Grid.Row="5" Grid.Column="1"></TextBox>
+                    </Grid>
+                </ScrollViewer>
+            </Border>
+
+            <Border Grid.Column="0" Grid.Row="2" BorderThickness="1" BorderBrush="Gainsboro">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="5">
+                        <!--Definitions-->
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--Skill title-->
+                        <Label Grid.Row="0" Grid.Column="0" FontWeight="Bold">Reading</Label>
+
+                        <!--Skill variables-->
+                        <Label Grid.Row="1">Skill multiplier</Label>
+                        <TextBox Grid.Row="1" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="2">Aim reading weight</Label>
+                        <TextBox Grid.Row="2" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="3">Rhythm reading weight</Label>
+                        <TextBox Grid.Row="3" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="4">Focal distance threshold</Label>
+                        <TextBox Grid.Row="4" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="5">Focal distance harshness</Label>
+                        <TextBox Grid.Row="5" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="6">Overlap threshold</Label>
+                        <TextBox Grid.Row="6" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="7">Overlap harshness</Label>
+                        <TextBox Grid.Row="7" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="8">Rhythm distance harshness</Label>
+                        <TextBox Grid.Row="8" Grid.Column="1"></TextBox>
+                        <Label Grid.Row="9">Rhythm delay harshness</Label>
+                        <TextBox Grid.Row="9" Grid.Column="1"></TextBox>
+                    </Grid>
+                </ScrollViewer>
+            </Border>
+
+            <DataGrid Grid.Column="1" Grid.Row="0" Name="dataGridAimPoint" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Offset" Binding="{Binding Offset, StringFormat={}{0:0}}" SortDirection="Ascending" />
+                    <DataGridTextColumn Header="Speed" Binding="{Binding CurrentSpeed, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="Stamina" Binding="{Binding CurrentStamina, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty, StringFormat={}{0:n3}}" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <DataGrid Grid.Column="1" Grid.Row="1" Name="dataGridClickPoint" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Offset" Binding="{Binding Offset, StringFormat={}{0:0}}" SortDirection="Ascending" />
+                    <DataGridTextColumn Header="Speed" Binding="{Binding CurrentSpeed, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="Stamina" Binding="{Binding CurrentStamina, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty, StringFormat={}{0:n3}}" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <DataGrid Grid.Column="1" Grid.Row="2" Name="dataGridVisualPoint" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Offset" Binding="{Binding Offset, StringFormat={}{0:0}}" SortDirection="Ascending" />
+                    <DataGridTextColumn Header="Density Weight" Binding="{Binding FocalWeight, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="Rhythmic Weight" Binding="{Binding RhythmicFocalWeight, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty, StringFormat={}{0:n3}}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </DockPanel>
+</Window>

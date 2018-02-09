@@ -6,7 +6,7 @@ using UniCircleTools;
 
 namespace UniCircleDifficulty.Skills.Physical
 {
-    abstract class PhysicalSkill<TDiffPoint> : Skill<TDiffPoint> where TDiffPoint : PhysicalPoint
+    public abstract class PhysicalSkill<TDiffPoint> : Skill<TDiffPoint> where TDiffPoint : PhysicalPoint
     {
         // Fraction excertion values decay to in 1 second
         protected abstract double SpeedDecayBase { get; }

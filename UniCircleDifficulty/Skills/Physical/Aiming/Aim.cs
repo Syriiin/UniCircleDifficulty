@@ -8,7 +8,7 @@ namespace UniCircleDifficulty.Skills.Physical.Aiming
     /// <summary>
     /// Skill representing the difficulty of moving your cursor between notes
     /// </summary>
-    class Aim : PhysicalSkill<AimPoint>
+    public class Aim : PhysicalSkill<AimPoint>
     {
         // TODO:
         // - Slider support

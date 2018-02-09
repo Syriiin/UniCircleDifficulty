@@ -4,7 +4,7 @@ using System.Text;
 
 namespace UniCircleDifficulty.Skills.Physical.Clicking
 {
-    class ClickPoint : PhysicalPoint
+    public class ClickPoint : PhysicalPoint
     {
 
     }

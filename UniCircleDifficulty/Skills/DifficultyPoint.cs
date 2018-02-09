@@ -4,7 +4,7 @@ using System.Text;
 
 namespace UniCircleDifficulty
 {
-    class DifficultyPoint
+    public class DifficultyPoint
     {
         public double Difficulty { get; set; }
 
