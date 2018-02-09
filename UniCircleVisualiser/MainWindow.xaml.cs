@@ -4,7 +4,7 @@ using Microsoft.Win32;
 
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
-using UniCircleDifficulty;
+using UniCircle.Difficulty.Standard;
 
 namespace UniCircleVisualiser
 {
@@ -13,24 +13,20 @@ namespace UniCircleVisualiser
     /// </summary>
     public partial class MainWindow : Window
     {
-        private string beatmapPath;
-        private DifficultyCalculator calculator;
-
-        public string LoadedBeatmapTitle => calculator?.Beatmap.Title;
+        private Calculator calculator = new Calculator();
 
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
+
+            dataGridAimPoint.ItemsSource = calculator.Aiming.CalculatedPoints;
+            dataGridClickPoint.ItemsSource = calculator.Clicking.CalculatedPoints;
+            dataGridVisualPoint.ItemsSource = calculator.Reading.CalculatedPoints;
         }
 
-        private void InitaliseCalculator()
+        private Mods GetMods()
         {
-            if (beatmapPath == null) // If beatmapPath is null, a beatmap hasnt been loaded
-            {
-                return;
-            }
-
             Mods mods = Mods.None;
 
             // Settings mods
@@ -42,7 +38,7 @@ namespace UniCircleVisualiser
             {
                 mods |= Mods.HardRock;
             }
-            
+
             // Time mods
             if (checkboxHT.IsChecked ?? false)
             {
@@ -63,21 +59,20 @@ namespace UniCircleVisualiser
                 mods |= Mods.Flashlight;
             }
 
-            calculator = new DifficultyCalculator(new Beatmap(beatmapPath), mods);
-            calculator.CalculateDifficulty();
-
-            textBlockOpenBeatmap.Text = String.Format("{0} - {1} [{2}]", calculator.Beatmap.Artist, calculator.Beatmap.Title, calculator.Beatmap.Version);
-            DisplayData();
+            return mods;
         }
 
         private void Recalculate()
         {
-            if (calculator == null) // If calculator is null, a beatmap hasnt been loaded
+            if (calculator.Beatmap == null)
             {
                 return;
             }
 
+            calculator.SetMods(GetMods());
+
             // TODO: expose skill constants so they can be modified at runtime for testing
+
             calculator.CalculateDifficulty();
 
             DisplayData();
@@ -90,10 +85,10 @@ namespace UniCircleVisualiser
             labelClickingDifficulty.Content = String.Format("Clicking: {0:0.##} stars", calculator.Clicking.Value);
             labelReadingDifficulty.Content = String.Format("Reading: {0:0.##} stars", calculator.Reading.Value);
 
-            // Populate datagrids
-            dataGridAimPoint.ItemsSource = calculator.Aiming.CalculatedPoints;
-            dataGridClickPoint.ItemsSource = calculator.Clicking.CalculatedPoints;
-            dataGridVisualPoint.ItemsSource = calculator.Reading.CalculatedPoints;
+            // Refresh datagrids
+            dataGridAimPoint.Items.Refresh();
+            dataGridClickPoint.Items.Refresh();
+            dataGridVisualPoint.Items.Refresh();
         }
 
         private void OpenButton_Click(object sender, RoutedEventArgs e)
@@ -105,14 +100,15 @@ namespace UniCircleVisualiser
 
             if (openFileDialog.ShowDialog(this) == true)
             {
-                beatmapPath = openFileDialog.FileName;
-                InitaliseCalculator();
+                calculator.SetBeatmap(new Beatmap(openFileDialog.FileName));
+                textBlockOpenBeatmap.Text = String.Format("{0} - {1} [{2}]", calculator.Beatmap.Artist, calculator.Beatmap.Title, calculator.Beatmap.Version);
+                Recalculate();
             }
         }
 
         private void CheckboxMod_Changed(object sender, RoutedEventArgs e)
         {
-            InitaliseCalculator();
+            Recalculate();
         }
 
         private void CheckboxEZ_Checked(object sender, RoutedEventArgs e)

@@ -93,6 +93,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\UniCircle.Difficulty.Standard\UniCircle.Difficulty.Standard.csproj">
+      <Project>{c5a0f17f-7dde-4e62-9f8a-e539cb56c4cc}</Project>
+      <Name>UniCircle.Difficulty.Standard</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UniCircleDifficulty\UniCircleDifficulty.csproj">
       <Project>{cd990cb8-3978-4f5c-9b6a-de681895c24b}</Project>
       <Name>UniCircleDifficulty</Name>
