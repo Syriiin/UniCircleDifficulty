@@ -13,14 +13,14 @@ namespace UniCircle.Difficulty.Standard.Skills.Visual
     public class Reading : Skill<ReadingPoint>
     {
         // Curve constants
-        private const double focal_distance_threshold = 100;
-        private const double focal_distance_curve_harshness = 0.05;  // Higher = quicker change
+        public double FocalDistanceThreshold { get; set; } = 100;
+        public double FocalDistanceCurveHarshness { get; set; } = 0.05;  // Higher = quicker change
 
-        private const double overlap_threshold = 25;
-        private const double overlap_curve_harshness = 0.1;
+        public double OverlapThreshold { get; set; } = 25;
+        public double OverlapCurveHarshness { get; set; } = 0.1;
 
-        private const double rhythm_distance_curve_harshness = 7;
-        private const double rhythm_delay_curve_harshness = 10;
+        public double RhythmDistanceCurveHarshness { get; set; } = 7;
+        public double RhythmDelayCurveHarshness { get; set; } = 10;
 
         // Shortcuts for readability
         private ReadingPoint ReadingPointA => GetDifficultyPoint(0);
@@ -30,10 +30,10 @@ namespace UniCircle.Difficulty.Standard.Skills.Visual
         private double FocalTotal => _currentDiffPoints.Sum(rp => rp.FocalWeight);
         private double RhythmicFocalTotal => _currentDiffPoints.Sum(rp => rp.RhythmicFocalWeight);
 
-        private double AimReadingWeight => 1;
-        private double RhythmicReadingWeight => 1;
+        public double AimReadingWeight { get; set; } = 1;
+        public double RhythmicReadingWeight { get; set; } = 1;
 
-        protected override double SkillMultiplier => 0.1;
+        public override double SkillMultiplier { get; set; } = 0.1;
 
         public override void ProcessHitObject(HitObject hitObject)
         {
@@ -109,14 +109,14 @@ namespace UniCircle.Difficulty.Standard.Skills.Visual
         }
 
         // Focal weight of visual point A. Scales from 0 to 1 with distance
-        private static double FocalWeight(ReadingPoint readingPointA, ReadingPoint readingPointB)
+        private double FocalWeight(ReadingPoint readingPointA, ReadingPoint readingPointB)
         {
             double distance = Utils.NormalisedDistance(readingPointA, readingPointB);
 
-            return Math.Tanh((distance - focal_distance_threshold) * focal_distance_curve_harshness) / 2 + 0.5;
+            return Math.Tanh((distance - FocalDistanceThreshold) * FocalDistanceCurveHarshness) / 2 + 0.5;
         }
 
-        private static double OverlapBonus(ReadingPoint readingPointA, ReadingPoint readingPointB)
+        private double OverlapBonus(ReadingPoint readingPointA, ReadingPoint readingPointB)
         {
             if (readingPointB == null)
             {
@@ -125,7 +125,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Visual
 
             double distance = Utils.NormalisedDistance(readingPointA, readingPointB);
 
-            return Math.Tanh((distance - overlap_threshold) * overlap_curve_harshness) / -2 + 1.5;
+            return Math.Tanh((distance - OverlapThreshold) * OverlapCurveHarshness) / -2 + 1.5;
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Visual
             return RhythmicFocalTotal * ReadingPointA.RhythmicFocalWeight;
         }
 
-        private static double RhythmicFocalWeight(ReadingPoint readingPointA, ReadingPoint readingPointB, ReadingPoint readingPointC)
+        private double RhythmicFocalWeight(ReadingPoint readingPointA, ReadingPoint readingPointB, ReadingPoint readingPointC)
         {
             // Step 1: Determine distance change weight (low distance change = high, decreases and drops off exponentially)
             double distanceAB = Utils.NormalisedDistance(readingPointA, readingPointB);
@@ -172,17 +172,17 @@ namespace UniCircle.Difficulty.Standard.Skills.Visual
         }
 
         // Defines how much the distance change between 3 points affects timing reading
-        private static double DistanceChangeWeight(double distanceAB, double distanceBC)
+        private double DistanceChangeWeight(double distanceAB, double distanceBC)
         {
             // Domain: [1, infinity]
             // Range: [0, 1]
             // TODO: Contemplate using absolute distances instead of ratio. Since distance changes effects are less the further they are from each other
             double distanceChange = Math.Min(distanceAB, distanceBC) == 0 ? double.PositiveInfinity : Math.Max(distanceAB, distanceBC) / Math.Min(distanceAB, distanceBC);
-            return Math.Pow(Math.E, -rhythm_distance_curve_harshness * (distanceChange - 1));
+            return Math.Pow(Math.E, -RhythmDistanceCurveHarshness * (distanceChange - 1));
         }
 
         // Defines how much the delay change between 3 points affects timing reading
-        private static double DelayChangeWeight(double delayAB, double delayBC)
+        private double DelayChangeWeight(double delayAB, double delayBC)
         {
             // Domain: [1, infinity]
             // Range: [0, 1]
@@ -191,10 +191,10 @@ namespace UniCircle.Difficulty.Standard.Skills.Visual
             {
                 delayChange = 1;
             }
-            return -Math.Pow(Math.E, -rhythm_delay_curve_harshness * (delayChange - 1)) + 1;
+            return -Math.Pow(Math.E, -RhythmDelayCurveHarshness * (delayChange - 1)) + 1;
         }
 
-        private static double SpeedBonus(double approachTime)
+        private double SpeedBonus(double approachTime)
         {
             // 2x bonus at ar11
             // 1.082x bonus at ar10.3

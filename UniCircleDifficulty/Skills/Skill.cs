@@ -42,7 +42,7 @@ namespace UniCircleDifficulty.Skills
         /// <summary>
         /// Multiplier to scale difficulty rating to a consistent value range across skills
         /// </summary>
-        protected abstract double SkillMultiplier { get; }
+        public abstract double SkillMultiplier { get; set; }
 
         /// <summary>
         /// Current total difficulty value based on <see cref="_diffList"/>

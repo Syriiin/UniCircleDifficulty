@@ -13,16 +13,16 @@ namespace UniCircleVisualiser
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Calculator calculator = new Calculator();
+        public Calculator Calculator { get; set; } = new Calculator();
 
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
 
-            dataGridAimPoint.ItemsSource = calculator.Aiming.CalculatedPoints;
-            dataGridClickPoint.ItemsSource = calculator.Clicking.CalculatedPoints;
-            dataGridVisualPoint.ItemsSource = calculator.Reading.CalculatedPoints;
+            dataGridAimPoint.ItemsSource = Calculator.Aiming.CalculatedPoints;
+            dataGridClickPoint.ItemsSource = Calculator.Clicking.CalculatedPoints;
+            dataGridVisualPoint.ItemsSource = Calculator.Reading.CalculatedPoints;
         }
 
         private Mods GetMods()
@@ -64,16 +64,16 @@ namespace UniCircleVisualiser
 
         private void Recalculate()
         {
-            if (calculator.Beatmap == null)
+            if (Calculator.Beatmap == null)
             {
                 return;
             }
 
-            calculator.SetMods(GetMods());
+            Calculator.SetMods(GetMods());
 
             // TODO: expose skill constants so they can be modified at runtime for testing
 
-            calculator.CalculateDifficulty();
+            Calculator.CalculateDifficulty();
 
             DisplayData();
         }
@@ -81,9 +81,9 @@ namespace UniCircleVisualiser
         private void DisplayData()
         {
             // Populate Difficulty labels
-            labelAimingDifficulty.Content = String.Format("Aiming: {0:0.##} stars", calculator.Aiming.Value);
-            labelClickingDifficulty.Content = String.Format("Clicking: {0:0.##} stars", calculator.Clicking.Value);
-            labelReadingDifficulty.Content = String.Format("Reading: {0:0.##} stars", calculator.Reading.Value);
+            labelAimingDifficulty.Content = String.Format("Aiming: {0:0.##} stars", Calculator.Aiming.Value);
+            labelClickingDifficulty.Content = String.Format("Clicking: {0:0.##} stars", Calculator.Clicking.Value);
+            labelReadingDifficulty.Content = String.Format("Reading: {0:0.##} stars", Calculator.Reading.Value);
 
             // Refresh datagrids
             dataGridAimPoint.Items.Refresh();
@@ -100,8 +100,8 @@ namespace UniCircleVisualiser
 
             if (openFileDialog.ShowDialog(this) == true)
             {
-                calculator.SetBeatmap(new Beatmap(openFileDialog.FileName));
-                textBlockOpenBeatmap.Text = String.Format("{0} - {1} [{2}]", calculator.Beatmap.Artist, calculator.Beatmap.Title, calculator.Beatmap.Version);
+                Calculator.SetBeatmap(new Beatmap(openFileDialog.FileName));
+                textBlockOpenBeatmap.Text = String.Format("{0} - {1} [{2}]", Calculator.Beatmap.Artist, Calculator.Beatmap.Title, Calculator.Beatmap.Version);
                 Recalculate();
             }
         }
@@ -133,6 +133,11 @@ namespace UniCircleVisualiser
         {
             checkboxHT.IsChecked = false;
             CheckboxMod_Changed(sender, e);
+        }
+
+        private void SkillSetting_SourceUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
+        {
+            Recalculate();
         }
     }
 }

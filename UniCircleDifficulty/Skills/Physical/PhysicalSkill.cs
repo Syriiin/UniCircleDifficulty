@@ -7,12 +7,12 @@ namespace UniCircleDifficulty.Skills.Physical
     public abstract class PhysicalSkill<TDiffPoint> : Skill<TDiffPoint> where TDiffPoint : PhysicalPoint
     {
         // Fraction excertion values decay to in 1 second
-        protected abstract double SpeedDecayBase { get; }
-        protected abstract double StaminaDecayBase { get; }
+        public abstract double SpeedDecayBase { get; set; }
+        public abstract double StaminaDecayBase { get; set; }
 
         // Weight of exertion values
-        protected abstract double SpeedWeight { get; }
-        protected abstract double StaminaWeight { get; }
+        public abstract double SpeedWeight { get; set; }
+        public abstract double StaminaWeight { get; set; }
 
         // Exertion values
         private double _speed = 0;

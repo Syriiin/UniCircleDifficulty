@@ -20,12 +20,12 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
         //      Would buff cutstreams/accelerating streams, deconstruction star style triples, worldwide choppers hard part, etc...
 
         // Bonus constants
-        private const double angle_diff_weight = 0.3;
-        private const double steady_diff_weight = 0.2;
+        public double AngleDiffWeight { get; set; } = 0.3;
+        public double SteadyDiffWeight { get; set; } = 0.2;
 
         // Snappiness constants
-        private const double snap_threshold = 100;
-        private const double snap_curve_harshness = 0.3;  // Higher = quicker change
+        public double SnapThreshold { get; set; } = 100;
+        public double SnapCurveHarshness { get; set; } = 0.3;  // Higher = quicker change
 
         // Shortcuts for readability
         private AimPoint AimPointA => GetDifficultyPoint(0);
@@ -33,14 +33,14 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
         private AimPoint AimPointC => GetDifficultyPoint(2);
 
         // Exertion decay rate
-        protected override double SpeedDecayBase => 0.15;
-        protected override double StaminaDecayBase => 0.3;
+        public override double SpeedDecayBase { get; set; } = 0.15;
+        public override double StaminaDecayBase { get; set; } = 0.3;
 
         // Exertion weights
-        protected override double SpeedWeight => 1;
-        protected override double StaminaWeight => 1;
+        public override double SpeedWeight { get; set; } = 1;
+        public override double StaminaWeight { get; set; } = 1;
 
-        protected override double SkillMultiplier => 1;
+        public override double SkillMultiplier { get; set; } = 1;
 
         public override void ProcessHitObject(HitObject hitObject)
         {
@@ -115,15 +115,15 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
             double prevDelay = AimPointB.DeltaTime;   // previous because between object B and C
             double snappiness = Snappiness(prevDelay);
 
-            double angleDifficulty = AngleDifficulty(angle, snappiness) * angle_diff_weight;
-            double steadinessDifficulty = SteadinessDifficulty(snappiness) * steady_diff_weight;
+            double angleDifficulty = AngleDifficulty(angle, snappiness) * AngleDiffWeight;
+            double steadinessDifficulty = SteadinessDifficulty(snappiness) * SteadyDiffWeight;
 
             return 1 + angleDifficulty + steadinessDifficulty;
         }
 
         // Difficulty of angle depending on snappiness
         // Range: [0, 1]
-        private static double AngleDifficulty(double angle, double snappiness)
+        private double AngleDifficulty(double angle, double snappiness)
         {
             // Difficulty of angles depends on how they are played, wide angles are harder when snapping into, but opposite when flowing into
             // Higher snappiness will result in higher reward for high (more flat) angles, reverse for low snappiness
@@ -133,7 +133,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
         // Difficulty of aiming notes steadily in time with their offsets.
         // Most relevent for spaced streams
         // Range: [0, 1]
-        private static double SteadinessDifficulty(double snappiness)
+        private double SteadinessDifficulty(double snappiness)
         {
             // High snappiness give no bonus
             // Low snappiness (streams) gain a bonus based on (spacing?)
@@ -147,9 +147,9 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
         // Estimate the degree of snappiness in the aim between two objects based on delay. -1 = flow, 1 = snap
         // Different players will play different patterns with more less snappiness, but generally it follows a curve
         // Range: [-1, 1]
-        private static double Snappiness(double delay)
+        private double Snappiness(double delay)
         {
-            return Math.Tanh(snap_curve_harshness * (delay - snap_threshold));
+            return Math.Tanh(SnapCurveHarshness * (delay - SnapThreshold));
         }
     }
 }
