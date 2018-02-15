@@ -115,10 +115,10 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
             double prevDelay = AimPointB.DeltaTime;   // previous because between object B and C
             double snappiness = Snappiness(prevDelay);
 
-            double angleDifficulty = AngleDifficulty(angle, snappiness);
-            double steadinessDifficulty = SteadinessDifficulty(snappiness);
+            double angleDifficulty = AngleDifficulty(angle, snappiness) * angle_diff_weight;
+            double steadinessDifficulty = SteadinessDifficulty(snappiness) * steady_diff_weight;
 
-            return 1 + 0.3 * angleDifficulty + 0.2 * steadinessDifficulty;
+            return 1 + angleDifficulty + steadinessDifficulty;
         }
 
         // Difficulty of angle depending on snappiness
