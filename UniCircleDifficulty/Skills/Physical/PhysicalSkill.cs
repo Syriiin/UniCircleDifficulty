@@ -24,6 +24,15 @@ namespace UniCircleDifficulty.Skills.Physical
             // Calculate difficulty and exertion values
             double energyExerted = CalculateEnergyExerted();
             double semanticBonus = CalculateSemanticBonus();
+
+            // Add to exertion values
+            _speed += energyExerted;
+            _stamina += energyExerted;
+
+            // Decay exertion values (note this is done after exertion values are added so the current action is included in the decay)
+            _speed *= SpeedDecay(diffPoint.DeltaTime);
+            _stamina *= StaminaDecay(diffPoint.DeltaTime);
+
             // Experimental deltatime squaring since exertion doesnt include time anymore.
             double rawDifficulty = energyExerted / Math.Pow(diffPoint.DeltaTime, 2);
             double speedBonus = _speed * SpeedWeight;
@@ -34,14 +43,6 @@ namespace UniCircleDifficulty.Skills.Physical
             // Data points
             diffPoint.CurrentSpeed = _speed;
             diffPoint.CurrentStamina = _stamina;
-
-            // Add to exertion values
-            _speed += energyExerted;
-            _stamina += energyExerted;
-
-            // Decay exertion values (note this is done after exertion values are added so the current action is included in the decay)
-            _speed *= SpeedDecay(diffPoint.DeltaTime);
-            _stamina *= StaminaDecay(diffPoint.DeltaTime);
         }
 
         /// <summary>
