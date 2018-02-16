@@ -2,9 +2,14 @@
 using System.Windows;
 using Microsoft.Win32;
 
+using LiveCharts;
+using LiveCharts.Wpf;
+using LiveCharts.Configurations;
+
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
 using UniCircle.Difficulty.Standard;
+using UniCircleDifficulty.Skills;
 
 namespace UniCircleVisualiser
 {
@@ -14,6 +19,12 @@ namespace UniCircleVisualiser
     public partial class MainWindow : Window
     {
         public Calculator Calculator { get; set; } = new Calculator();
+
+        public SeriesCollection AimingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<DifficultyPoint>().X(p => p.Offset).Y(p => p.Difficulty));
+        public SeriesCollection ClickingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<DifficultyPoint>().X(p => p.Offset).Y(p => p.Difficulty));
+        public SeriesCollection ReadingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<DifficultyPoint>().X(p => p.Offset).Y(p => p.Difficulty));
+
+        public Func<double, string> XFormatter => ms => TimeSpan.FromMilliseconds(ms).ToString(@"mm\:ss\:fff");
 
         public MainWindow()
         {
@@ -71,8 +82,6 @@ namespace UniCircleVisualiser
 
             Calculator.SetMods(GetMods());
 
-            // TODO: expose skill constants so they can be modified at runtime for testing
-
             Calculator.CalculateDifficulty();
 
             DisplayData();
@@ -89,6 +98,32 @@ namespace UniCircleVisualiser
             dataGridAimPoint.Items.Refresh();
             dataGridClickPoint.Items.Refresh();
             dataGridVisualPoint.Items.Refresh();
+            
+            // Draw charts
+            AimingChartSeries.Clear();
+            AimingChartSeries.Add(
+                new LineSeries
+                {
+                    Values = new ChartValues<DifficultyPoint>(Calculator.Aiming.CalculatedPoints),
+                    PointGeometry = null
+                }
+            );
+            ClickingChartSeries.Clear();
+            ClickingChartSeries.Add(
+                new LineSeries
+                {
+                    Values = new ChartValues<DifficultyPoint>(Calculator.Clicking.CalculatedPoints),
+                    PointGeometry = null
+                }
+            );
+            ReadingChartSeries.Clear();
+            ReadingChartSeries.Add(
+                new LineSeries
+                {
+                    Values = new ChartValues<DifficultyPoint>(Calculator.Reading.CalculatedPoints),
+                    PointGeometry = null
+                }
+            );
         }
 
         private void OpenButton_Click(object sender, RoutedEventArgs e)

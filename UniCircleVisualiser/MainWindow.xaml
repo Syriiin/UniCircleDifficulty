@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UniCircleVisualiser"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         Title="UniCircle Visualiser" MinHeight="400" MinWidth="800" Height="600" Width="1200" ResizeMode="CanResize">
     <DockPanel Margin="5">
@@ -204,6 +205,31 @@
                     <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty, StringFormat={}{0:n3}}" />
                 </DataGrid.Columns>
             </DataGrid>
+
+            <lvc:CartesianChart Grid.Column="2" Grid.Row="0" Series="{Binding AimingChartSeries}" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}" Zoom="X" Pan="X">
+                <lvc:CartesianChart.AxisY>
+                    <lvc:Axis Title="Difficulty" MinValue="0" />
+                </lvc:CartesianChart.AxisY>
+                <lvc:CartesianChart.AxisX>
+                    <lvc:Axis Title="Offset" LabelFormatter="{Binding XFormatter}" MinValue="0" />
+                </lvc:CartesianChart.AxisX>
+            </lvc:CartesianChart>
+            <lvc:CartesianChart Grid.Column="2" Grid.Row="1" Series="{Binding ClickingChartSeries}" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}" Zoom="X" Pan="X">
+                <lvc:CartesianChart.AxisY>
+                    <lvc:Axis Title="Difficulty" MinValue="0" />
+                </lvc:CartesianChart.AxisY>
+                <lvc:CartesianChart.AxisX>
+                    <lvc:Axis Title="Offset" LabelFormatter="{Binding XFormatter}" MinValue="0" />
+                </lvc:CartesianChart.AxisX>
+            </lvc:CartesianChart>
+            <lvc:CartesianChart Grid.Column="2" Grid.Row="2" Series="{Binding ReadingChartSeries}" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}" Zoom="X" Pan="X">
+                <lvc:CartesianChart.AxisY>
+                    <lvc:Axis Title="Difficulty" MinValue="0" />
+                </lvc:CartesianChart.AxisY>
+                <lvc:CartesianChart.AxisX>
+                    <lvc:Axis Title="Offset" LabelFormatter="{Binding XFormatter}" MinValue="0" />
+                </lvc:CartesianChart.AxisX>
+            </lvc:CartesianChart>
         </Grid>
     </DockPanel>
 </Window>
