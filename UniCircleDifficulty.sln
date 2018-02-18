@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniCircleDifficulty", "UniCircleDifficulty\UniCircleDifficulty.csproj", "{CD990CB8-3978-4F5C-9B6A-DE681895C24B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniCircle.Difficulty", "UniCircle.Difficulty\UniCircle.Difficulty.csproj", "{CD990CB8-3978-4F5C-9B6A-DE681895C24B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniCircleTools", "UniCircleTools\UniCircleTools\UniCircleTools.csproj", "{0DB7D828-7876-4160-AEAC-48D5BC25904B}"
 EndProject
