@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
-namespace UniCircleDifficulty.Skills
+namespace UniCircle.Difficulty.Skills
 {
     public interface ISkill
     {

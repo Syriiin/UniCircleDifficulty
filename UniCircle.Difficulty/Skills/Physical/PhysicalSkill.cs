@@ -2,7 +2,7 @@
 
 using UniCircleTools;
 
-namespace UniCircleDifficulty.Skills.Physical
+namespace UniCircle.Difficulty.Skills.Physical
 {
     public abstract class PhysicalSkill<TDiffPoint> : Skill<TDiffPoint> where TDiffPoint : PhysicalPoint
     {

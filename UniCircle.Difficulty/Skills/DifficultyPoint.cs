@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UniCircleDifficulty.Skills
+namespace UniCircle.Difficulty.Skills
 {
     public abstract class DifficultyPoint
     {

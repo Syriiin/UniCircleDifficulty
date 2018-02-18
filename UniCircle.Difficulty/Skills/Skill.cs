@@ -5,7 +5,7 @@ using System.Linq;
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
-namespace UniCircleDifficulty.Skills
+namespace UniCircle.Difficulty.Skills
 {
     /// <summary>
     /// Represents a specific skill that adds difficulty to a beatmap

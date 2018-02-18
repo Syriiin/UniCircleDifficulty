@@ -9,7 +9,7 @@ using LiveCharts.Configurations;
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
 using UniCircle.Difficulty.Standard;
-using UniCircleDifficulty.Skills;
+using UniCircle.Difficulty.Skills;
 
 namespace UniCircle.Visualiser
 {

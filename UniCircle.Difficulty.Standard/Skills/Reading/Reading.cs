@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-using UniCircleDifficulty.Skills;
+using UniCircle.Difficulty.Skills;
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
