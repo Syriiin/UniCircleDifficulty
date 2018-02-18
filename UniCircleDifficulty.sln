@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniCircleDifficulty", "UniCircleDifficulty\UniCircleDifficulty.csproj", "{CD990CB8-3978-4F5C-9B6A-DE681895C24B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniCircle.Difficulty", "UniCircle.Difficulty\UniCircle.Difficulty.csproj", "{CD990CB8-3978-4F5C-9B6A-DE681895C24B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniCircleTools", "UniCircleTools\UniCircleTools\UniCircleTools.csproj", "{0DB7D828-7876-4160-AEAC-48D5BC25904B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniCircleVisualiser", "UniCircleVisualiser\UniCircleVisualiser.csproj", "{2E8807C5-4DDB-463A-970F-E85940A1B97C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniCircle.Visualiser", "UniCircle.Visualiser\UniCircle.Visualiser.csproj", "{2E8807C5-4DDB-463A-970F-E85940A1B97C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniCircle.Difficulty.Standard", "UniCircle.Difficulty.Standard\UniCircle.Difficulty.Standard.csproj", "{C5A0F17F-7DDE-4E62-9F8A-E539CB56C4CC}"
 EndProject

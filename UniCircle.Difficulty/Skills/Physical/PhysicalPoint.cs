@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UniCircleDifficulty.Skills.Physical
+namespace UniCircle.Difficulty.Skills.Physical
 {
     public abstract class PhysicalPoint : DifficultyPoint
     {

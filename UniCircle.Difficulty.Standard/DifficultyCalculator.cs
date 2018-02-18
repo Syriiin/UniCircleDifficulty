@@ -1,6 +1,6 @@
 ﻿using System;
 
-using UniCircleDifficulty;
+using UniCircle.Difficulty;
 
 using UniCircle.Difficulty.Standard.Skills.Physical.Aiming;
 using UniCircle.Difficulty.Standard.Skills.Physical.Clicking;

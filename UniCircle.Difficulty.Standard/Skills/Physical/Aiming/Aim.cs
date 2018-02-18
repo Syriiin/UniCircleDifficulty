@@ -1,6 +1,6 @@
 ﻿using System;
 
-using UniCircleDifficulty.Skills.Physical;
+using UniCircle.Difficulty.Skills.Physical;
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
 

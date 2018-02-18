@@ -5,9 +5,9 @@ using System.Linq;
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
-using UniCircleDifficulty.Skills;
+using UniCircle.Difficulty.Skills;
 
-namespace UniCircleDifficulty
+namespace UniCircle.Difficulty
 {
     public abstract class DifficultyCalculator
     {

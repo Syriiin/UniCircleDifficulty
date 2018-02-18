@@ -1,6 +1,6 @@
 ﻿using System;
 
-using UniCircleDifficulty.Skills;
+using UniCircle.Difficulty.Skills;
 
 namespace UniCircle.Difficulty.Standard.Skills.Visual
 {

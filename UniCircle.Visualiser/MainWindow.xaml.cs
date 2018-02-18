@@ -9,9 +9,9 @@ using LiveCharts.Configurations;
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
 using UniCircle.Difficulty.Standard;
-using UniCircleDifficulty.Skills;
+using UniCircle.Difficulty.Skills;
 
-namespace UniCircleVisualiser
+namespace UniCircle.Visualiser
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
