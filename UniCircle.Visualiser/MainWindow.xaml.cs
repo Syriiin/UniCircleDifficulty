@@ -18,7 +18,7 @@ namespace UniCircle.Visualiser
     /// </summary>
     public partial class MainWindow : Window
     {
-        public Calculator Calculator { get; set; } = new Calculator();
+        public DifficultyCalculator Calculator { get; set; } = new DifficultyCalculator();
 
         public SeriesCollection AimingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<DifficultyPoint>().X(p => p.Offset).Y(p => p.Difficulty));
         public SeriesCollection ClickingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<DifficultyPoint>().X(p => p.Offset).Y(p => p.Difficulty));

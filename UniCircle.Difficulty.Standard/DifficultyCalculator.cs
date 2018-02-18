@@ -8,13 +8,13 @@ using UniCircle.Difficulty.Standard.Skills.Visual;
 
 namespace UniCircle.Difficulty.Standard
 {
-    public class Calculator : DifficultyCalculator
+    public class DifficultyCalculator : Difficulty.DifficultyCalculator
     {
         public Aiming Aiming { get; }
         public Clicking Clicking { get; }
         public Reading Reading { get; }
 
-        public Calculator()
+        public DifficultyCalculator()
         {
             Aiming = new Aiming();
             Clicking = new Clicking();
