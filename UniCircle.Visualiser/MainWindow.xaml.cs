@@ -11,7 +11,7 @@ using UniCircleTools.Beatmaps;
 using UniCircle.Difficulty.Standard;
 using UniCircleDifficulty.Skills;
 
-namespace UniCircleVisualiser
+namespace UniCircle.Visualiser
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

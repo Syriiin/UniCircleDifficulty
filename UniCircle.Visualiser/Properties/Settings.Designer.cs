@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace UniCircleVisualiser.Properties
+namespace UniCircle.Visualiser.Properties
 {
 
 
