@@ -38,6 +38,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
             // Construct click point from hitobject and call ProcessDifficultyPoint with them
             ClickPoint clickPoint = new ClickPoint
             {
+                BaseObject = hitObject,
                 DeltaTime = offset - ClickPointB?.Offset ?? offset,
                 Offset = offset
             };

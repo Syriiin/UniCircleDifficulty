@@ -55,6 +55,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
             // Construct aim points from hitobject and call ProcessDifficultyPoint with them
             AimPoint aimPoint = new AimPoint
             {
+                BaseObject = hitObject,
                 DeltaTime = offset - AimPointB?.Offset ?? offset,
                 Offset = offset,
                 X = hitObject.X,

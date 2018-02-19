@@ -46,6 +46,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Visual
             // Construct visual points from hitobject and call ProcessDifficultyPoint with them
             ReadingPoint readingPoint = new ReadingPoint
             {
+                BaseObject = hitObject,
                 Offset = hitObject.Time / Utils.ModClockRate(_mods),
                 ApproachTime = Utils.ModApproachTime(hitObject.Difficulty.AR, _mods) / Utils.ModClockRate(_mods),
                 X = hitObject.X,
