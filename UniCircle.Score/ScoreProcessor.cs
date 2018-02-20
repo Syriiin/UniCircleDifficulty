@@ -14,22 +14,42 @@ namespace UniCircle.Score
         Hit300,
         Hit100,
         Hit50,
-        Miss,
-        Sliderbreak
+        Miss
+    }
+
+    public enum ScoreStyle
+    {
+        V1,
+        V2
     }
 
     public class ScoreProcessor
     {
+        public ScoreStyle ScoreStyle { get; }
         public double Score { get; private set; }
         public int Combo { get; set; }
+        public int MaxCombo { get; set; }
 
         private List<ScoreObject> _remainingScoreObjects = new List<ScoreObject>();
 
         private Beatmap _beatmap;
         private Mods _mods;
 
-        public ScoreProcessor(Beatmap beatmap, Mods mods)
+        private const double aiming_weight = 0.4;
+        private const double clicking_weight = 0.4;
+        private const double reading_weight = 0.2;
+        private const double max_score = 1000000;
+
+        private double aimingPoints = 0;
+        private double maxAimingPoints = 0;
+        private double clickingPoints = 0;
+        private double maxClickingPoints = 0;
+        private double readingPoints = 0;
+        private double maxReadingPoints = 0;
+
+        public ScoreProcessor(Beatmap beatmap, Mods mods, ScoreStyle scoreStyle)
         {
+            ScoreStyle = scoreStyle;
             _beatmap = beatmap;
             _mods = mods;
             ProcessBeatmap();
@@ -43,35 +63,73 @@ namespace UniCircle.Score
                 return;
             }
             _remainingScoreObjects.RemoveAt(0);
-            
-            double difficultyMultiplier = currentObject.AimingDifficulty + currentObject.ClickingDifficulty + currentObject.ReadingDifficulty;
-            // Perhaps change later such that different difficulty sources only give bonus for certain results
-            //  aim => if not break (not miss or sliderbreak)
-            //  click => if not miss (scales with hitvalue)
-            //  read => always (scales with hitvalue)
 
-            double hitValue = 0;
-
-            switch (judgement)
+            if (ScoreStyle == ScoreStyle.V1)
             {
-                case HitJudgement.Hit300:
-                    hitValue = 300;
-                    break;
-                case HitJudgement.Hit100:
-                    hitValue = 100;
-                    break;
-                case HitJudgement.Hit50:
-                    hitValue = 50;
-                    break;
-                case HitJudgement.Sliderbreak:
-                    hitValue = 100;
-                    break;
+                double difficultyMultiplier = currentObject.AimingDifficulty + currentObject.ClickingDifficulty + currentObject.ReadingDifficulty;
+                // Perhaps change later such that different difficulty sources only give bonus for certain results
+
+                double hitValue = PointsForJudgement(judgement);
+
+                // Mods multiplier is considered in difficulty multiplier
+                Score += hitValue + hitValue * difficultyMultiplier * Combo / 25;
+            }
+            else if (ScoreStyle == ScoreStyle.V2)
+            {
+                //  aim => scales with hitrate (perhaps scale with max combo too?)
+                //  click => scales with acc
+                //  read => scales with acc
+                aimingPoints += AimingPoints(judgement);
+                maxAimingPoints += AimingPoints(HitJudgement.Hit300);
+                clickingPoints += ClickingPoints(judgement);
+                maxClickingPoints += ClickingPoints(HitJudgement.Hit300);
+                readingPoints += ReadingPoints(judgement);
+                maxReadingPoints += ReadingPoints(HitJudgement.Hit300);
+
+                // where aim, click and read are portions max possible performance
+                Score = max_score * ((aimingPoints / maxAimingPoints) * aiming_weight + (clickingPoints / maxClickingPoints) * clicking_weight + (readingPoints / maxReadingPoints) * reading_weight);
             }
 
             Combo++;
+            MaxCombo++;
+        }
 
-            // Mods multiplier is considered in difficulty multiplier
-            Score += hitValue + hitValue * difficultyMultiplier * Combo / 25;
+        private double AimingPoints(HitJudgement judgement)
+        {
+            switch (judgement)
+            {
+                case HitJudgement.Hit300:
+                case HitJudgement.Hit100:
+                case HitJudgement.Hit50:
+                    return PointsForJudgement(HitJudgement.Hit300);
+                default:
+                    return 0;
+            }
+        }
+
+        private double ClickingPoints(HitJudgement judgement)
+        {
+            return PointsForJudgement(judgement);
+        }
+
+        private double ReadingPoints(HitJudgement judgement)
+        {
+            return PointsForJudgement(judgement);
+        }
+
+        private double PointsForJudgement(HitJudgement judgement)
+        {
+            switch (judgement)
+            {
+                case HitJudgement.Hit300:
+                    return 300;
+                case HitJudgement.Hit100:
+                    return 100;
+                case HitJudgement.Hit50:
+                    return 50;
+                default:
+                    return 0;
+            }
         }
 
         private void ProcessBeatmap()
