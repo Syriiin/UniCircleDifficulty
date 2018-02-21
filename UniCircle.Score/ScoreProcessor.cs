@@ -66,13 +66,10 @@ namespace UniCircle.Score
 
             if (ScoreStyle == ScoreStyle.V1)
             {
-                double difficultyMultiplier = currentObject.AimingDifficulty + currentObject.ClickingDifficulty + currentObject.ReadingDifficulty;
-                // Perhaps change later such that different difficulty sources only give bonus for certain results
-
-                double hitValue = PointsForJudgement(judgement);
+                double hitValue = AimingPoints(judgement) * currentObject.AimingDifficulty + ClickingPoints(judgement) * currentObject.ClickingDifficulty + ReadingPoints(judgement) * currentObject.ReadingDifficulty;
 
                 // Mods multiplier is considered in difficulty multiplier
-                Score += hitValue + hitValue * difficultyMultiplier * Combo / 25;
+                Score += hitValue + hitValue * Combo / 100;
             }
             else if (ScoreStyle == ScoreStyle.V2)
             {
