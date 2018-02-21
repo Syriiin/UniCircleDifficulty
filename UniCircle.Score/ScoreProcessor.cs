@@ -76,12 +76,12 @@ namespace UniCircle.Score
                 //  aim => scales with hitrate (perhaps scale with max combo too?)
                 //  click => scales with acc
                 //  read => scales with acc
-                aimingPoints += AimingPoints(judgement);
-                maxAimingPoints += AimingPoints(HitJudgement.Hit300);
-                clickingPoints += ClickingPoints(judgement);
-                maxClickingPoints += ClickingPoints(HitJudgement.Hit300);
-                readingPoints += ReadingPoints(judgement);
-                maxReadingPoints += ReadingPoints(HitJudgement.Hit300);
+                aimingPoints += AimingPoints(judgement) * currentObject.AimingDifficulty;
+                maxAimingPoints += AimingPoints(HitJudgement.Hit300) * currentObject.AimingDifficulty;
+                clickingPoints += ClickingPoints(judgement) * currentObject.ClickingDifficulty;
+                maxClickingPoints += ClickingPoints(HitJudgement.Hit300) * currentObject.ClickingDifficulty;
+                readingPoints += ReadingPoints(judgement) * currentObject.ReadingDifficulty;
+                maxReadingPoints += ReadingPoints(HitJudgement.Hit300) * currentObject.ReadingDifficulty;
 
                 // where aim, click and read are portions max possible performance
                 Score = max_score * ((aimingPoints / maxAimingPoints) * aiming_weight + (clickingPoints / maxClickingPoints) * clicking_weight + (readingPoints / maxReadingPoints) * reading_weight);
