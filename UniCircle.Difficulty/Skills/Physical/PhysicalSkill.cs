@@ -33,12 +33,12 @@ namespace UniCircle.Difficulty.Skills.Physical
             _speed *= SpeedDecay(diffPoint.DeltaTime);
             _stamina *= StaminaDecay(diffPoint.DeltaTime);
 
-            // Experimental deltatime squaring since exertion doesnt include time anymore.
-            double rawDifficulty = energyExerted / Math.Pow(diffPoint.DeltaTime, 2);
+            // Perhaps square deltatime since exertion doesnt include time anymore.
+            double rawDifficulty = energyExerted / diffPoint.DeltaTime;
             double speedBonus = _speed * SpeedWeight;
             double staminaBonus = _stamina * StaminaWeight;
 
-            diffPoint.Difficulty = rawDifficulty * (semanticBonus + speedBonus + staminaBonus);
+            diffPoint.Difficulty = rawDifficulty * (1 + semanticBonus + speedBonus + staminaBonus);
 
             // Data points
             diffPoint.CurrentSpeed = _speed;
@@ -57,7 +57,7 @@ namespace UniCircle.Difficulty.Skills.Physical
         /// Calculates the bonus difficulty of an object based on semantics
         /// </summary>
         /// <returns>Semantic difficulty multiplier of the current object</returns>
-        protected virtual double CalculateSemanticBonus() => 1;
+        protected virtual double CalculateSemanticBonus() => 0;
 
         private double SpeedDecay(double time) => Math.Pow(SpeedDecayBase, time / 1000);
         private double StaminaDecay(double time) => Math.Pow(StaminaDecayBase, time / 1000);

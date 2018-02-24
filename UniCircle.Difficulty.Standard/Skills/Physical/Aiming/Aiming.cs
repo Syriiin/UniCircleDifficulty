@@ -104,13 +104,13 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
             if (AimPointC == null) // This is the second object in the map
             {
                 // No angle difficulty, since there is no angle
-                return 1;
+                return 0;
             }
             
             double angle = Utils.Angle(AimPointC, AimPointB, AimPointA);
             if (double.IsNaN(angle))
             {
-                return 1;
+                return 0;
             }
 
             double prevDelay = AimPointB.DeltaTime;   // previous because between object B and C
@@ -119,7 +119,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
             double angleDifficulty = AngleDifficulty(angle, snappiness) * AngleDiffWeight;
             double steadinessDifficulty = SteadinessDifficulty(snappiness) * SteadyDiffWeight;
 
-            return 1 + angleDifficulty + steadinessDifficulty;
+            return angleDifficulty + steadinessDifficulty;
         }
 
         // Difficulty of angle depending on snappiness
