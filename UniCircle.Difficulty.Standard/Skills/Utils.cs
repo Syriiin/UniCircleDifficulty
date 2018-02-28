@@ -6,22 +6,6 @@ namespace UniCircle.Difficulty.Standard.Skills
 {
     static class Utils
     {
-        /// <summary>
-        /// Calculate normalised distance of 2 circles with circle size 52
-        /// </summary>
-        /// <param name="circleA">1st circle</param>
-        /// <param name="circleB">2nd circle</param>
-        /// <returns>Normalised distance</returns>
-        public static double NormalisedDistance(ICircle circleA, ICircle circleB)
-        {
-            // Average CS (to support possible lazer variable CS)
-            double avgRadius = (circleB.Radius + circleA.Radius) / 2;
-            // Ratio of distance to CS
-            double distanceRatio = Distance(circleB, circleA) / avgRadius;
-            // Normalised distance at radius 52
-            return distanceRatio * 52;
-        }
-
         public static double Distance(ICircle circleA, ICircle circleB)
         {
             return Distance(circleA.X, circleA.Y, circleB.X, circleB.Y);

@@ -91,8 +91,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
                 return 0;
             }
             
-            // Normalised distance at radius 52
-            double distance = Utils.NormalisedDistance(AimPointA, AimPointB);
+            double distance = Utils.Distance(AimPointA, AimPointB);
             
             return distance;
         }
@@ -119,7 +118,12 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
             double angleDifficulty = AngleDifficulty(angle, snappiness) * AngleDiffWeight;
             double steadinessDifficulty = SteadinessDifficulty(snappiness) * SteadyDiffWeight;
 
-            return angleDifficulty + steadinessDifficulty;
+            return angleDifficulty + steadinessDifficulty + CircleSizeDifficulty(AimPointA.Radius);
+        }
+
+        private double CircleSizeDifficulty(double radius)
+        {
+            return 52 / radius;
         }
 
         // Difficulty of angle depending on snappiness

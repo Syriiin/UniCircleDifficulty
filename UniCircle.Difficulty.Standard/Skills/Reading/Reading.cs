@@ -101,7 +101,8 @@ namespace UniCircle.Difficulty.Standard.Skills.Visual
             ReadingPointA.FocalWeight = FocalWeight(ReadingPointA, ReadingPointB);
 
             // Step 2: Search for nearest note
-            ReadingPoint nearestPoint = _currentDiffPoints.Take(_currentDiffPoints.Count - 1).OrderBy(rp => Utils.NormalisedDistance(rp, ReadingPointA)).FirstOrDefault();
+            // TODO: make sure nearest point is not part of the same stream of notes. something like weight by focal weights leading back??
+            ReadingPoint nearestPoint = _currentDiffPoints.Take(_currentDiffPoints.Count - 1).OrderBy(rp => Utils.Distance(rp, ReadingPointA)).FirstOrDefault();
 
             // Step 3: Calculate overlap bonus
             double overlapBonus = OverlapBonus(ReadingPointA, nearestPoint);
@@ -112,7 +113,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Visual
         // Focal weight of visual point A. Scales from 0 to 1 with distance
         private double FocalWeight(ReadingPoint readingPointA, ReadingPoint readingPointB)
         {
-            double distance = Utils.NormalisedDistance(readingPointA, readingPointB);
+            double distance = Utils.Distance(readingPointA, readingPointB);
 
             return Math.Tanh((distance - FocalDistanceThreshold) * FocalDistanceCurveHarshness) / 2 + 0.5;
         }
@@ -124,7 +125,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Visual
                 return 1;
             }
 
-            double distance = Utils.NormalisedDistance(readingPointA, readingPointB);
+            double distance = Utils.Distance(readingPointA, readingPointB);
 
             return Math.Tanh((distance - OverlapThreshold) * OverlapCurveHarshness) / -2 + 1.5;
         }
@@ -159,8 +160,8 @@ namespace UniCircle.Difficulty.Standard.Skills.Visual
         private double RhythmicFocalWeight(ReadingPoint readingPointA, ReadingPoint readingPointB, ReadingPoint readingPointC)
         {
             // Step 1: Determine distance change weight (low distance change = high, decreases and drops off exponentially)
-            double distanceAB = Utils.NormalisedDistance(readingPointA, readingPointB);
-            double distanceBC = Utils.NormalisedDistance(readingPointB, readingPointC);
+            double distanceAB = Utils.Distance(readingPointA, readingPointB);
+            double distanceBC = Utils.Distance(readingPointB, readingPointC);
             double distanceChangeWeight = DistanceChangeWeight(distanceAB, distanceBC);
 
             // Step 2: Determine timing change weight (low timing change = low, increases and caps out exponentially)
