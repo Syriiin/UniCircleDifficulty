@@ -50,7 +50,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
                 return;
             }
 
-            double offset = hitObject.Time / Utils.ModClockRate(_mods);
+            double offset = hitObject.Time / Utils.ModClockRate(Mods);
 
             // Construct aim points from hitobject and call ProcessDifficultyPoint with them
             AimPoint aimPoint = new AimPoint
@@ -60,10 +60,10 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
                 Offset = offset,
                 X = hitObject.X,
                 Y = hitObject.Y,
-                Radius = Utils.ModRadius(hitObject.Difficulty.CS, _mods)
+                Radius = Utils.ModRadius(hitObject.Difficulty.CS, Mods)
             };
 
-            if (_mods.HasFlag(Mods.HardRock))
+            if (Mods.HasFlag(Mods.HardRock))
             {
                 aimPoint.Y = -aimPoint.Y + 384; // Flip notes (even though it technically doesnt matter since EVERYTHING is flipped)
             }
@@ -75,11 +75,11 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
 
         protected override void UpdateDifficultyPoints(AimPoint aimPoint)
         {
-            _currentDiffPoints.Add(aimPoint);
+            CurrentDiffPoints.Add(aimPoint);
 
-            if (_currentDiffPoints.Count == 4)
+            if (CurrentDiffPoints.Count == 4)
             {
-                _currentDiffPoints.RemoveAt(0);
+                CurrentDiffPoints.RemoveAt(0);
             }
         }
 

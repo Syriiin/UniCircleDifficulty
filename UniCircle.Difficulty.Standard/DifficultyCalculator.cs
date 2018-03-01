@@ -1,10 +1,6 @@
-﻿using System;
-
-using UniCircle.Difficulty;
-
-using UniCircle.Difficulty.Standard.Skills.Physical.Aiming;
+﻿using UniCircle.Difficulty.Standard.Skills.Physical.Aiming;
 using UniCircle.Difficulty.Standard.Skills.Physical.Clicking;
-using UniCircle.Difficulty.Standard.Skills.Visual;
+using UniCircle.Difficulty.Standard.Skills.Reading;
 
 namespace UniCircle.Difficulty.Standard
 {
@@ -19,9 +15,9 @@ namespace UniCircle.Difficulty.Standard
             Aiming = new Aiming();
             Clicking = new Clicking();
             Reading = new Reading();
-            _skills.Add(Aiming);
-            _skills.Add(Clicking);
-            _skills.Add(Reading);
+            Skills.Add(Aiming);
+            Skills.Add(Clicking);
+            Skills.Add(Reading);
         }
     }
 }

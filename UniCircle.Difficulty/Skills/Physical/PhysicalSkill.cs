@@ -1,7 +1,5 @@
 ﻿using System;
 
-using UniCircleTools;
-
 namespace UniCircle.Difficulty.Skills.Physical
 {
     public abstract class PhysicalSkill<TDiffPoint> : Skill<TDiffPoint> where TDiffPoint : PhysicalPoint
@@ -15,8 +13,8 @@ namespace UniCircle.Difficulty.Skills.Physical
         public abstract double StaminaWeight { get; set; }
 
         // Exertion values
-        private double _speed = 0;
-        private double _stamina = 0;
+        private double _speed;
+        private double _stamina;
 
         protected override void CalculateDifficulty()
         {

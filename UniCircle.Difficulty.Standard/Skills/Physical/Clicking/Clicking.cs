@@ -1,7 +1,4 @@
-﻿using System;
-
-using UniCircle.Difficulty.Skills.Physical;
-using UniCircleTools;
+﻿using UniCircle.Difficulty.Skills.Physical;
 using UniCircleTools.Beatmaps;
 
 namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
@@ -33,7 +30,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
                 return;
             }
 
-            double offset = hitObject.Time / Utils.ModClockRate(_mods);
+            double offset = hitObject.Time / Utils.ModClockRate(Mods);
 
             // Construct click point from hitobject and call ProcessDifficultyPoint with them
             ClickPoint clickPoint = new ClickPoint
@@ -49,12 +46,12 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
         protected override void UpdateDifficultyPoints(ClickPoint clickPoint)
         {
             // Add diffPoint to currentDiffPoints
-            _currentDiffPoints.Add(clickPoint);
+            CurrentDiffPoints.Add(clickPoint);
 
             // Update pool
-            if (_currentDiffPoints.Count == 3)
+            if (CurrentDiffPoints.Count == 3)
             {
-                _currentDiffPoints.RemoveAt(0);
+                CurrentDiffPoints.RemoveAt(0);
             }
         }
 
@@ -69,7 +66,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
         protected override double CalculateSemanticBonus()
         {
             // Accuracy difficulty assuming perfect reading (essentially just changes in beat snapping)
-            return base.CalculateSemanticBonus();
+            return 0;
         }
     }
 }

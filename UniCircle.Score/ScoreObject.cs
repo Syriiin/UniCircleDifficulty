@@ -1,12 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 
 using UniCircleTools.Beatmaps;
 using UniCircle.Difficulty.Skills;
 using UniCircle.Difficulty.Standard.Skills.Physical.Aiming;
 using UniCircle.Difficulty.Standard.Skills.Physical.Clicking;
-using UniCircle.Difficulty.Standard.Skills.Visual;
+using UniCircle.Difficulty.Standard.Skills.Reading;
 
 namespace UniCircle.Score
 {

@@ -15,24 +15,24 @@ namespace UniCircle.Difficulty.Skills
         /// <summary>
         /// Base weight for calculating difficulty totals
         /// </summary>
-        private const double diff_weight = 0.9;
+        private const double DiffWeight = 0.9;
         
         /// <summary>
         /// Mods to consider in hitobject processing
         /// </summary>
-        protected Mods _mods;
+        protected Mods Mods;
 
         /// <summary>
         /// List of <see cref="DifficultyPoint"/>s this skill needs to calculate difficulty for the latest point
         /// </summary>
-        protected List<TDiffPoint> _currentDiffPoints = new List<TDiffPoint>();
+        protected List<TDiffPoint> CurrentDiffPoints = new List<TDiffPoint>();
 
         /// <summary>
-        /// Shortcut method for accessing <see cref="_currentDiffPoints"/> with reverse indexing
+        /// Shortcut method for accessing <see cref="CurrentDiffPoints"/> with reverse indexing
         /// </summary>
         /// <param name="objectNum">Reverse index of object to return</param>
         /// <returns></returns>
-        protected TDiffPoint GetDifficultyPoint(int objectNum) => _currentDiffPoints.ElementAtOrDefault(_currentDiffPoints.Count - (1 + objectNum));
+        protected TDiffPoint GetDifficultyPoint(int objectNum) => CurrentDiffPoints.ElementAtOrDefault(CurrentDiffPoints.Count - (1 + objectNum));
 
         /// <summary>
         /// List of calculated difficulty points
@@ -59,7 +59,7 @@ namespace UniCircle.Difficulty.Skills
 
                 foreach (TDiffPoint diffPoint in diffPoints)
                 {
-                    total += diffPoint.Difficulty * Math.Pow(diff_weight, i);
+                    total += diffPoint.Difficulty * Math.Pow(DiffWeight, i);
                     i += diffPoint.DeltaTime / 400;
                 }
 
@@ -101,7 +101,7 @@ namespace UniCircle.Difficulty.Skills
         }
 
         /// <summary>
-        /// Add <see cref="DifficultyPoint"/> to <see cref="_currentDiffPoints"/> and remove any now irrelevent points
+        /// Add <see cref="DifficultyPoint"/> to <see cref="CurrentDiffPoints"/> and remove any now irrelevent points
         /// </summary>
         /// <param name="diffPoint"><see cref="DifficultyPoint"/> to add</param>
         protected abstract void UpdateDifficultyPoints(TDiffPoint diffPoint);
@@ -113,13 +113,13 @@ namespace UniCircle.Difficulty.Skills
 
         public virtual void Reset()
         {
-            _currentDiffPoints.Clear();
+            CurrentDiffPoints.Clear();
             CalculatedPoints.Clear();
         }
 
         public void SetMods(Mods mods)
         {
-            _mods = mods;
+            Mods = mods;
         }
     }
 }

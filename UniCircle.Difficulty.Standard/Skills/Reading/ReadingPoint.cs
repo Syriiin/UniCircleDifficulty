@@ -1,8 +1,6 @@
-﻿using System;
+﻿using UniCircle.Difficulty.Skills;
 
-using UniCircle.Difficulty.Skills;
-
-namespace UniCircle.Difficulty.Standard.Skills.Visual
+namespace UniCircle.Difficulty.Standard.Skills.Reading
 {
     public class ReadingPoint : DifficultyPoint, ICircle
     {

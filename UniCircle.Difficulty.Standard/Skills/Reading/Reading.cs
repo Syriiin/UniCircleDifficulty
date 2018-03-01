@@ -5,7 +5,7 @@ using UniCircle.Difficulty.Skills;
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
-namespace UniCircle.Difficulty.Standard.Skills.Visual
+namespace UniCircle.Difficulty.Standard.Skills.Reading
 {
     /// <summary>
     /// Skill representing the difficulty of identifying rhythmic and visual patterns in notes
@@ -27,8 +27,8 @@ namespace UniCircle.Difficulty.Standard.Skills.Visual
         private ReadingPoint ReadingPointB => GetDifficultyPoint(1);
         private ReadingPoint ReadingPointC => GetDifficultyPoint(2);
 
-        private double FocalTotal => _currentDiffPoints.Sum(rp => rp.FocalWeight);
-        private double RhythmicFocalTotal => _currentDiffPoints.Sum(rp => rp.RhythmicFocalWeight);
+        private double FocalTotal => CurrentDiffPoints.Sum(rp => rp.FocalWeight);
+        private double RhythmicFocalTotal => CurrentDiffPoints.Sum(rp => rp.RhythmicFocalWeight);
 
         public double AimReadingWeight { get; set; } = 1;
         public double RhythmicReadingWeight { get; set; } = 1;
@@ -47,14 +47,14 @@ namespace UniCircle.Difficulty.Standard.Skills.Visual
             ReadingPoint readingPoint = new ReadingPoint
             {
                 BaseObject = hitObject,
-                Offset = hitObject.Time / Utils.ModClockRate(_mods),
-                ApproachTime = Utils.ModApproachTime(hitObject.Difficulty.AR, _mods) / Utils.ModClockRate(_mods),
+                Offset = hitObject.Time / Utils.ModClockRate(Mods),
+                ApproachTime = Utils.ModApproachTime(hitObject.Difficulty.AR, Mods) / Utils.ModClockRate(Mods),
                 X = hitObject.X,
                 Y = hitObject.Y,
-                Radius = Utils.ModRadius(hitObject.Difficulty.CS, _mods)
+                Radius = Utils.ModRadius(hitObject.Difficulty.CS, Mods)
             };
 
-            if (_mods.HasFlag(Mods.HardRock))
+            if (Mods.HasFlag(Mods.HardRock))
             {
                 readingPoint.Y = -readingPoint.Y + 384; // Flip notes (even though it technically doesnt matter since EVERYTHING is flipped)
             }
@@ -67,18 +67,18 @@ namespace UniCircle.Difficulty.Standard.Skills.Visual
         protected override void UpdateDifficultyPoints(ReadingPoint readingPoint)
         {
             // Add readingPoint to currentDiffPoints
-            _currentDiffPoints.Add(readingPoint);
+            CurrentDiffPoints.Add(readingPoint);
 
             // Remove points that are no longer visible
             double currentTime = readingPoint.Offset - readingPoint.ApproachTime;   // Visual points are processed at the moment they first appear
-            _currentDiffPoints.RemoveAll(rp => rp.Offset < currentTime);
+            CurrentDiffPoints.RemoveAll(rp => rp.Offset < currentTime);
         }
 
         protected override void CalculateDifficulty()
         {
             ReadingPoint readingPoint = ReadingPointA;
 
-            if (_currentDiffPoints.Count == 1)   // Not enough visual points to cause difficulty
+            if (CurrentDiffPoints.Count == 1)   // Not enough visual points to cause difficulty
             {
                 readingPoint.Difficulty = 0;
                 return;
@@ -102,7 +102,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Visual
 
             // Step 2: Search for nearest note
             // TODO: make sure nearest point is not part of the same stream of notes. something like weight by focal weights leading back??
-            ReadingPoint nearestPoint = _currentDiffPoints.Take(_currentDiffPoints.Count - 1).OrderBy(rp => NormalisedDistance(rp, ReadingPointA)).FirstOrDefault();
+            ReadingPoint nearestPoint = CurrentDiffPoints.Take(CurrentDiffPoints.Count - 1).OrderBy(rp => NormalisedDistance(rp, ReadingPointA)).FirstOrDefault();
 
             // Step 3: Calculate overlap bonus
             double overlapBonus = OverlapBonus(ReadingPointA, nearestPoint);
@@ -143,7 +143,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Visual
             // NOTE: I am unsure if this fits into the idea of map difficulty since identifying rhythm is intended to be done through music. 
             //          However time-distance proportions are something that are a staple in almost all maps; so I'm not really sure if it should be relevent or not.
             
-            if (_currentDiffPoints.Count < 3)   // Not enough visual points to cause rhythmic difficulty
+            if (CurrentDiffPoints.Count < 3)   // Not enough visual points to cause rhythmic difficulty
             {
                 return 0;
             }

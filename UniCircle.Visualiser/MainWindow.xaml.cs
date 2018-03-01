@@ -31,9 +31,9 @@ namespace UniCircle.Visualiser
             InitializeComponent();
             DataContext = this;
 
-            dataGridAimPoint.ItemsSource = Calculator.Aiming.CalculatedPoints;
-            dataGridClickPoint.ItemsSource = Calculator.Clicking.CalculatedPoints;
-            dataGridVisualPoint.ItemsSource = Calculator.Reading.CalculatedPoints;
+            DataGridAimPoint.ItemsSource = Calculator.Aiming.CalculatedPoints;
+            DataGridClickPoint.ItemsSource = Calculator.Clicking.CalculatedPoints;
+            DataGridVisualPoint.ItemsSource = Calculator.Reading.CalculatedPoints;
         }
 
         private Mods GetMods()
@@ -95,9 +95,9 @@ namespace UniCircle.Visualiser
             labelReadingDifficulty.Content = String.Format("Reading: {0:0.##} stars", Calculator.Reading.Value);
 
             // Refresh datagrids
-            dataGridAimPoint.Items.Refresh();
-            dataGridClickPoint.Items.Refresh();
-            dataGridVisualPoint.Items.Refresh();
+            DataGridAimPoint.Items.Refresh();
+            DataGridClickPoint.Items.Refresh();
+            DataGridVisualPoint.Items.Refresh();
             
             // Draw charts
             AimingChartSeries.Clear();

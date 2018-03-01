@@ -4,7 +4,7 @@ using UniCircleTools;
 
 namespace UniCircle.Difficulty.Standard.Skills
 {
-    static class Utils
+    internal static class Utils
     {
         public static double Distance(ICircle circleA, ICircle circleB)
         {

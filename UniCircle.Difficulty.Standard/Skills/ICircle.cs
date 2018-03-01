@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace UniCircle.Difficulty.Standard.Skills
+﻿namespace UniCircle.Difficulty.Standard.Skills
 {
-    interface ICircle
+    internal interface ICircle
     {
         double X { get; set; }
         double Y { get; set; }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 
 using UniCircleTools;
@@ -35,17 +34,17 @@ namespace UniCircle.Score
         private Beatmap _beatmap;
         private Mods _mods;
 
-        private const double aiming_weight = 0.4;
-        private const double clicking_weight = 0.4;
-        private const double reading_weight = 0.2;
-        private const double max_score = 1000000;
+        private const double AimingWeight = 0.4;
+        private const double ClickingWeight = 0.4;
+        private const double ReadingWeight = 0.2;
+        private const double MaxScore = 1000000;
 
-        private double aimingPoints = 0;
-        private double maxAimingPoints = 0;
-        private double clickingPoints = 0;
-        private double maxClickingPoints = 0;
-        private double readingPoints = 0;
-        private double maxReadingPoints = 0;
+        private double _aimingPoints;
+        private double _maxAimingPoints;
+        private double _clickingPoints;
+        private double _maxClickingPoints;
+        private double _readingPoints;
+        private double _maxReadingPoints;
 
         public ScoreProcessor(Beatmap beatmap, Mods mods, ScoreStyle scoreStyle)
         {
@@ -76,15 +75,15 @@ namespace UniCircle.Score
                 //  aim => scales with hitrate (perhaps scale with max combo too?)
                 //  click => scales with acc
                 //  read => scales with acc
-                aimingPoints += AimingPoints(judgement) * currentObject.AimingDifficulty;
-                maxAimingPoints += AimingPoints(HitJudgement.Hit300) * currentObject.AimingDifficulty;
-                clickingPoints += ClickingPoints(judgement) * currentObject.ClickingDifficulty;
-                maxClickingPoints += ClickingPoints(HitJudgement.Hit300) * currentObject.ClickingDifficulty;
-                readingPoints += ReadingPoints(judgement) * currentObject.ReadingDifficulty;
-                maxReadingPoints += ReadingPoints(HitJudgement.Hit300) * currentObject.ReadingDifficulty;
+                _aimingPoints += AimingPoints(judgement) * currentObject.AimingDifficulty;
+                _maxAimingPoints += AimingPoints(HitJudgement.Hit300) * currentObject.AimingDifficulty;
+                _clickingPoints += ClickingPoints(judgement) * currentObject.ClickingDifficulty;
+                _maxClickingPoints += ClickingPoints(HitJudgement.Hit300) * currentObject.ClickingDifficulty;
+                _readingPoints += ReadingPoints(judgement) * currentObject.ReadingDifficulty;
+                _maxReadingPoints += ReadingPoints(HitJudgement.Hit300) * currentObject.ReadingDifficulty;
 
                 // where aim, click and read are portions max possible performance
-                Score = max_score * ((aimingPoints / maxAimingPoints) * aiming_weight + (clickingPoints / maxClickingPoints) * clicking_weight + (readingPoints / maxReadingPoints) * reading_weight);
+                Score = MaxScore * ((_aimingPoints / _maxAimingPoints) * AimingWeight + (_clickingPoints / _maxClickingPoints) * ClickingWeight + (_readingPoints / _maxReadingPoints) * ReadingWeight);
             }
 
             Combo++;

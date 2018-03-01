@@ -1,6 +1,4 @@
-﻿using System;
-
-using UniCircleTools.Beatmaps;
+﻿using UniCircleTools.Beatmaps;
 
 namespace UniCircle.Difficulty.Skills
 {

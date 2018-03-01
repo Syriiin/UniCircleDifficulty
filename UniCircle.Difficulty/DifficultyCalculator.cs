@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using UniCircleTools;
@@ -13,9 +12,9 @@ namespace UniCircle.Difficulty
     {
         public Beatmap Beatmap { get; private set; }
 
-        protected List<ISkill> _skills = new List<ISkill>();
+        protected List<ISkill> Skills = new List<ISkill>();
 
-        public virtual double Difficulty => _skills.Sum(skill => skill.Value);
+        public virtual double Difficulty => Skills.Sum(skill => skill.Value);
 
         public void SetBeatmap(Beatmap beatmap)
         {
@@ -26,7 +25,7 @@ namespace UniCircle.Difficulty
         public void SetMods(Mods mods)
         {
             Reset();
-            foreach (ISkill skill in _skills)
+            foreach (ISkill skill in Skills)
             {
                 skill.SetMods(mods);
             }
@@ -34,7 +33,7 @@ namespace UniCircle.Difficulty
 
         public void Reset()
         {
-            foreach (ISkill skill in _skills)
+            foreach (ISkill skill in Skills)
             {
                 skill.Reset();
             }
@@ -48,7 +47,7 @@ namespace UniCircle.Difficulty
             }
 
             // Calculates skill difficulties
-            foreach (ISkill skill in _skills)
+            foreach (ISkill skill in Skills)
             {
                 skill.ProcessHitObjectSequence(Beatmap.HitObjects);
             }
