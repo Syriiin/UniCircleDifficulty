@@ -12,9 +12,6 @@ namespace UniCircle.Difficulty.Skills
     /// </summary>
     public abstract class Skill<TDiffPoint> : ISkill where TDiffPoint : DifficultyPoint
     {
-        /// <summary>
-        /// Base weight for calculating difficulty totals
-        /// </summary>
         private const double DiffWeight = 0.9;
         
         /// <summary>
@@ -23,16 +20,9 @@ namespace UniCircle.Difficulty.Skills
         protected Mods Mods;
 
         /// <summary>
-        /// List of <see cref="DifficultyPoint"/>s this skill needs to calculate difficulty for the latest point
+        /// List of <see cref="DifficultyPoint"/>s this skill uses to calculate difficulty for the latest point
         /// </summary>
         protected List<TDiffPoint> CurrentDiffPoints = new List<TDiffPoint>();
-
-        /// <summary>
-        /// Shortcut method for accessing <see cref="CurrentDiffPoints"/> with reverse indexing
-        /// </summary>
-        /// <param name="objectNum">Reverse index of object to return</param>
-        /// <returns></returns>
-        protected TDiffPoint GetDifficultyPoint(int objectNum) => CurrentDiffPoints.ElementAtOrDefault(CurrentDiffPoints.Count - (1 + objectNum));
 
         /// <summary>
         /// List of calculated difficulty points
@@ -45,19 +35,17 @@ namespace UniCircle.Difficulty.Skills
         public abstract double SkillMultiplier { get; set; }
 
         /// <summary>
-        /// Current total difficulty value based on <see cref="_diffList"/>
+        /// Current total difficulty value based on <see cref="CalculatedPoints"/>
         /// </summary>
         public double Value
         {
             get
             {
-                // Perhaps instead each should be weighted against the max value
-                // ie. values closer to the max value should contribute more, meaning 5m 1* + 1m 3* makes a 3* map, but 5m 3* makes a 3.5* or something
-                List<TDiffPoint> diffPoints = CalculatedPoints.OrderByDescending(d => d.Difficulty).ToList();
+                var diffPoints = CalculatedPoints.OrderByDescending(d => d.Difficulty).ToList();
                 double total = 0;
                 double i = 0;
 
-                foreach (TDiffPoint diffPoint in diffPoints)
+                foreach (var diffPoint in diffPoints)
                 {
                     total += diffPoint.Difficulty * Math.Pow(DiffWeight, i);
                     i += diffPoint.DeltaTime / 400;
@@ -69,19 +57,25 @@ namespace UniCircle.Difficulty.Skills
         }
 
         /// <summary>
-        /// Process multiple <see cref="HitObject"/>s in order provided by the passed <see cref="IEnumerable{HitObject}"/>
+        /// Shortcut method for accessing <see cref="CurrentDiffPoints"/> with reverse indexing
         /// </summary>
-        /// <param name="hitObjects">Collection of HitObjects to process</param>
+        /// <param name="objectNum">Reverse index of object to return</param>
+        protected TDiffPoint GetDifficultyPoint(int objectNum) => CurrentDiffPoints.ElementAtOrDefault(CurrentDiffPoints.Count - (1 + objectNum));
+
+        /// <summary>
+        /// Process multiple <see cref="HitObject"/>s in the order provided by the passed <see cref="IEnumerable{HitObject}"/>
+        /// </summary>
+        /// <param name="hitObjects">Collection of <see cref="HitObject"/>s to process</param>
         public void ProcessHitObjectSequence(IEnumerable<HitObject> hitObjects)
         {
-            foreach (HitObject hitObject in hitObjects)
+            foreach (var hitObject in hitObjects)
             {
                 ProcessHitObject(hitObject);
             }
         }
 
         /// <summary>
-        /// Converts <see cref="HitObject"/>s into <see cref="DifficultyPoint"/>s and calls <see cref="ProcessDifficultyPoint(TDiffPoint)"/> with them
+        /// Process <see cref="HitObject"/> by converting it into <see cref="DifficultyPoint"/>s and calculating difficulty
         /// </summary>
         /// <param name="hitObject">HitObject to process</param>
         public abstract void ProcessHitObject(HitObject hitObject);
@@ -101,22 +95,29 @@ namespace UniCircle.Difficulty.Skills
         }
 
         /// <summary>
-        /// Add <see cref="DifficultyPoint"/> to <see cref="CurrentDiffPoints"/> and remove any now irrelevent points
+        /// Add <see cref="DifficultyPoint"/> to <see cref="CurrentDiffPoints"/> and remove any now unneeded points
         /// </summary>
         /// <param name="diffPoint"><see cref="DifficultyPoint"/> to add</param>
         protected abstract void UpdateDifficultyPoints(TDiffPoint diffPoint);
 
         /// <summary>
-        /// Calculates and sets difficulty of the current latest diff point with the rest as context
+        /// Calculates and sets difficulty of the current latest <see cref="DifficultyPoint"/> with <see cref="CurrentDiffPoints"/> as context
         /// </summary>
         protected abstract void CalculateDifficulty();
 
+        /// <summary>
+        /// Resets skill to default state
+        /// </summary>
         public virtual void Reset()
         {
             CurrentDiffPoints.Clear();
             CalculatedPoints.Clear();
         }
 
+        /// <summary>
+        /// Sets <see cref="Mods"/>
+        /// </summary>
+        /// <param name="mods"><see cref="UniCircleTools.Mods"/> to set</param>
         public void SetMods(Mods mods)
         {
             Mods = mods;
