@@ -4,12 +4,27 @@ using UniCircleTools;
 
 namespace UniCircle.Difficulty.Standard.Skills
 {
+    /// <summary>
+    /// Collection of utility functions used by several skills
+    /// </summary>
     internal static class Utils
     {
+        /// <summary>
+        /// Distance between the centers of 2 circles
+        /// </summary>
+        /// <param name="circleA">First circle</param>
+        /// <param name="circleB">Second circle</param>
         public static double Distance(ICircle circleA, ICircle circleB)
         {
             return Distance(circleA.X, circleA.Y, circleB.X, circleB.Y);
         }
+        /// <summary>
+        /// Distance between 2 points
+        /// </summary>
+        /// <param name="x1">First X</param>
+        /// <param name="y1">First Y</param>
+        /// <param name="x2">Second X</param>
+        /// <param name="y2">Second Y</param>
         public static double Distance(double x1, double y1, double x2, double y2)
         {
             // Pythag
@@ -17,7 +32,7 @@ namespace UniCircle.Difficulty.Standard.Skills
         }
 
         /// <summary>
-        /// Calculate the angle formed by 3 <see cref="AimPoint"/>s in radians
+        /// Calculate the angle formed by 3 <see cref="ICircle"/>s in radians
         /// </summary>
         /// <param name="circleA">1st point</param>
         /// <param name="circleB">2nd point</param>
@@ -27,6 +42,16 @@ namespace UniCircle.Difficulty.Standard.Skills
         {
             return Angle(circleA.X, circleA.Y, circleB.X, circleB.Y, circleC.X, circleC.Y);
         }
+        /// <summary>
+        /// Calculate the angle formed by 3 points in radians
+        /// </summary>
+        /// <param name="x1">First X</param>
+        /// <param name="y1">First Y</param>
+        /// <param name="x2">Second X</param>
+        /// <param name="y2">Second Y</param>
+        /// <param name="x3">Third X</param>
+        /// <param name="y3">Third Y</param>
+        /// <returns>Inner angle</returns>
         public static double Angle(double x1, double y1, double x2, double y2, double x3, double y3)
         {
             // Cosine rule: Cos(C) = a^2 + b^2 - c^2 / 2ab
@@ -40,7 +65,7 @@ namespace UniCircle.Difficulty.Standard.Skills
         }
 
         /// <summary>
-        /// Speed effect of passed mods
+        /// Speed multiplier with passed mods
         /// </summary>
         /// <param name="mods">Mods to apply</param>
         /// <returns>Clock rate</returns>
@@ -78,6 +103,12 @@ namespace UniCircle.Difficulty.Standard.Skills
             return 64 * (1 - 0.7 * (cs - 5) / 5) / 2;
         }
 
+        /// <summary>
+        /// Approach time in ms with passed mods
+        /// </summary>
+        /// <param name="ar"></param>
+        /// <param name="mods"></param>
+        /// <returns>Approach rate in milliseconds</returns>
         public static double ModApproachTime(double ar, Mods mods)
         {
             if (mods.HasFlag(Mods.HardRock))

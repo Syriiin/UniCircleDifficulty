@@ -33,7 +33,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
             double offset = hitObject.Time / Utils.ModClockRate(Mods);
 
             // Construct click point from hitobject and call ProcessDifficultyPoint with them
-            ClickPoint clickPoint = new ClickPoint
+            var clickPoint = new ClickPoint
             {
                 BaseObject = hitObject,
                 DeltaTime = offset - ClickPointB?.Offset ?? offset,

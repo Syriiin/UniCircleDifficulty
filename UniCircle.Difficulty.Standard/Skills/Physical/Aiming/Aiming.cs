@@ -11,14 +11,6 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
     /// </summary>
     public class Aiming : PhysicalSkill<AimPoint>
     {
-        // TODO:
-        // - Slider support
-        //      Add slider support, for slider tick aim, angle from slider end with last tick, distance and speed from slider end, etc..
-        //      May cause problems with maps like big black where sliders can be tapped like circles, perhaps check for ticks instead.
-        // - Spacing changes?
-        //      Create (awkwardness?) to account for massive time-distance equality changes.
-        //      Would buff cutstreams/accelerating streams, deconstruction star style triples, worldwide choppers hard part, etc...
-
         // Bonus constants
         public double AngleDiffWeight { get; set; } = 0.3;
         public double SteadyDiffWeight { get; set; } = 0.2;
@@ -53,7 +45,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
             double offset = hitObject.Time / Utils.ModClockRate(Mods);
 
             // Construct aim points from hitobject and call ProcessDifficultyPoint with them
-            AimPoint aimPoint = new AimPoint
+            var aimPoint = new AimPoint
             {
                 BaseObject = hitObject,
                 DeltaTime = offset - AimPointB?.Offset ?? offset,
@@ -67,8 +59,6 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
             {
                 aimPoint.Y = -aimPoint.Y + 384; // Flip notes (even though it technically doesnt matter since EVERYTHING is flipped)
             }
-
-            // TODO: Process sliderticks into aim points when they are implemented
 
             ProcessDifficultyPoint(aimPoint);
         }

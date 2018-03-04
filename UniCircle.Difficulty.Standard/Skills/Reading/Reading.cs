@@ -44,7 +44,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Reading
             }
 
             // Construct visual points from hitobject and call ProcessDifficultyPoint with them
-            ReadingPoint readingPoint = new ReadingPoint
+            var readingPoint = new ReadingPoint
             {
                 BaseObject = hitObject,
                 Offset = hitObject.Time / Utils.ModClockRate(Mods),
@@ -58,8 +58,6 @@ namespace UniCircle.Difficulty.Standard.Skills.Reading
             {
                 readingPoint.Y = -readingPoint.Y + 384; // Flip notes (even though it technically doesnt matter since EVERYTHING is flipped)
             }
-
-            // TODO: consider reading implications of sliders (create visual points at corners in curve?)
 
             ProcessDifficultyPoint(readingPoint);
         }
@@ -76,7 +74,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Reading
 
         protected override void CalculateDifficulty()
         {
-            ReadingPoint readingPoint = ReadingPointA;
+            var readingPoint = ReadingPointA;
 
             if (CurrentDiffPoints.Count == 1)   // Not enough visual points to cause difficulty
             {
@@ -101,8 +99,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Reading
             ReadingPointA.FocalWeight = FocalWeight(ReadingPointA, ReadingPointB);
 
             // Step 2: Search for nearest note
-            // TODO: make sure nearest point is not part of the same stream of notes. something like weight by focal weights leading back??
-            ReadingPoint nearestPoint = CurrentDiffPoints.Take(CurrentDiffPoints.Count - 1).OrderBy(rp => NormalisedDistance(rp, ReadingPointA)).FirstOrDefault();
+            var nearestPoint = CurrentDiffPoints.Take(CurrentDiffPoints.Count - 1).OrderBy(rp => NormalisedDistance(rp, ReadingPointA)).FirstOrDefault();
 
             // Step 3: Calculate overlap bonus
             double overlapBonus = OverlapBonus(ReadingPointA, nearestPoint);
