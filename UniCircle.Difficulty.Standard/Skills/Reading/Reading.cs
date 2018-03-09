@@ -76,7 +76,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Reading
         {
             var readingPoint = ReadingPointA;
 
-            if (CurrentDiffPoints.Count == 1)   // Not enough visual points to cause difficulty
+            if (CurrentDiffPoints.Count < 2)   // Not enough visual points to cause difficulty
             {
                 readingPoint.Difficulty = 0;
                 return;

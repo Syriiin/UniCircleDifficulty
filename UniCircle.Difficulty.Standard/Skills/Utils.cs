@@ -114,6 +114,11 @@ namespace UniCircle.Difficulty.Standard.Skills
             if (mods.HasFlag(Mods.HardRock))
             {
                 ar *= 1.4;
+
+                if (ar > 10)
+                {
+                    ar = 10;
+                }
             }
             else if (mods.HasFlag(Mods.Easy))
             {
