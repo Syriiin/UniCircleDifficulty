@@ -48,7 +48,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
             var aimPoint = new AimPoint
             {
                 BaseObject = hitObject,
-                DeltaTime = offset - AimPointB?.Offset ?? offset,
+                DeltaTime = offset - AimPointA?.Offset ?? offset,
                 Offset = offset,
                 X = hitObject.X,
                 Y = hitObject.Y,

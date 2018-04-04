@@ -36,7 +36,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
             var clickPoint = new ClickPoint
             {
                 BaseObject = hitObject,
-                DeltaTime = offset - ClickPointB?.Offset ?? offset,
+                DeltaTime = offset - ClickPointA?.Offset ?? offset,
                 Offset = offset
             };
 
