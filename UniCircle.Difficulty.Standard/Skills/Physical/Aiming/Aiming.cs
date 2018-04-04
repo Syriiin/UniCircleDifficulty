@@ -25,8 +25,9 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
         private AimPoint AimPointC => GetDifficultyPoint(2);
 
         // Exertion decay rate
-        public override double SpeedDecayBase { get; set; } = 0.15;
-        public override double StaminaDecayBase { get; set; } = 0.3;
+        public override double SpeedDecayBaseMin { get; set; } = 0.1;
+        public override double StaminaDecayBaseMin { get; set; } = 0.9;
+        public override double ExertionDecayNormaliser { get; set; } = 1;
 
         // Exertion weights
         public override double SpeedWeight { get; set; } = 1;

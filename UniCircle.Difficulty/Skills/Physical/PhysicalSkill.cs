@@ -9,14 +9,19 @@ namespace UniCircle.Difficulty.Skills.Physical
         private double _stamina;
 
         /// <summary>
-        /// Fraction <see cref="_speed"/> decays to in 1 second
+        /// Minimum fraction <see cref="_speed"/> can decay to in 1 second
         /// </summary>
-        public abstract double SpeedDecayBase { get; set; }
+        public abstract double SpeedDecayBaseMin { get; set; }
         
         /// <summary>
-        /// Fraction <see cref="_stamina"/> decays to in 1 second
+        /// Minimum fraction <see cref="_stamina"/> can decay to in 1 second
         /// </summary>
-        public abstract double StaminaDecayBase { get; set; }
+        public abstract double StaminaDecayBaseMin { get; set; }
+
+        /// <summary>
+        /// Value that normalises the decay function to have a reasonable value range
+        /// </summary>
+        public abstract double ExertionDecayNormaliser { get; set; }
 
         // Weight of exertion values
         /// <summary>
@@ -42,8 +47,8 @@ namespace UniCircle.Difficulty.Skills.Physical
             _stamina += energyExerted;
 
             // Decay exertion values (note this is done after exertion values are added so the current action is included in the decay)
-            _speed *= SpeedDecay(diffPoint.DeltaTime);
-            _stamina *= StaminaDecay(diffPoint.DeltaTime);
+            _speed *= SpeedDecay(diffPoint.DeltaTime, energyExerted);
+            _stamina *= StaminaDecay(diffPoint.DeltaTime, energyExerted);
 
             // Perhaps square deltatime since exertion doesnt include time anymore.
             double rawDifficulty = energyExerted / diffPoint.DeltaTime;
@@ -69,8 +74,8 @@ namespace UniCircle.Difficulty.Skills.Physical
         /// <returns>Semantic difficulty multiplier of the current object</returns>
         protected virtual double CalculateSemanticBonus() => 0;
 
-        private double SpeedDecay(double time) => Math.Pow(SpeedDecayBase, time / 1000);
-        private double StaminaDecay(double time) => Math.Pow(StaminaDecayBase, time / 1000);
+        private double SpeedDecay(double time, double energy) => Math.Pow(-(1 - SpeedDecayBaseMin) * Math.Pow(Math.E, -ExertionDecayNormaliser * energy / time) + 1, time / 1000);
+        private double StaminaDecay(double time, double energy) => Math.Pow(-(1 - StaminaDecayBaseMin) * Math.Pow(Math.E, -ExertionDecayNormaliser * energy / time) + 1, time / 1000);
 
         /// <inheritdoc />
         public override void Reset()
