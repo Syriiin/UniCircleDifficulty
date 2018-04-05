@@ -12,10 +12,10 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
         private ClickPoint ClickPointA => GetDifficultyPoint(0);
         private ClickPoint ClickPointB => GetDifficultyPoint(1);
 
-        // Exertion decay rate
-        public override double SpeedDecayBaseMin { get; set; } = 0.1;
-        public override double StaminaDecayBaseMin { get; set; } = 0.9;
-        public override double ExertionDecayNormaliser { get; set; } = 150;
+        // Exertion recovery rate
+        public override double MaxSpeedRecoveryRate { get; set; } = 0.9;
+        public override double MaxStaminaRecoveryRate { get; set; } = 0.1;
+        public override double ExertionNormaliser { get; set; } = 150;
 
         // Exertion weights
         public override double SpeedWeight { get; set; } = 1;

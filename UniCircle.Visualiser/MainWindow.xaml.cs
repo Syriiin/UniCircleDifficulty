@@ -12,7 +12,6 @@ using UniCircle.Difficulty.Standard;
 using UniCircle.Difficulty.Standard.Skills.Physical.Aiming;
 using UniCircle.Difficulty.Standard.Skills.Physical.Clicking;
 using UniCircle.Difficulty.Standard.Skills.Reading;
-using UniCircle.Difficulty.Skills;
 
 namespace UniCircle.Visualiser
 {

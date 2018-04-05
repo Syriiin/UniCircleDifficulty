@@ -75,10 +75,10 @@
                         <!--Skill variables-->
                         <Label Grid.Row="1" Grid.Column="0">Skill multiplier</Label>
                         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.SkillMultiplier, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="2" Grid.Column="0">Speed decay</Label>
-                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.SpeedDecayBaseMin, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="3" Grid.Column="0">Stamina decay</Label>
-                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.StaminaDecayBaseMin, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="2" Grid.Column="0">Speed recovery</Label>
+                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.MaxSpeedRecoveryRate, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="3" Grid.Column="0">Stamina recovery</Label>
+                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.MaxStaminaRecoveryRate, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
                         <Label Grid.Row="4" Grid.Column="0">Speed weight</Label>
                         <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.SpeedWeight, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
                         <Label Grid.Row="5" Grid.Column="0">Stamina weight</Label>
@@ -122,10 +122,10 @@
                         <!--Skill variables-->
                         <Label Grid.Row="1" Grid.Column="0">Skill multiplier</Label>
                         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Calculator.Clicking.SkillMultiplier, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="2" Grid.Column="0">Speed decay</Label>
-                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Calculator.Clicking.SpeedDecayBaseMin, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="3" Grid.Column="0">Stamina decay</Label>
-                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=Calculator.Clicking.StaminaDecayBaseMin, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="2" Grid.Column="0">Speed recovery</Label>
+                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Calculator.Clicking.MaxSpeedRecoveryRate, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="3" Grid.Column="0">Stamina recovery</Label>
+                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=Calculator.Clicking.MaxStaminaRecoveryRate, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
                         <Label Grid.Row="4" Grid.Column="0">Speed weight</Label>
                         <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Path=Calculator.Clicking.SpeedWeight, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
                         <Label Grid.Row="5" Grid.Column="0">Stamina weight</Label>
