@@ -55,7 +55,7 @@ namespace UniCircle.Difficulty.Skills.Physical
             double speedBonus = _speed * SpeedWeight;
             double staminaBonus = _stamina * StaminaWeight;
 
-            diffPoint.Difficulty = rawDifficulty * (1 + semanticBonus + speedBonus + staminaBonus);
+            diffPoint.Difficulty = rawDifficulty * (1 + semanticBonus) * (1 + speedBonus) * (1 + staminaBonus);
 
             // Data points
             diffPoint.CurrentSpeed = _speed;

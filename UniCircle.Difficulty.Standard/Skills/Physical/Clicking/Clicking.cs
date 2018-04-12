@@ -18,10 +18,10 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
         public override double ExertionNormaliser { get; set; } = 150;
 
         // Exertion weights
-        public override double SpeedWeight { get; set; } = 1;
-        public override double StaminaWeight { get; set; } = 1;
+        public override double SpeedWeight { get; set; } = 0.5;
+        public override double StaminaWeight { get; set; } = 0.05;
 
-        public override double SkillMultiplier { get; set; } = 10;
+        public override double SkillMultiplier { get; set; } = 0.32;
 
         public override void ProcessHitObject(HitObject hitObject)
         {
