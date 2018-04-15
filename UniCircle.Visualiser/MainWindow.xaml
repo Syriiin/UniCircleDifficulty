@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:UniCircle.Visualiser"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="UniCircle Visualiser" MinHeight="400" MinWidth="800" Height="600" Width="1200" ResizeMode="CanResize">
+        Title="UniCircle Visualiser" MinHeight="400" MinWidth="800" Height="600" Width="1200" ResizeMode="CanResize" Drop="MainWindow_OnDrop" AllowDrop="True">
     <DockPanel Margin="5">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="5">
             <Button Width="100" Margin="5" Click="OpenButton_Click">Open Beatmap</Button>
@@ -184,25 +184,31 @@
             <DataGrid Grid.Column="1" Grid.Row="0" Name="DataGridAimPoint" IsReadOnly="True" AutoGenerateColumns="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Offset" Binding="{Binding Offset, StringFormat={}{0:0}}" SortDirection="Ascending" />
+                    <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty, StringFormat={}{0:n3}}" />
                     <DataGridTextColumn Header="Speed" Binding="{Binding CurrentSpeed, StringFormat={}{0:n3}}" />
                     <DataGridTextColumn Header="Stamina" Binding="{Binding CurrentStamina, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="Speed Bonus" Binding="{Binding SpeedBonus, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="Stamina Bonus" Binding="{Binding StaminaBonus, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="Semantic Bonus" Binding="{Binding SemanticBonus, StringFormat={}{0:n3}}" />
                 </DataGrid.Columns>
             </DataGrid>
             <DataGrid Grid.Column="1" Grid.Row="1" Name="DataGridClickPoint" IsReadOnly="True" AutoGenerateColumns="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Offset" Binding="{Binding Offset, StringFormat={}{0:0}}" SortDirection="Ascending" />
+                    <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty, StringFormat={}{0:n3}}" />
                     <DataGridTextColumn Header="Speed" Binding="{Binding CurrentSpeed, StringFormat={}{0:n3}}" />
                     <DataGridTextColumn Header="Stamina" Binding="{Binding CurrentStamina, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="Speed Bonus" Binding="{Binding SpeedBonus, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="Stamina Bonus" Binding="{Binding StaminaBonus, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="Semantic Bonus" Binding="{Binding SemanticBonus, StringFormat={}{0:n3}}" />
                 </DataGrid.Columns>
             </DataGrid>
             <DataGrid Grid.Column="1" Grid.Row="2" Name="DataGridVisualPoint" IsReadOnly="True" AutoGenerateColumns="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Offset" Binding="{Binding Offset, StringFormat={}{0:0}}" SortDirection="Ascending" />
+                    <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty, StringFormat={}{0:n3}}" />
                     <DataGridTextColumn Header="Density Weight" Binding="{Binding FocalWeight, StringFormat={}{0:n3}}" />
                     <DataGridTextColumn Header="Rhythmic Weight" Binding="{Binding RhythmicFocalWeight, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty, StringFormat={}{0:n3}}" />
                 </DataGrid.Columns>
             </DataGrid>
 

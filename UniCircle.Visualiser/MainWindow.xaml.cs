@@ -137,10 +137,15 @@ namespace UniCircle.Visualiser
 
             if (openFileDialog.ShowDialog(this) == true)
             {
-                Calculator.SetBeatmap(new Beatmap(openFileDialog.FileName));
-                textBlockOpenBeatmap.Text = String.Format("{0} - {1} [{2}]", Calculator.Beatmap.Artist, Calculator.Beatmap.Title, Calculator.Beatmap.Version);
-                Recalculate();
+                LoadBeatmap(openFileDialog.FileName);
             }
+        }
+
+        private void LoadBeatmap(string filePath)
+        {
+            Calculator.SetBeatmap(new Beatmap(filePath));
+            textBlockOpenBeatmap.Text = $"{Calculator.Beatmap.Artist} - {Calculator.Beatmap.Title} [{Calculator.Beatmap.Version}]";
+            Recalculate();
         }
 
         private void CheckboxMod_Changed(object sender, RoutedEventArgs e)
@@ -175,6 +180,16 @@ namespace UniCircle.Visualiser
         private void SkillSetting_SourceUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
         {
             Recalculate();
+        }
+
+        private void MainWindow_OnDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[]) e.Data.GetData(DataFormats.FileDrop);
+
+                LoadBeatmap(files[0]);
+            }
         }
     }
 }
