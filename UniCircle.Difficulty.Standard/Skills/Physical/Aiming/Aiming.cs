@@ -24,15 +24,16 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
         private AimPoint AimPointB => GetDifficultyPoint(1);
         private AimPoint AimPointC => GetDifficultyPoint(2);
 
-        // Exertion decay rate
-        public override double SpeedDecayBase { get; set; } = 0.15;
-        public override double StaminaDecayBase { get; set; } = 0.3;
+        // Exertion recovery rate
+        public override double MaxSpeedRecoveryRate { get; set; } = 0.9;
+        public override double MaxStaminaRecoveryRate { get; set; } = 0.1;
+        public override double ExertionNormaliser { get; set; } = 1;
 
         // Exertion weights
-        public override double SpeedWeight { get; set; } = 1;
-        public override double StaminaWeight { get; set; } = 1;
+        public override double SpeedWeight { get; set; } = 0.0005;
+        public override double StaminaWeight { get; set; } = 0.00005;
 
-        public override double SkillMultiplier { get; set; } = 1;
+        public override double SkillMultiplier { get; set; } = 0.32;
 
         public override void ProcessHitObject(HitObject hitObject)
         {
@@ -90,25 +91,30 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
         // Multiplier of raw difficulty
         protected override double CalculateSemanticBonus()
         {
+            double semanticDificulty = CircleSizeDifficulty(AimPointA.Radius);
+
+            double delay = AimPointA.DeltaTime;     // because steadiness cares about the immidiate object
+            double snappiness = Snappiness(delay);
+            double steadinessDifficulty = SteadinessDifficulty(snappiness) * SteadyDiffWeight;
+
             if (AimPointC == null) // This is the second object in the map
             {
                 // No angle difficulty, since there is no angle
-                return 0;
+                return semanticDificulty;
             }
             
             double angle = Utils.Angle(AimPointC, AimPointB, AimPointA);
             if (double.IsNaN(angle))
             {
-                return 0;
+                return semanticDificulty;
             }
 
-            double prevDelay = AimPointB.DeltaTime;   // previous because between object B and C
-            double snappiness = Snappiness(prevDelay);
-
-            double angleDifficulty = AngleDifficulty(angle, snappiness) * AngleDiffWeight;
-            double steadinessDifficulty = SteadinessDifficulty(snappiness) * SteadyDiffWeight;
-
-            return angleDifficulty + steadinessDifficulty + CircleSizeDifficulty(AimPointA.Radius);
+            double prevDelay = AimPointB.DeltaTime;   // previous because angle diff cares about delay of objects B and C
+            double prevSnappiness = Snappiness(prevDelay);            
+            double angleDifficulty = AngleDifficulty(angle, prevSnappiness) * AngleDiffWeight;
+            
+            semanticDificulty += angleDifficulty + steadinessDifficulty;
+            return semanticDificulty;
         }
 
         private double CircleSizeDifficulty(double radius)

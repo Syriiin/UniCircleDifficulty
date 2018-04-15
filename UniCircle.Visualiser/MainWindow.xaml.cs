@@ -9,7 +9,9 @@ using LiveCharts.Configurations;
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
 using UniCircle.Difficulty.Standard;
-using UniCircle.Difficulty.Skills;
+using UniCircle.Difficulty.Standard.Skills.Physical.Aiming;
+using UniCircle.Difficulty.Standard.Skills.Physical.Clicking;
+using UniCircle.Difficulty.Standard.Skills.Reading;
 
 namespace UniCircle.Visualiser
 {
@@ -20,9 +22,9 @@ namespace UniCircle.Visualiser
     {
         public DifficultyCalculator Calculator { get; set; } = new DifficultyCalculator();
 
-        public SeriesCollection AimingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<DifficultyPoint>().X(p => p.Offset).Y(p => p.Difficulty));
-        public SeriesCollection ClickingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<DifficultyPoint>().X(p => p.Offset).Y(p => p.Difficulty));
-        public SeriesCollection ReadingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<DifficultyPoint>().X(p => p.Offset).Y(p => p.Difficulty));
+        public SeriesCollection AimingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<AimPoint>().X(p => p.Offset).Y(p => p.Difficulty));
+        public SeriesCollection ClickingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<ClickPoint>().X(p => p.Offset).Y(p => p.Difficulty));
+        public SeriesCollection ReadingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<ReadingPoint>().X(p => p.Offset).Y(p => p.Difficulty));
 
         public Func<double, string> XFormatter => ms => TimeSpan.FromMilliseconds(ms).ToString(@"mm\:ss\:fff");
 
@@ -104,7 +106,7 @@ namespace UniCircle.Visualiser
             AimingChartSeries.Add(
                 new LineSeries
                 {
-                    Values = new ChartValues<DifficultyPoint>(Calculator.Aiming.CalculatedPoints),
+                    Values = new ChartValues<AimPoint>(Calculator.Aiming.CalculatedPoints),
                     PointGeometry = null
                 }
             );
@@ -112,7 +114,7 @@ namespace UniCircle.Visualiser
             ClickingChartSeries.Add(
                 new LineSeries
                 {
-                    Values = new ChartValues<DifficultyPoint>(Calculator.Clicking.CalculatedPoints),
+                    Values = new ChartValues<ClickPoint>(Calculator.Clicking.CalculatedPoints),
                     PointGeometry = null
                 }
             );
@@ -120,7 +122,7 @@ namespace UniCircle.Visualiser
             ReadingChartSeries.Add(
                 new LineSeries
                 {
-                    Values = new ChartValues<DifficultyPoint>(Calculator.Reading.CalculatedPoints),
+                    Values = new ChartValues<ReadingPoint>(Calculator.Reading.CalculatedPoints),
                     PointGeometry = null
                 }
             );
