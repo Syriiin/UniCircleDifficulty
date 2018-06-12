@@ -6,5 +6,9 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
     {
         public Vector Position { get; set; }
         public Vector IncomingForce { get; set; }
+
+        // Data points
+        public double SnapForceVolatility { get; set; }
+        public double Snappiness { get; set; }
     }
 }

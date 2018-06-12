@@ -23,6 +23,10 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
 
         public override double SkillMultiplier { get; set; } = 0.32;
 
+        public override double SnapForceThreshold { get; set; } = 5;
+        public override double FlowForceThreshold { get; set; } = 13;
+        public override double SnapForceVolatilityRecoveryRate { get; set; } = 0.9;
+
         public override void ProcessHitObject(HitObject hitObject)
         {
             if (hitObject is Spinner)

@@ -31,6 +31,19 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
         // Vector length (magnitude) equals the square root of the sum of its squared components (pythagoras)
         public double Length => Math.Sqrt(_components.Sum(c => Math.Pow(c, 2)));
 
+        // Unit vector (magnitude of 1) is found by dividing the components by the vector magnitude
+        public Vector UnitVector
+        {
+            get
+            {
+                if (Length == 0)
+                {
+                    return new Vector(_components); // zero vectors cant have unit vectors so lets just return another zero vector
+                }
+                return new Vector(_components.Select(c => c / Length).ToArray());
+            }
+        }
+
         public static Vector operator +(Vector v1, Vector v2)
         {
             if (v1.Dimensions != v2.Dimensions)
