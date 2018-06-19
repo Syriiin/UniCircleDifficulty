@@ -37,7 +37,9 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
             {
                 BaseObject = hitObject,
                 DeltaTime = offset - ClickPointA?.Offset ?? offset,
-                Offset = offset
+                Offset = offset,
+                TimeErrorRange = Utils.ModHitWindow(hitObject.Difficulty.OD, Mods) / Utils.ModClockRate(Mods),
+                EnergyErrorRange = 1
             };
 
             ProcessDifficultyPoint(clickPoint);

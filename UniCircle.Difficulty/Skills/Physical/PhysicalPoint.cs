@@ -2,6 +2,9 @@
 {
     public abstract class PhysicalPoint : DifficultyPoint
     {
+        public double TimeErrorRange { get; set; }
+        public double EnergyErrorRange { get; set; }
+
         // Data points
 
         /// <summary>

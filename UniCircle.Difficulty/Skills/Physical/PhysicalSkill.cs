@@ -38,7 +38,7 @@ namespace UniCircle.Difficulty.Skills.Physical
         protected override void CalculateDifficulty()
         {
             var diffPoint = GetDifficultyPoint(0);
-            // Calculate difficulty and exertion values
+            // Calculate energy, semantic, and error range values
             double energyExerted = CalculateEnergyExerted();
             double semanticBonus = CalculateSemanticBonus();
 
@@ -51,7 +51,7 @@ namespace UniCircle.Difficulty.Skills.Physical
             _stamina *= 1 - StaminaRecovery(diffPoint.DeltaTime, energyExerted);
 
             // Perhaps square deltatime since exertion doesnt include time anymore.
-            double rawDifficulty = energyExerted / diffPoint.DeltaTime;
+            double rawDifficulty = ((energyExerted / diffPoint.EnergyErrorRange) / diffPoint.DeltaTime) / diffPoint.TimeErrorRange;
             double speedBonus = _speed * SpeedWeight;
             double staminaBonus = _stamina * StaminaWeight;
 
