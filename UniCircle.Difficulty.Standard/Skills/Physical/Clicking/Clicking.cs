@@ -20,7 +20,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
         public override double SpeedWeight { get; set; } = 0.5;
         public override double StaminaWeight { get; set; } = 0.05;
 
-        public override double SkillMultiplier { get; set; } = 0.32;
+        public override double SkillMultiplier { get; set; } = 2;
 
         public override void ProcessHitObject(HitObject hitObject)
         {

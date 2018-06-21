@@ -21,7 +21,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
         public override double SpeedWeight { get; set; } = 0.0005;
         public override double StaminaWeight { get; set; } = 0.00005;
 
-        public override double SkillMultiplier { get; set; } = 0.32;
+        public override double SkillMultiplier { get; set; } = 4;
 
         public override double SnapForceThreshold { get; set; } = 5;
         public override double FlowForceThreshold { get; set; } = 13;
