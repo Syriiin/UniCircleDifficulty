@@ -57,8 +57,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
                 Position = position,
                 IncomingForce = position - (LatestAimPoint?.Position ?? position),
                 Radius = Utils.ModRadius(hitObject.Difficulty.CS, Mods),
-                TimeErrorRange = Utils.ModHitWindow(hitObject.Difficulty.OD, Mods) / Utils.ModClockRate(Mods),
-                EnergyErrorRange = Utils.ModRadius(hitObject.Difficulty.CS, Mods)
+                TargetErrorRange = Utils.ModRadius(hitObject.Difficulty.CS, Mods)
             };
 
             ProcessDifficultyPoint(aimPoint);

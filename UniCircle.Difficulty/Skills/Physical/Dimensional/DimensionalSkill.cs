@@ -28,6 +28,9 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
             // Calculate snappiness
             double snappiness = CalculateSnappiness();
 
+            // Calculate imprecision
+            DimensionalPointA.Imprecision = Imprecision(DimensionalPointA.IncomingForce.Length, DimensionalPointA.TargetErrorRange, DimensionalPointA.DeltaTime, snappiness);
+
             // Data points
             DimensionalPointA.SnapForceVolatility = _snapForceVolatility;
             DimensionalPointA.Snappiness = CalculateSnappiness();
@@ -89,6 +92,24 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
         }
 
         private double SnapForceVolatilityRecovery(double time) => 1 - Math.Pow(1 - SnapForceVolatilityRecoveryRate, time / 1000);
+        
+        private double Imprecision(double distance, double targetRange, double time, double snappiness)
+        {
+            if (distance < targetRange)
+            {
+                // target range touches the expected current cursor position so from the moment the next action begins you are already in the range
+                return time;
+            }
+
+            double targetPortion = targetRange / distance;  // circle radius to distance ratio
+            double targetThreshold = 1 - targetPortion;     // portion of distance to reach target edge
+            
+            // temporary simple curve until more research is put into snap speeds
+            double timeToThresholdPortion = snappiness * (Math.Acos(-2 * targetThreshold + 1) / Math.PI) + (1 - snappiness) * targetThreshold;  // time to reach edge of target circle
+            double targetTimePortion = 1 - timeToThresholdPortion;  // time within target circle
+
+            return time * targetTimePortion;
+        }
 
         /// <inheritdoc />
         public override void Reset()
