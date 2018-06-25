@@ -52,7 +52,7 @@ namespace UniCircle.Difficulty.Skills.Physical
             
             // Imprecision for binary skills (clicking) is the hit window,
             //  and for dimensional skills, is the time spent within the error range when moving in the expected path according to flow and snap motions
-            double rawDifficulty = energyExerted / (diffPoint.DeltaTime * diffPoint.Imprecision);
+            double rawDifficulty = 1 / diffPoint.Imprecision;
             double speedBonus = _speed * SpeedWeight;
             double staminaBonus = _stamina * StaminaWeight;
 

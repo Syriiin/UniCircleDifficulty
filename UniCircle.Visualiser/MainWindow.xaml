@@ -187,7 +187,7 @@
                     <DataGridTextColumn Header="Stamina" Binding="{Binding CurrentStamina, StringFormat={}{0:n3}}" />
                     <DataGridTextColumn Header="SnapForceVolatility" Binding="{Binding SnapForceVolatility, StringFormat={}{0:n3}}" />
                     <DataGridTextColumn Header="Snappiness" Binding="{Binding Snappiness, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="Semantic Bonus" Binding="{Binding SemanticBonus, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="Imprecision" Binding="{Binding Imprecision, StringFormat={}{0:n3}}" />
                 </DataGrid.Columns>
             </DataGrid>
             <DataGrid Grid.Column="1" Grid.Row="1" Name="DataGridClickPoint" IsReadOnly="True" AutoGenerateColumns="False">
