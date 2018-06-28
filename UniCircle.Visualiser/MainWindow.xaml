@@ -196,7 +196,6 @@
                     <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty, StringFormat={}{0:n3}}" />
                     <DataGridTextColumn Header="Speed" Binding="{Binding CurrentSpeed, StringFormat={}{0:n3}}" />
                     <DataGridTextColumn Header="Stamina" Binding="{Binding CurrentStamina, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="Semantic Bonus" Binding="{Binding SemanticBonus, StringFormat={}{0:n3}}" />
                 </DataGrid.Columns>
             </DataGrid>
             <DataGrid Grid.Column="1" Grid.Row="2" Name="DataGridVisualPoint" IsReadOnly="True" AutoGenerateColumns="False">
