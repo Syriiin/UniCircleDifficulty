@@ -83,14 +83,12 @@
                         <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.SpeedWeight, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
                         <Label Grid.Row="5" Grid.Column="0">Stamina weight</Label>
                         <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.StaminaWeight, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="6" Grid.Column="0">Angle weight</Label>
-                        <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.AngleDiffWeight, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="7" Grid.Column="0">Steadiness weight</Label>
-                        <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.SteadyDiffWeight, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="8" Grid.Column="0">Snappiness threshold</Label>
-                        <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.SnapThreshold, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="9" Grid.Column="0">Snappiness harshness</Label>
-                        <TextBox Grid.Row="9" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.SnapCurveHarshness, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="7" Grid.Column="0">Snap Force Threshold</Label>
+                        <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.SnapForceThreshold, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="8" Grid.Column="0">Flow Force Threshold</Label>
+                        <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.FlowForceThreshold, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="9" Grid.Column="0">Snap Force Volatility Recovery Rate</Label>
+                        <TextBox Grid.Row="9" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.SnapForceVolatilityRecoveryRate, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
                     </Grid>
                 </ScrollViewer>
             </Border>
@@ -187,9 +185,9 @@
                     <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty, StringFormat={}{0:n3}}" />
                     <DataGridTextColumn Header="Speed" Binding="{Binding CurrentSpeed, StringFormat={}{0:n3}}" />
                     <DataGridTextColumn Header="Stamina" Binding="{Binding CurrentStamina, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="Speed Bonus" Binding="{Binding SpeedBonus, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="Stamina Bonus" Binding="{Binding StaminaBonus, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="Semantic Bonus" Binding="{Binding SemanticBonus, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="SnapForceVolatility" Binding="{Binding SnapForceVolatility, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="Snappiness" Binding="{Binding Snappiness, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="Imprecision" Binding="{Binding Imprecision, StringFormat={}{0:n3}}" />
                 </DataGrid.Columns>
             </DataGrid>
             <DataGrid Grid.Column="1" Grid.Row="1" Name="DataGridClickPoint" IsReadOnly="True" AutoGenerateColumns="False">
@@ -198,9 +196,6 @@
                     <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty, StringFormat={}{0:n3}}" />
                     <DataGridTextColumn Header="Speed" Binding="{Binding CurrentSpeed, StringFormat={}{0:n3}}" />
                     <DataGridTextColumn Header="Stamina" Binding="{Binding CurrentStamina, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="Speed Bonus" Binding="{Binding SpeedBonus, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="Stamina Bonus" Binding="{Binding StaminaBonus, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="Semantic Bonus" Binding="{Binding SemanticBonus, StringFormat={}{0:n3}}" />
                 </DataGrid.Columns>
             </DataGrid>
             <DataGrid Grid.Column="1" Grid.Row="2" Name="DataGridVisualPoint" IsReadOnly="True" AutoGenerateColumns="False">

@@ -1,8 +1,8 @@
-﻿using UniCircle.Difficulty.Skills.Physical;
+﻿using UniCircle.Difficulty.Skills.Physical.Binary;
 
 namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
 {
-    public class ClickPoint : PhysicalPoint
+    public class ClickPoint : BinaryPoint
     {
 
     }

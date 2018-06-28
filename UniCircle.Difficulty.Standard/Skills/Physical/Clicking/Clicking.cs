@@ -1,4 +1,4 @@
-﻿using UniCircle.Difficulty.Skills.Physical;
+﻿using UniCircle.Difficulty.Skills.Physical.Binary;
 using UniCircleTools.Beatmaps;
 
 namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
@@ -6,11 +6,10 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
     /// <summary>
     /// Skill representing the difficulty of keeping up with tapping speed of notes
     /// </summary>
-    public class Clicking : PhysicalSkill<ClickPoint>
+    public class Clicking : BinarySkill<ClickPoint>
     {
         // Shortcuts for readability
         private ClickPoint ClickPointA => GetDifficultyPoint(0);
-        private ClickPoint ClickPointB => GetDifficultyPoint(1);
 
         // Exertion recovery rate
         public override double MaxSpeedRecoveryRate { get; set; } = 0.9;
@@ -21,7 +20,7 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
         public override double SpeedWeight { get; set; } = 0.5;
         public override double StaminaWeight { get; set; } = 0.05;
 
-        public override double SkillMultiplier { get; set; } = 0.32;
+        public override double SkillMultiplier { get; set; } = 0.25;
 
         public override void ProcessHitObject(HitObject hitObject)
         {
@@ -38,7 +37,8 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
             {
                 BaseObject = hitObject,
                 DeltaTime = offset - ClickPointA?.Offset ?? offset,
-                Offset = offset
+                Offset = offset,
+                Imprecision = Utils.ModHitWindow(hitObject.Difficulty.OD, Mods) / Utils.ModClockRate(Mods)
             };
 
             ProcessDifficultyPoint(clickPoint);
@@ -54,20 +54,6 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
             {
                 CurrentDiffPoints.RemoveAt(0);
             }
-        }
-
-        // Energy exerted in a key press can be taken as a constant since there is no varying pressure or anything
-        protected override double CalculateEnergyExerted()
-        {
-            // In ppv2, higher spaced objects are worth more to reward spaced streams.
-            // This can is really part of aim, and thus speed is not concerned with it.
-            return 1;
-        }
-
-        protected override double CalculateSemanticBonus()
-        {
-            // Accuracy difficulty assuming perfect reading (essentially just changes in beat snapping)
-            return 0;
         }
     }
 }

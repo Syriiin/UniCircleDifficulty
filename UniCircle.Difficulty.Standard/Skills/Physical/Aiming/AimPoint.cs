@@ -1,11 +1,9 @@
-﻿using UniCircle.Difficulty.Skills.Physical;
+﻿using UniCircle.Difficulty.Skills.Physical.Dimensional;
 
 namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
 {
-    public class AimPoint : PhysicalPoint, ICircle
+    public class AimPoint : DimensionalPoint
     {
-        public double X { get; set; }
-        public double Y { get; set; }
         public double Radius { get; set; }
     }
 }

@@ -134,5 +134,30 @@ namespace UniCircle.Difficulty.Standard.Skills
                 return 1950 - (ar * 150);
             }
         }
+
+        /// <summary>
+        /// Hit window in ms with passed mods
+        /// </summary>
+        /// <param name="od"></param>
+        /// <param name="mods"></param>
+        /// <returns>Approach rate in milliseconds</returns>
+        public static double ModHitWindow(double od, Mods mods)
+        {
+            if (mods.HasFlag(Mods.HardRock))
+            {
+                od *= 1.4;
+
+                if (od > 10)
+                {
+                    od = 10;
+                }
+            }
+            else if (mods.HasFlag(Mods.Easy))
+            {
+                od *= 0.5;
+            }
+
+            return 79.5 - (od * 6);
+        }
     }
 }

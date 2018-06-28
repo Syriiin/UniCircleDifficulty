@@ -2,6 +2,8 @@
 {
     public abstract class PhysicalPoint : DifficultyPoint
     {
+        public double Imprecision { get; set; }
+
         // Data points
 
         /// <summary>

@@ -38,7 +38,7 @@ namespace UniCircle.Difficulty.Skills.Physical
         protected override void CalculateDifficulty()
         {
             var diffPoint = GetDifficultyPoint(0);
-            // Calculate difficulty and exertion values
+            // Calculate energy, semantic, and error range values
             double energyExerted = CalculateEnergyExerted();
             double semanticBonus = CalculateSemanticBonus();
 
@@ -49,9 +49,10 @@ namespace UniCircle.Difficulty.Skills.Physical
             // Recover exertion values (note this is done after exertion values are added so the current action is included in the recovery) (this needs to be revisited)
             _speed *= 1 - SpeedRecovery(diffPoint.DeltaTime, energyExerted);
             _stamina *= 1 - StaminaRecovery(diffPoint.DeltaTime, energyExerted);
-
-            // Perhaps square deltatime since exertion doesnt include time anymore.
-            double rawDifficulty = energyExerted / diffPoint.DeltaTime;
+            
+            // Imprecision for binary skills (clicking) is the hit window,
+            //  and for dimensional skills, is the time spent within the error range when moving in the expected path according to flow and snap motions
+            double rawDifficulty = 1 / diffPoint.Imprecision;
             double speedBonus = _speed * SpeedWeight;
             double staminaBonus = _stamina * StaminaWeight;
 
