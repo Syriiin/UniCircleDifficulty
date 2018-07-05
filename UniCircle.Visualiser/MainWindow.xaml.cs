@@ -92,6 +92,7 @@ namespace UniCircle.Visualiser
         private void DisplayData()
         {
             // Populate Difficulty labels
+            labelTotalDifficulty.Content = String.Format("Total: {0:0.##} stars", Calculator.Difficulty);
             labelAimingDifficulty.Content = String.Format("Aiming: {0:0.##} stars", Calculator.Aiming.Value);
             labelClickingDifficulty.Content = String.Format("Clicking: {0:0.##} stars", Calculator.Clicking.Value);
             labelReadingDifficulty.Content = String.Format("Reading: {0:0.##} stars", Calculator.Reading.Value);

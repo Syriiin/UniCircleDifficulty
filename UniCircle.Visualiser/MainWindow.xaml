@@ -30,8 +30,9 @@
             
             <!--Current beatmap-->
             <TextBlock Name="textBlockOpenBeatmap" VerticalAlignment="Center" FontWeight="Bold" TextWrapping="WrapWithOverflow" />
-            
+
             <!--Difficulty labels-->
+            <Label Name="labelTotalDifficulty" VerticalAlignment="Center" FontSize="14" />
             <Label Name="labelAimingDifficulty" VerticalAlignment="Center" FontSize="14" />
             <Label Name="labelClickingDifficulty" VerticalAlignment="Center" FontSize="14" />
             <Label Name="labelReadingDifficulty" VerticalAlignment="Center" FontSize="14" />

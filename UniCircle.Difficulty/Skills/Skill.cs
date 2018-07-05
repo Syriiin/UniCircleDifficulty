@@ -29,6 +29,8 @@ namespace UniCircle.Difficulty.Skills
         /// </summary>
         public List<TDiffPoint> CalculatedPoints { get; } = new List<TDiffPoint>();
 
+        public List<double> CalculatedDifficulties => CalculatedPoints.Select(p => p.Difficulty).ToList();
+
         /// <summary>
         /// Multiplier to scale difficulty rating to a consistent value range across skills
         /// </summary>
