@@ -31,10 +31,11 @@ namespace UniCircle.Difficulty
         {
             get
             {
-                // TODO: refactor out of difficulty point model since we want
-                //  each hit object to have only 1 difficulty point per skill
+                // TODO: refactor out of difficulty point model since we want each hit object to have only 1 difficulty point per skill
+                //  (might not need to refactor entirly. just enforce single difficulty points)
+                //  - would be better to have a list of objects in this class that held references to the specific skill difficulty points or something
 
-                // Get multiply all difficulty points and skill multipliers
+                // Multiply all difficulty points and skill multipliers
                 var difficulties = Skills[0].CalculatedDifficulties;
                 double multiplier = Skills[0].SkillMultiplier;
                 foreach (var skill in Skills.Skip(1))
@@ -60,7 +61,7 @@ namespace UniCircle.Difficulty
                 }
 
                 // Apply difficulty curve and normalise with multiplier
-                return total * multiplier;
+                return Math.Sqrt(total) * multiplier;
 
                 //return Skills.Sum(skill => skill.Value);
             }
