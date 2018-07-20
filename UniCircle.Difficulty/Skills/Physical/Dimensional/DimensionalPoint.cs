@@ -10,6 +10,7 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
 
         // Data points
         public double SnapForceVolatility { get; set; }
+        public double ActualForceVolatility { get; set; }
         public double Snappiness { get; set; }
     }
 }

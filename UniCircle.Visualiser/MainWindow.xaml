@@ -185,6 +185,7 @@
                     <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty, StringFormat={}{0:n3}}" />
                     <DataGridTextColumn Header="Speed" Binding="{Binding CurrentSpeed, StringFormat={}{0:n3}}" />
                     <DataGridTextColumn Header="Stamina" Binding="{Binding CurrentStamina, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="ActualForceVolatility" Binding="{Binding ActualForceVolatility, StringFormat={}{0:n3}}" />
                     <DataGridTextColumn Header="SnapForceVolatility" Binding="{Binding SnapForceVolatility, StringFormat={}{0:n3}}" />
                     <DataGridTextColumn Header="Snappiness" Binding="{Binding Snappiness, StringFormat={}{0:n3}}" />
                     <DataGridTextColumn Header="Imprecision" Binding="{Binding Imprecision, StringFormat={}{0:n3}}" />

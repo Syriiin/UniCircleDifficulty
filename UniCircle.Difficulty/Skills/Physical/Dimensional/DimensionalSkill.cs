@@ -6,7 +6,9 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
         where TDiffPoint : DimensionalPoint
     {
         private Vector _previousSnapForce;
+        private Vector _previousActualForce;
         private double _snapForceVolatility;
+        private double _actualForceVolatility;
 
         // Shortcut for readability
         private DimensionalPoint DimensionalPointA => GetDifficultyPoint(0);
@@ -19,24 +21,26 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
         protected override double CalculateEnergyExerted()
         {
             // Recover
-            _snapForceVolatility *= 1 - SnapForceVolatilityRecovery(DimensionalPointA.DeltaTime);
-
-            // Calculate snap and flow energy
-            double snapEnergy = CalculateSnappingEnergy();
-            double flowEnergy = CalculateFlowingEnergy();
+            _snapForceVolatility *= 1 - ForceVolatilityRecovery(DimensionalPointA.DeltaTime);
+            _actualForceVolatility *= 1 - ForceVolatilityRecovery(DimensionalPointA.DeltaTime);
 
             // Calculate snappiness
             double snappiness = CalculateSnappiness();
+
+            // Calculate snap and flow energy
+            double snapEnergy = CalculateSnappingEnergy(snappiness);    // for now, snap needs to be done first, because flowing uses _previousSnapForce, which is set in snapping
+            double flowEnergy = CalculateFlowingEnergy(snappiness);
 
             // Calculate imprecision
             DimensionalPointA.Imprecision = Imprecision(DimensionalPointA.IncomingForce.Length, DimensionalPointA.TargetErrorRange, DimensionalPointA.DeltaTime, snappiness);
 
             // Data points
             DimensionalPointA.SnapForceVolatility = _snapForceVolatility;
+            DimensionalPointA.ActualForceVolatility = _actualForceVolatility;
             DimensionalPointA.Snappiness = CalculateSnappiness();
 
             // Sum up parts with weights
-            return snapEnergy * snappiness + flowEnergy * (1 - snappiness);
+            return snapEnergy + flowEnergy;
         }
 
         private double CalculateSnappiness()
@@ -59,39 +63,47 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
             return snappiness;
         }
 
-        private double CalculateSnappingEnergy()
+        private double CalculateSnappingEnergy(double snappiness)
         {
             // Moving and stopping force are both proportional to the vector length
             //  ie. the larger the jump, the higher the amount of force to get there and thus higher force to cancel it out
 
-            // TODO: contemplate if moving and stopping power are equal and perhaps need sliding window variable for skills to adjust
-
             Vector movingForce = DimensionalPointA.IncomingForce;
             Vector stoppingForce = -DimensionalPointA.IncomingForce;
 
-            // Add snap force flux values
+            // Add force flux values
             if (_previousSnapForce != null)
             {
                 _snapForceVolatility += (movingForce.UnitVector - _previousSnapForce.UnitVector).Length;
+                _actualForceVolatility += (movingForce.UnitVector - _previousActualForce.UnitVector).Length * snappiness;
             }
             _snapForceVolatility += (stoppingForce.UnitVector - movingForce.UnitVector).Length;
-
+            _snapForceVolatility += (stoppingForce.UnitVector - movingForce.UnitVector).Length * snappiness;
 
             // vector opposing the direction of movement
             _previousSnapForce = stoppingForce;
 
-            return movingForce.Length + stoppingForce.Length;
+            return (movingForce.Length + stoppingForce.Length) * snappiness;
         }
 
-        private double CalculateFlowingEnergy()
+        private double CalculateFlowingEnergy(double snappiness)
         {
             // Just distance right?
             Vector movingForce = DimensionalPointA.IncomingForce;
 
-            return movingForce.Length;
+            // Add force flux values
+            if (_previousActualForce != null)
+            {
+                _actualForceVolatility += (movingForce.UnitVector - _previousActualForce.UnitVector).Length * (1 - snappiness);
+            }
+
+            // Update previous force (weighted vector of snap and flow)
+            _previousActualForce = _previousSnapForce * snappiness + movingForce * (1 - snappiness);
+
+            return movingForce.Length * (1 - snappiness);
         }
 
-        private double SnapForceVolatilityRecovery(double time) => 1 - Math.Pow(1 - SnapForceVolatilityRecoveryRate, time / 1000);
+        private double ForceVolatilityRecovery(double time) => 1 - Math.Pow(1 - SnapForceVolatilityRecoveryRate, time / 1000);
         
         private double Imprecision(double distance, double targetRange, double time, double snappiness)
         {
@@ -115,7 +127,9 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
         public override void Reset()
         {
             _snapForceVolatility = 0;
+            _actualForceVolatility = 0;
             _previousSnapForce = null;
+            _previousActualForce = null;
 
             base.Reset();
         }

@@ -71,5 +71,10 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
             // Vector negation is just the negating its components
             return new Vector(v._components.Select(c => -c).ToArray());
         }
+        
+        public static Vector operator *(Vector v, double scalar)
+        {
+            return new Vector(v._components.Select(c => c * scalar).ToArray());
+        }
     }
 }
