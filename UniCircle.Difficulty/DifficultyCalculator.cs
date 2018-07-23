@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using UniCircleTools;
@@ -26,7 +27,34 @@ namespace UniCircle.Difficulty
         /// <summary>
         /// Calculated difficulty of beatmap
         /// </summary>
-        public virtual double Difficulty => Skills.Sum(skill => skill.Value);
+        public double Difficulty
+        {
+            get
+            {
+                // TODO: refactor out of difficulty point model since we want each hit object to have only 1 difficulty point per skill
+                //  (might not need to refactor entirly. just enforce single difficulty points)
+                //  - would be better to have a list of objects in this class that held references to the specific skill difficulty points or something
+
+                // Add all skills' difficulty points
+                var difficulties = Skills[0].CalculatedDifficulties;
+                foreach (var skill in Skills.Skip(1))
+                {
+                    for (int i = 1; i < difficulties.Count; i++)
+                    {
+                        difficulties[i] += skill.CalculatedDifficulties[i];
+                    }
+                }
+
+                // Order difficulties
+                difficulties = difficulties.OrderByDescending(d => d).ToList();
+
+                // Determine beatmap difficulty
+                double total = difficulties.Max();  // Literal *difficulty* (not performance required) of a map is the difficulty of its most difficulty point
+
+                // Apply difficulty curve and normalise with multiplier
+                return Math.Sqrt(total);
+            }
+        }
 
         /// <summary>
         /// Sets the <see cref="Beatmap"/> to be calculated

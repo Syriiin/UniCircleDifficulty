@@ -29,6 +29,8 @@ namespace UniCircle.Difficulty.Skills
         /// </summary>
         public List<TDiffPoint> CalculatedPoints { get; } = new List<TDiffPoint>();
 
+        public List<double> CalculatedDifficulties => CalculatedPoints.Select(p => p.Difficulty * SkillMultiplier).ToList();
+
         /// <summary>
         /// Multiplier to scale difficulty rating to a consistent value range across skills
         /// </summary>
@@ -47,12 +49,12 @@ namespace UniCircle.Difficulty.Skills
 
                 foreach (var diffPoint in diffPoints)
                 {
-                    total += diffPoint.Difficulty * Math.Pow(DiffWeight, i);
+                    total += diffPoint.Difficulty * SkillMultiplier * Math.Pow(DiffWeight, i);
                     i += diffPoint.DeltaTime / 400;
                 }
 
                 // Apply difficulty curve and normalise with multiplier
-                return Math.Sqrt(total) * SkillMultiplier;
+                return Math.Sqrt(total);
             }
         }
 
