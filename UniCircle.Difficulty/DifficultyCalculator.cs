@@ -35,35 +35,24 @@ namespace UniCircle.Difficulty
                 //  (might not need to refactor entirly. just enforce single difficulty points)
                 //  - would be better to have a list of objects in this class that held references to the specific skill difficulty points or something
 
-                // Multiply all difficulty points and skill multipliers
+                // Add all skills' difficulty points
                 var difficulties = Skills[0].CalculatedDifficulties;
-                double multiplier = Skills[0].SkillMultiplier;
                 foreach (var skill in Skills.Skip(1))
                 {
-                    multiplier *= skill.SkillMultiplier;
                     for (int i = 1; i < difficulties.Count; i++)
                     {
-                        difficulties[i] *= skill.CalculatedDifficulties[i];
+                        difficulties[i] += skill.CalculatedDifficulties[i];
                     }
                 }
 
-                // Order difficulties and normalise multipliers by skill count
+                // Order difficulties
                 difficulties = difficulties.OrderByDescending(d => d).ToList();
-                multiplier /= Skills.Count;
 
-                double total = 0;
-                double j = 0;
-
-                foreach (var diff in difficulties)
-                {
-                    total += diff * Math.Pow(0.99, j);
-                    j++;
-                }
+                // Determine beatmap difficulty
+                double total = difficulties.Max();  // Literal *difficulty* (not performance required) of a map is the difficulty of its most difficulty point
 
                 // Apply difficulty curve and normalise with multiplier
-                return Math.Sqrt(total) * multiplier;
-
-                //return Skills.Sum(skill => skill.Value);
+                return Math.Sqrt(total);
             }
         }
 
