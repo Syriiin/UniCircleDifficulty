@@ -12,6 +12,7 @@ namespace UniCircle.Difficulty.Skills
         double Value { get; }
         double SkillMultiplier { get; }
         List<double> CalculatedDifficulties { get; }
+        DifficultyPoint CalculateDifficultyPoint(HitObject hitObject);
         void ProcessHitObjectSequence(IEnumerable<HitObject> hitObjects);
         void SetMods(Mods mods);
         void Reset();

@@ -1,0 +1,35 @@
+﻿<Window x:Class="UniCircle.Visualiser.HitObjectData"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UniCircle.Visualiser"
+        mc:Ignorable="d"
+        Title="HitObjectData" Height="600" Width="800">
+    <Grid>
+        <DataGrid Name="HitObjectDataGrid" IsReadOnly="True" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Offset" Binding="{Binding BaseHitObject.Time, StringFormat={}{0:0}}" SortDirection="Ascending" />
+
+                <!--Aim-->
+                <DataGridTextColumn Header="AimDifficulty" Binding="{Binding DifficultyPoints[0].Difficulty, StringFormat={}{0:n3}}" />
+                <DataGridTextColumn Header="AimSpeed" Binding="{Binding DifficultyPoints[0].CurrentSpeed, StringFormat={}{0:n3}}" />
+                <DataGridTextColumn Header="AimStamina" Binding="{Binding DifficultyPoints[0].CurrentStamina, StringFormat={}{0:n3}}" />
+                <DataGridTextColumn Header="AimActualForceVolatility" Binding="{Binding DifficultyPoints[0].ActualForceVolatility, StringFormat={}{0:n3}}" />
+                <DataGridTextColumn Header="AimSnapForceVolatility" Binding="{Binding DifficultyPoints[0].SnapForceVolatility, StringFormat={}{0:n3}}" />
+                <DataGridTextColumn Header="AimSnappiness" Binding="{Binding DifficultyPoints[0].Snappiness, StringFormat={}{0:n3}}" />
+                <DataGridTextColumn Header="AimImprecision" Binding="{Binding DifficultyPoints[0].Imprecision, StringFormat={}{0:n3}}" />
+                
+                <!--Clicking-->
+                <DataGridTextColumn Header="ClickingDifficulty" Binding="{Binding DifficultyPoints[1].Difficulty, StringFormat={}{0:n3}}" />
+                <DataGridTextColumn Header="ClickingSpeed" Binding="{Binding DifficultyPoints[1].CurrentSpeed, StringFormat={}{0:n3}}" />
+                <DataGridTextColumn Header="ClickingStamina" Binding="{Binding DifficultyPoints[1].CurrentStamina, StringFormat={}{0:n3}}" />
+
+                <!--Reading-->
+                <DataGridTextColumn Header="ReadingDifficulty" Binding="{Binding DifficultyPoints[2].Difficulty, StringFormat={}{0:n3}}" />
+                <DataGridTextColumn Header="ReadingDensityWeight" Binding="{Binding DifficultyPoints[2].FocalWeight, StringFormat={}{0:n3}}" />
+                <DataGridTextColumn Header="ReadingRhythmicWeight" Binding="{Binding DifficultyPoints[2].RhythmicFocalWeight, StringFormat={}{0:n3}}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

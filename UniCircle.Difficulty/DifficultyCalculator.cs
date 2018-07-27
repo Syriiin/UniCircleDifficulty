@@ -19,6 +19,8 @@ namespace UniCircle.Difficulty
         /// </summary>
         protected List<ISkill> Skills = new List<ISkill>();
 
+        public List<DifficultyHitObject> DifficultyHitObjects = new List<DifficultyHitObject>();
+
         /// <summary>
         /// <see cref="UniCircleTools.Beatmaps.Beatmap"/> to calculator difficulty for
         /// </summary>
@@ -100,10 +102,17 @@ namespace UniCircle.Difficulty
                 return;
             }
 
-            // Calculates skill difficulties
-            foreach (var skill in Skills)
+            // Process HitObjects
+            foreach (var hitObject in Beatmap.HitObjects)
             {
-                skill.ProcessHitObjectSequence(Beatmap.HitObjects);
+                var diffHitObject = new DifficultyHitObject(hitObject);
+
+                foreach (var skill in Skills)
+                {
+                    diffHitObject.DifficultyPoints.Add(skill.CalculateDifficultyPoint(hitObject));
+                }
+
+                DifficultyHitObjects.Add(diffHitObject);
             }
         }
     }

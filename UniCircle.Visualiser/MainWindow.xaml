@@ -9,7 +9,10 @@
         Title="UniCircle Visualiser" MinHeight="400" MinWidth="800" Height="600" Width="1200" ResizeMode="CanResize" Drop="MainWindow_OnDrop" AllowDrop="True">
     <DockPanel Margin="5">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="5">
-            <Button Width="100" Margin="5" Click="OpenButton_Click">Open Beatmap</Button>
+            <StackPanel Width="120">
+                <Button Margin="5" Height="Auto" Click="OpenButton_Click">Open Beatmap</Button>
+                <Button Margin="5" Height="Auto" Click="HitObjectData_Click" Name="HitObjectDataButton">Hit Object Data</Button>
+            </StackPanel>
             
             <!--Mods-->
             <StackPanel Orientation="Vertical" Margin="5">

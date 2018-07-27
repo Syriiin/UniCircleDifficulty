@@ -33,6 +33,9 @@ namespace UniCircle.Visualiser
             InitializeComponent();
             DataContext = this;
 
+            // Disable hitobject data button by default
+            HitObjectDataButton.IsEnabled = false;
+
             DataGridAimPoint.ItemsSource = Calculator.Aiming.CalculatedPoints;
             DataGridClickPoint.ItemsSource = Calculator.Clicking.CalculatedPoints;
             DataGridVisualPoint.ItemsSource = Calculator.Reading.CalculatedPoints;
@@ -127,6 +130,9 @@ namespace UniCircle.Visualiser
                     PointGeometry = null
                 }
             );
+            
+            // Enable hitobject data button
+            HitObjectDataButton.IsEnabled = true;
         }
 
         private void OpenButton_Click(object sender, RoutedEventArgs e)
@@ -140,6 +146,11 @@ namespace UniCircle.Visualiser
             {
                 LoadBeatmap(openFileDialog.FileName);
             }
+        }
+
+        private void HitObjectData_Click(object sender, RoutedEventArgs e)
+        {
+            new HitObjectData(Calculator.DifficultyHitObjects).Show();
         }
 
         private void LoadBeatmap(string filePath)

@@ -82,6 +82,13 @@ namespace UniCircle.Difficulty.Skills
         /// <param name="hitObject">HitObject to process</param>
         public abstract void ProcessHitObject(HitObject hitObject);
 
+        public DifficultyPoint CalculateDifficultyPoint(HitObject hitObject)
+        {
+            // Messy at the moment since we dont want skills to store the difficultypoint data anymore, but will be nicer when refactored later on
+            ProcessHitObject(hitObject);
+            return CalculatedPoints.Last();
+        }
+
         /// <summary>
         /// Processes <see cref="DifficultyPoint"/> and calculates difficulty
         /// </summary>
