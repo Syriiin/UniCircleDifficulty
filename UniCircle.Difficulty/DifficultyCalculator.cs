@@ -17,14 +17,16 @@ namespace UniCircle.Difficulty
         /// <summary>
         /// List of skills this calculator is processing with
         /// </summary>
-        protected List<ISkill> Skills = new List<ISkill>();
+        protected readonly List<ISkill> Skills = new List<ISkill>();
 
-        public List<DifficultyHitObject> DifficultyHitObjects = new List<DifficultyHitObject>();
+        public readonly List<DifficultyPoint> DifficultyPoints = new List<DifficultyPoint>();
 
         /// <summary>
         /// <see cref="UniCircleTools.Beatmaps.Beatmap"/> to calculator difficulty for
         /// </summary>
         public Beatmap Beatmap { get; private set; }
+
+        public Mods Mods { get; private set; }
 
         /// <summary>
         /// Calculated difficulty of beatmap
@@ -33,19 +35,8 @@ namespace UniCircle.Difficulty
         {
             get
             {
-                // TODO: refactor out of difficulty point model since we want each hit object to have only 1 difficulty point per skill
-                //  (might not need to refactor entirly. just enforce single difficulty points)
-                //  - would be better to have a list of objects in this class that held references to the specific skill difficulty points or something
-
-                // Add all skills' difficulty points
-                var difficulties = Skills[0].CalculatedDifficulties;
-                foreach (var skill in Skills.Skip(1))
-                {
-                    for (int i = 1; i < difficulties.Count; i++)
-                    {
-                        difficulties[i] += skill.CalculatedDifficulties[i];
-                    }
-                }
+                // Get difficulty values
+                var difficulties = DifficultyPoints.Select(d => d.Difficulty);
 
                 // Order difficulties
                 difficulties = difficulties.OrderByDescending(d => d).ToList();
@@ -53,7 +44,7 @@ namespace UniCircle.Difficulty
                 // Determine beatmap difficulty
                 double total = difficulties.Max();  // Literal *difficulty* (not performance required) of a map is the difficulty of its most difficulty point
 
-                // Apply difficulty curve and normalise with multiplier
+                // Apply difficulty curve
                 return Math.Sqrt(total);
             }
         }
@@ -75,10 +66,7 @@ namespace UniCircle.Difficulty
         public void SetMods(Mods mods)
         {
             Reset();
-            foreach (var skill in Skills)
-            {
-                skill.SetMods(mods);
-            }
+            Mods = mods;
         }
 
         /// <summary>
@@ -105,15 +93,24 @@ namespace UniCircle.Difficulty
             // Process HitObjects
             foreach (var hitObject in Beatmap.HitObjects)
             {
-                var diffHitObject = new DifficultyHitObject(hitObject);
+                var difficultyPoint = new DifficultyPoint(hitObject);
 
                 foreach (var skill in Skills)
                 {
-                    diffHitObject.DifficultyPoints.Add(skill.CalculateDifficultyPoint(hitObject));
+                    skill.ProcessHitObject(HitObjectWithMods(difficultyPoint.BaseHitObject, Mods));
+
+                    difficultyPoint.SkillDatas.Add(new SkillData
+                    {
+                        SkillType = skill.GetType(),
+                        Difficulty = skill.CalculateDifficulty(),
+                        DataPoints = skill.DataPoints
+                    });
                 }
 
-                DifficultyHitObjects.Add(diffHitObject);
+                DifficultyPoints.Add(difficultyPoint);
             }
         }
+
+        protected abstract HitObject HitObjectWithMods(HitObject hitObject, Mods mods);
     }
 }

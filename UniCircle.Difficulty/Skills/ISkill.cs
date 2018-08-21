@@ -1,20 +1,13 @@
 ﻿using System.Collections.Generic;
-
-using UniCircleTools;
 using UniCircleTools.Beatmaps;
 
 namespace UniCircle.Difficulty.Skills
 {
-    // This interface exists solely to be used in DifficultyCalculator because C# doesnt like
-    //  having generics of generics (ie. List<Skill<DifficultyPoint>>)
     public interface ISkill
     {
-        double Value { get; }
-        double SkillMultiplier { get; }
-        List<double> CalculatedDifficulties { get; }
-        DifficultyPoint CalculateDifficultyPoint(HitObject hitObject);
-        void ProcessHitObjectSequence(IEnumerable<HitObject> hitObjects);
-        void SetMods(Mods mods);
+        void ProcessHitObject(HitObject hitObject);
+        double CalculateDifficulty();
+        Dictionary<string, double> DataPoints { get; }
         void Reset();
     }
 }
