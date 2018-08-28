@@ -3,6 +3,9 @@ using UniCircleTools.Beatmaps;
 
 namespace UniCircle.Difficulty.Skills.Physical.Dimensional
 {
+    /// <summary>
+    /// Abstract class to assist when creating a skill centered around dimensional physical exertion (eg. aiming)
+    /// </summary>
     public abstract class DimensionalSkill : PhysicalSkill
     {
         private Vector _previousSnapForce;
@@ -10,15 +13,26 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
         private double _snapForceVolatility;
         private double _actualForceVolatility;
 
+        /// <summary>
+        /// Snappiness higher than this value is considered full snap
+        /// </summary>
         public abstract double SnapForceThreshold { get; set; }
+
+        /// <summary>
+        /// Snappiness lower than this value is considered full flow
+        /// </summary>
         public abstract double FlowForceThreshold { get; set; }
 
+        /// <summary>
+        /// Percent of snap force volatility value that will decay in 1 second
+        /// </summary>
         public abstract double SnapForceVolatilityRecoveryRate { get; set; }
 
         // TODO: refactor this. i dont like it
         private HitObject _previousHitObject;
         private double _deltaTime;
 
+        /// <inheritdoc />
         public override void ProcessHitObject(HitObject hitObject)
         {
             if (_previousHitObject != null)
@@ -35,6 +49,7 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
             base.ProcessHitObject(hitObject);
         }
 
+        /// <inheritdoc />
         protected override double CalculateEnergyExerted()
         {
             // Recover
@@ -57,6 +72,10 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
             return snapEnergy + flowEnergy;
         }
 
+        /// <summary>
+        /// Calculates the snappiness of the current action
+        /// </summary>
+        /// <returns>The snappiness</returns>
         private double CalculateSnappiness()
         {
             double snappiness;
@@ -77,6 +96,11 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
             return snappiness;
         }
 
+        /// <summary>
+        /// Calculate energy of the current action assuming the player is snapping the action
+        /// </summary>
+        /// <param name="snappiness">Current snappiness value</param>
+        /// <returns>Snapping energy</returns>
         private double CalculateSnappingEnergy(double snappiness)
         {
             // Moving and stopping force are both proportional to the vector length
@@ -100,6 +124,11 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
             return (movingForce.Length + stoppingForce.Length) * snappiness;
         }
 
+        /// <summary>
+        /// Calculate energy of current action assuming the player is flowing the action
+        /// </summary>
+        /// <param name="snappiness">Current snappiness value</param>
+        /// <returns>Flowing energy</returns>
         private double CalculateFlowingEnergy(double snappiness)
         {
             // Just distance right?
@@ -117,8 +146,14 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
             return movingForce.Length * (1 - snappiness);
         }
 
+        /// <summary>
+        /// Percent of force volatility that should be decayed after the given amount of time
+        /// </summary>
+        /// <param name="time">Decay time</param>
+        /// <returns>Percert to decay</returns>
         private double ForceVolatilityRecovery(double time) => 1 - Math.Pow(1 - SnapForceVolatilityRecoveryRate, time / 1000);
-        
+
+        /// <inheritdoc />
         protected override double CalculateImprecision()
         {
             double distance = CalculateIncomingForce().Length;
@@ -141,8 +176,16 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
             return _deltaTime * targetTimePortion;
         }
 
+        /// <summary>
+        /// Calculates the accelerative force of the current action
+        /// </summary>
+        /// <returns></returns>
         protected abstract Vector CalculateIncomingForce();
 
+        /// <summary>
+        /// Calculates
+        /// </summary>
+        /// <returns></returns>
         protected abstract double CalculateTargetErrorRange();
 
         /// <inheritdoc />

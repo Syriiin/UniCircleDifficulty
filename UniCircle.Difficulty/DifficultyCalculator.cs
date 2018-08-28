@@ -15,10 +15,13 @@ namespace UniCircle.Difficulty
     public abstract class DifficultyCalculator
     {
         /// <summary>
-        /// List of skills this calculator is processing with
+        /// List of <see cref="ISkill"/> this calculator is processing objects with
         /// </summary>
         protected readonly List<ISkill> Skills = new List<ISkill>();
 
+        /// <summary>
+        /// List of <see cref="DifficultyPoint"/> this calculator has processed
+        /// </summary>
         public readonly List<DifficultyPoint> DifficultyPoints = new List<DifficultyPoint>();
 
         /// <summary>
@@ -26,7 +29,10 @@ namespace UniCircle.Difficulty
         /// </summary>
         public Beatmap Beatmap { get; private set; }
 
-        public Mods Mods { get; private set; }
+        /// <summary>
+        /// <see cref="UniCircleTools.Mods"/> to apply to <see cref="HitObject"/>
+        /// </summary>
+        public Mods Mods { get; private set; } = Mods.None;
 
         /// <summary>
         /// Calculated difficulty of beatmap
@@ -35,14 +41,9 @@ namespace UniCircle.Difficulty
         {
             get
             {
-                // Get difficulty values
-                var difficulties = DifficultyPoints.Select(d => d.Difficulty);
-
-                // Order difficulties
-                difficulties = difficulties.OrderByDescending(d => d).ToList();
-
                 // Determine beatmap difficulty
-                double total = difficulties.Max();  // Literal *difficulty* (not performance required) of a map is the difficulty of its most difficulty point
+                // Literal *difficulty* (not necessarily performance required) of a map is the difficulty of its most difficulty point
+                double total = DifficultyPoints.Max(d => d.Difficulty);
 
                 // Apply difficulty curve
                 return Math.Sqrt(total);
@@ -70,7 +71,7 @@ namespace UniCircle.Difficulty
         }
 
         /// <summary>
-        /// Clears skills of calculation data
+        /// Clears <see cref="Skills"/> of calculation data
         /// </summary>
         public void Reset()
         {
@@ -85,10 +86,14 @@ namespace UniCircle.Difficulty
         /// </summary>
         public void CalculateDifficulty()
         {
+            // Check for beatmap
             if (Beatmap == null)
             {
                 return;
             }
+
+            // Reset skills
+            Reset();
 
             // Process HitObjects
             foreach (var hitObject in Beatmap.HitObjects)
@@ -111,6 +116,13 @@ namespace UniCircle.Difficulty
             }
         }
 
-        protected abstract HitObject HitObjectWithMods(HitObject hitObject, Mods mods);
+        /// <summary>
+        /// Helper method for applying <see cref="UniCircleTools.Mods"/> to <see cref="HitObject"/>
+        /// (this should really be part of <see cref="HitObject"/> itself, but isn't for now)
+        /// </summary>
+        /// <param name="baseHitObject">Base <see cref="HitObject"/></param>
+        /// <param name="mods"><see cref="UniCircleTools.Mods"/> to apply</param>
+        /// <returns><see cref="HitObject"/> with <see cref="UniCircleTools.Mods"/> applied</returns>
+        protected abstract HitObject HitObjectWithMods(HitObject baseHitObject, Mods mods);
     }
 }

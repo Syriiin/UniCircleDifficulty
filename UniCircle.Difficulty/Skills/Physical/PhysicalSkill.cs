@@ -4,6 +4,9 @@ using UniCircleTools.Beatmaps;
 
 namespace UniCircle.Difficulty.Skills.Physical
 {
+    /// <summary>
+    /// Abstract class to assist when creating a skill centered around physical exertion
+    /// </summary>
     public abstract class PhysicalSkill : ISkill
     {
         // Exertion values
@@ -11,12 +14,12 @@ namespace UniCircle.Difficulty.Skills.Physical
         private double _stamina;
         
         /// <summary>
-        /// Maximum speed pct recoverable in 1 second
+        /// Maximum speed percent recoverable in 1 second
         /// </summary>
         public abstract double MaxSpeedRecoveryRate { get; set; }
 
         /// <summary>
-        /// Maximum stamina pct recoverable in 1 second
+        /// Maximum stamina percent recoverable in 1 second
         /// </summary>
         public abstract double MaxStaminaRecoveryRate { get; set; }
 
@@ -25,27 +28,30 @@ namespace UniCircle.Difficulty.Skills.Physical
         /// </summary>
         public abstract double ExertionNormaliser { get; set; }
 
-        // Weight of exertion values
         /// <summary>
-        /// Weight of <see cref="_speed"/>
+        /// Weight of <see cref="_speed"/> for difficulty
         /// </summary>
         public abstract double SpeedWeight { get; set; }
 
         /// <summary>
-        /// Weight of <see cref="_stamina"/>
+        /// Weight of <see cref="_stamina"/> for difficulty
         /// </summary>
         public abstract double StaminaWeight { get; set; }
 
         /// <summary>
-        /// Calculates the total energy exerted (independant of time) in the action described by the latest difficulty point
+        /// Calculates the total energy exerted (independant of time) in the action described by the latest <see cref="HitObject"/>
         /// </summary>
         /// <returns>Total energy exerted during current point</returns>
         protected abstract double CalculateEnergyExerted();
 
+        /// <summary>
+        /// Calculates the level of accuracy required by the action described by the latest <see cref="HitObject"/>
+        /// </summary>
+        /// <returns>Calculated imprecision</returns>
         protected abstract double CalculateImprecision();
 
         /// <summary>
-        /// Calculates the bonus difficulty of a difficulty point based on semantics
+        /// Calculates any bonus difficulty of a <see cref="HitObject"/> based on semantics
         /// </summary>
         /// <returns>Semantic difficulty multiplier of the current object</returns>
         protected virtual double CalculateSemanticBonus() => 0;
@@ -59,6 +65,7 @@ namespace UniCircle.Difficulty.Skills.Physical
         private HitObject _previousHitObject;
         private double _deltaTime;
 
+        /// <inheritdoc />
         public virtual void ProcessHitObject(HitObject hitObject)
         {
             if (_previousHitObject != null)
@@ -73,6 +80,7 @@ namespace UniCircle.Difficulty.Skills.Physical
             _previousHitObject = hitObject;
         }
 
+        /// <inheritdoc />
         public double CalculateDifficulty()
         {
             // Calculate energy, semantic, and error range values
@@ -100,9 +108,11 @@ namespace UniCircle.Difficulty.Skills.Physical
 
             return rawDifficulty * (1 + semanticBonus) * (1 + speedBonus) * (1 + staminaBonus);
         }
-
+        
+        /// <inheritdoc />
         public Dictionary<string, double> DataPoints { get; set; } = new Dictionary<string, double>();
 
+        /// <inheritdoc />
         public virtual void Reset()
         {
             _speed = 0;
