@@ -1,13 +1,13 @@
-﻿using UniCircle.Difficulty.Skills;
+﻿using UniCircleTools.Beatmaps;
 
 namespace UniCircle.Difficulty.Standard.Skills.Reading
 {
-    public class ReadingPoint : DifficultyPoint, ICircle
+    /// <summary>
+    /// Data class used for holding reading data on currently visable <see cref="HitObject"/>
+    /// </summary>
+    public class ReadingPoint
     {
-        public double X { get; set; }
-        public double Y { get; set; }
-        public double Radius { get; set; }
-        public double ApproachTime { get; set; }
+        public HitObject HitObject { get; set; }
 
         public double FocalWeight { get; set; }
         public double RhythmicFocalWeight { get; set; }

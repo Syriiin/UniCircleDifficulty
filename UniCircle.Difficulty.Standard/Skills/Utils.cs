@@ -1,6 +1,7 @@
 ﻿using System;
 
 using UniCircleTools;
+using UniCircleTools.Beatmaps;
 
 namespace UniCircle.Difficulty.Standard.Skills
 {
@@ -10,13 +11,13 @@ namespace UniCircle.Difficulty.Standard.Skills
     internal static class Utils
     {
         /// <summary>
-        /// Distance between the centers of 2 circles
+        /// Distance between the centers of 2 <see cref="HitObject"/>
         /// </summary>
-        /// <param name="circleA">First circle</param>
-        /// <param name="circleB">Second circle</param>
-        public static double Distance(ICircle circleA, ICircle circleB)
+        /// <param name="hitObjectA">First circle</param>
+        /// <param name="hitObjectB">Second circle</param>
+        public static double Distance(HitObject hitObjectA, HitObject hitObjectB)
         {
-            return Distance(circleA.X, circleA.Y, circleB.X, circleB.Y);
+            return Distance(hitObjectA.X, hitObjectA.Y, hitObjectB.X, hitObjectB.Y);
         }
         /// <summary>
         /// Distance between 2 points
@@ -32,15 +33,15 @@ namespace UniCircle.Difficulty.Standard.Skills
         }
 
         /// <summary>
-        /// Calculate the angle formed by 3 <see cref="ICircle"/>s in radians
+        /// Calculate the angle formed by 3 <see cref="HitObject"/> in radians
         /// </summary>
-        /// <param name="circleA">1st point</param>
-        /// <param name="circleB">2nd point</param>
-        /// <param name="circleC">3rd point</param>
+        /// <param name="hitObjectA">1st point</param>
+        /// <param name="hitObjectB">2nd point</param>
+        /// <param name="hitObjectC">3rd point</param>
         /// <returns>Inner angle in radians</returns>
-        public static double Angle(ICircle circleA, ICircle circleB, ICircle circleC)
+        public static double Angle(HitObject hitObjectA, HitObject hitObjectB, HitObject hitObjectC)
         {
-            return Angle(circleA.X, circleA.Y, circleB.X, circleB.Y, circleC.X, circleC.Y);
+            return Angle(hitObjectA.X, hitObjectA.Y, hitObjectB.X, hitObjectB.Y, hitObjectC.X, hitObjectC.Y);
         }
         /// <summary>
         /// Calculate the angle formed by 3 points in radians

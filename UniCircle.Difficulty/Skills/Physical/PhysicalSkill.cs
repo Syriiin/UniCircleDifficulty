@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using UniCircleTools.Beatmaps;
 
 namespace UniCircle.Difficulty.Skills.Physical
@@ -66,7 +67,7 @@ namespace UniCircle.Difficulty.Skills.Physical
         private double _deltaTime;
 
         /// <inheritdoc />
-        public virtual void ProcessHitObject(HitObject hitObject)
+        public virtual bool ProcessHitObject(HitObject hitObject)
         {
             if (_previousHitObject != null)
             {
@@ -78,6 +79,8 @@ namespace UniCircle.Difficulty.Skills.Physical
             }
 
             _previousHitObject = hitObject;
+
+            return true;
         }
 
         /// <inheritdoc />
@@ -110,7 +113,7 @@ namespace UniCircle.Difficulty.Skills.Physical
         }
         
         /// <inheritdoc />
-        public Dictionary<string, double> DataPoints { get; set; } = new Dictionary<string, double>();
+        public Dictionary<string, double> DataPoints { get; set; }
 
         /// <inheritdoc />
         public virtual void Reset()

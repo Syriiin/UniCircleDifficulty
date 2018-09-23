@@ -1,16 +1,14 @@
-﻿using UniCircle.Difficulty.Skills.Physical.Binary;
-using UniCircleTools.Beatmaps;
+﻿using UniCircleTools.Beatmaps;
+
+using UniCircle.Difficulty.Skills.Physical.Binary;
 
 namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
 {
     /// <summary>
     /// Skill representing the difficulty of keeping up with tapping speed of notes
     /// </summary>
-    public class Clicking : BinarySkill<ClickPoint>
+    public class Clicking : BinarySkill
     {
-        // Shortcuts for readability
-        private ClickPoint ClickPointA => GetDifficultyPoint(0);
-
         // Exertion recovery rate
         public override double MaxSpeedRecoveryRate { get; set; } = 0.9;
         public override double MaxStaminaRecoveryRate { get; set; } = 0.1;
@@ -20,40 +18,21 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Clicking
         public override double SpeedWeight { get; set; } = 0.5;
         public override double StaminaWeight { get; set; } = 0.05;
 
-        public override double SkillMultiplier { get; set; } = 0.25;
+        private HitObject _currentHitObject;
 
-        public override void ProcessHitObject(HitObject hitObject)
+        public override bool ProcessHitObject(HitObject hitObject)
         {
             if (hitObject is Spinner)
             {
-                // Spinners are not considered in speed
-                return;
+                // Spinners are not considered in clicking
+                return false;
             }
 
-            double offset = hitObject.Time / Utils.ModClockRate(Mods);
+            _currentHitObject = hitObject;
 
-            // Construct click point from hitobject and call ProcessDifficultyPoint with them
-            var clickPoint = new ClickPoint
-            {
-                BaseObject = hitObject,
-                DeltaTime = offset - ClickPointA?.Offset ?? offset,
-                Offset = offset,
-                Imprecision = Utils.ModHitWindow(hitObject.Difficulty.OD, Mods) / Utils.ModClockRate(Mods)
-            };
-
-            ProcessDifficultyPoint(clickPoint);
+            return base.ProcessHitObject(hitObject);
         }
 
-        protected override void UpdateDifficultyPoints(ClickPoint clickPoint)
-        {
-            // Add diffPoint to currentDiffPoints
-            CurrentDiffPoints.Add(clickPoint);
-
-            // Update pool
-            if (CurrentDiffPoints.Count == 3)
-            {
-                CurrentDiffPoints.RemoveAt(0);
-            }
-        }
+        protected override double CalculateImprecision() => _currentHitObject.HitWindowFor(HitResult.Hit300);
     }
 }

@@ -78,6 +78,7 @@ namespace UniCircle.Difficulty
             foreach (var skill in Skills)
             {
                 skill.Reset();
+                skill.DataPoints.Clear();
             }
         }
 
@@ -102,14 +103,16 @@ namespace UniCircle.Difficulty
 
                 foreach (var skill in Skills)
                 {
-                    skill.ProcessHitObject(HitObjectWithMods(difficultyPoint.BaseHitObject, Mods));
-
-                    difficultyPoint.SkillDatas.Add(new SkillData
+                    if (skill.ProcessHitObject(HitObjectWithMods(difficultyPoint.BaseHitObject, Mods)))
                     {
-                        SkillType = skill.GetType(),
-                        Difficulty = skill.CalculateDifficulty(),
-                        DataPoints = skill.DataPoints
-                    });
+                        skill.DataPoints = new Dictionary<string, double>();
+                        difficultyPoint.SkillDatas.Add(new SkillData
+                        {
+                            SkillType = skill.GetType(),
+                            Difficulty = skill.CalculateDifficulty(),
+                            DataPoints = skill.DataPoints
+                        });
+                    }
                 }
 
                 DifficultyPoints.Add(difficultyPoint);

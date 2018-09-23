@@ -1,17 +1,14 @@
-﻿using UniCircle.Difficulty.Skills.Physical.Dimensional;
-using UniCircleTools;
-using UniCircleTools.Beatmaps;
+﻿using UniCircleTools.Beatmaps;
+
+using UniCircle.Difficulty.Skills.Physical.Dimensional;
 
 namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
 {
     /// <summary>
     /// Skill representing the difficulty of moving your cursor between notes
     /// </summary>
-    public class Aiming : DimensionalSkill<AimPoint>
+    public class Aiming : DimensionalSkill
     {
-        // Shortcuts for readability
-        private AimPoint LatestAimPoint => GetDifficultyPoint(0);
-
         // Exertion recovery rate
         public override double MaxSpeedRecoveryRate { get; set; } = 0.9;
         public override double MaxStaminaRecoveryRate { get; set; } = 0.1;
@@ -21,56 +18,33 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
         public override double SpeedWeight { get; set; } = 0.0005;
         public override double StaminaWeight { get; set; } = 0.00005;
 
-        public override double SkillMultiplier { get; set; } = 1.5;
-
         public override double SnapForceThreshold { get; set; } = 5;
         public override double FlowForceThreshold { get; set; } = 13;
         public override double SnapForceVolatilityRecoveryRate { get; set; } = 0.9;
 
-        public override void ProcessHitObject(HitObject hitObject)
+        private Vector _previousPosition;
+
+        private Vector _currentPosition;
+        private HitObject _currentHitObject;
+
+        public override bool ProcessHitObject(HitObject hitObject)
         {
             if (hitObject is Spinner)
             {
                 // Spinners are not considered in aim
-                return;
+                return false;
             }
+            
+            _previousPosition = _currentPosition;
 
-            double offset = hitObject.Time / Utils.ModClockRate(Mods);
+            _currentHitObject = hitObject;
+            _currentPosition = new Vector(hitObject.X, hitObject.Y);
 
-            Vector position;
-            if (Mods.HasFlag(Mods.HardRock))
-            {
-                // Flip notes (even though it technically doesnt matter since EVERYTHING is flipped)
-                position = new Vector(hitObject.X, -hitObject.Y + 384);
-            }
-            else
-            {
-                position = new Vector(hitObject.X, hitObject.Y);
-            }
-
-            // Construct aim points from hitobject and call ProcessDifficultyPoint with them
-            var aimPoint = new AimPoint
-            {
-                BaseObject = hitObject,
-                DeltaTime = offset - LatestAimPoint?.Offset ?? offset,
-                Offset = offset,
-                Position = position,
-                IncomingForce = position - (LatestAimPoint?.Position ?? position),
-                Radius = Utils.ModRadius(hitObject.Difficulty.CS, Mods),
-                TargetErrorRange = Utils.ModRadius(hitObject.Difficulty.CS, Mods)
-            };
-
-            ProcessDifficultyPoint(aimPoint);
+            return base.ProcessHitObject(hitObject);
         }
 
-        protected override void UpdateDifficultyPoints(AimPoint aimPoint)
-        {
-            CurrentDiffPoints.Add(aimPoint);
+        protected override Vector CalculateIncomingForce() => _currentPosition - (_previousPosition ?? _currentPosition);
 
-            if (CurrentDiffPoints.Count == 4)
-            {
-                CurrentDiffPoints.RemoveAt(0);
-            }
-        }
+        protected override double CalculateTargetErrorRange() => _currentHitObject.Radius;
     }
 }

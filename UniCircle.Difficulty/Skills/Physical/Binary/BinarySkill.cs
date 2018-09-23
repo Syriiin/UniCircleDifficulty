@@ -1,4 +1,4 @@
-﻿using System;
+﻿using UniCircleTools.Beatmaps;
 
 namespace UniCircle.Difficulty.Skills.Physical.Binary
 {
@@ -9,5 +9,7 @@ namespace UniCircle.Difficulty.Skills.Physical.Binary
     {
         /// <inheritdoc />
         protected override double CalculateEnergyExerted() => 1;
+
+        public override bool ProcessHitObject(HitObject hitObject) => base.ProcessHitObject(hitObject);
     }
 }

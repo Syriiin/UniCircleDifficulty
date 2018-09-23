@@ -1,4 +1,5 @@
 ﻿using System;
+
 using UniCircleTools.Beatmaps;
 
 namespace UniCircle.Difficulty.Skills.Physical.Dimensional
@@ -33,7 +34,7 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
         private double _deltaTime;
 
         /// <inheritdoc />
-        public override void ProcessHitObject(HitObject hitObject)
+        public override bool ProcessHitObject(HitObject hitObject)
         {
             if (_previousHitObject != null)
             {
@@ -46,7 +47,7 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
 
             _previousHitObject = hitObject;
 
-            base.ProcessHitObject(hitObject);
+            return base.ProcessHitObject(hitObject);
         }
 
         /// <inheritdoc />
