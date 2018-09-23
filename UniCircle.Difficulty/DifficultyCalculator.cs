@@ -22,7 +22,7 @@ namespace UniCircle.Difficulty
         /// <summary>
         /// List of <see cref="DifficultyPoint"/> this calculator has processed
         /// </summary>
-        public readonly List<DifficultyPoint> DifficultyPoints = new List<DifficultyPoint>();
+        public List<DifficultyPoint> DifficultyPoints { get; } = new List<DifficultyPoint>();
 
         /// <summary>
         /// <see cref="UniCircleTools.Beatmaps.Beatmap"/> to calculator difficulty for
