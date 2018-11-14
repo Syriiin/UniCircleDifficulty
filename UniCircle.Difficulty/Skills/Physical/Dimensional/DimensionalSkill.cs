@@ -36,14 +36,7 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
         /// <inheritdoc />
         public override bool ProcessHitObject(HitObject hitObject)
         {
-            if (_previousHitObject != null)
-            {
-                _deltaTime = hitObject.Time - _previousHitObject.Time;
-            }
-            else
-            {
-                _deltaTime = 0;
-            }
+            _deltaTime = hitObject.Time - _previousHitObject?.Time ?? hitObject.Time;
 
             _previousHitObject = hitObject;
 

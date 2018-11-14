@@ -90,41 +90,42 @@ namespace UniCircle.Difficulty.Standard.Skills
         /// <param name="cs">Original CS</param>
         /// <param name="mods">Mods to apply</param>
         /// <returns>Radius in osu!px</returns>
-        public static double ModRadius(double cs, Mods mods)
+        public static double ModRadius(float cs, Mods mods)
         {
-            if (mods.HasFlag(Mods.HardRock))
-            {
-                cs *= 1.3;
-            }
-            else if (mods.HasFlag(Mods.Easy))
-            {
-                cs *= 0.5;
-            }
+            cs = ModCircleSize(cs, mods);
 
             return 64 * (1 - 0.7 * (cs - 5) / 5) / 2;
         }
 
         /// <summary>
-        /// Approach time in ms with passed mods
+        /// Circle size with passed mods
         /// </summary>
-        /// <param name="ar"></param>
-        /// <param name="mods"></param>
-        /// <returns>Approach rate in milliseconds</returns>
-        public static double ModApproachTime(double ar, Mods mods)
+        /// <param name="cs">Original CS</param>
+        /// <param name="mods">Mods to apply</param>
+        /// <returns>Modded circle size</returns>
+        public static float ModCircleSize(float cs, Mods mods)
         {
             if (mods.HasFlag(Mods.HardRock))
             {
-                ar *= 1.4;
-
-                if (ar > 10)
-                {
-                    ar = 10;
-                }
+                cs *= 1.3f;
             }
             else if (mods.HasFlag(Mods.Easy))
             {
-                ar *= 0.5;
+                cs *= 0.5f;
             }
+
+            return cs;
+        }
+
+        /// <summary>
+        /// Approach time in ms with passed mods
+        /// </summary>
+        /// <param name="ar">Original AR</param>
+        /// <param name="mods">Mods to apply</param>
+        /// <returns>Approach rate in milliseconds</returns>
+        public static double ModApproachTime(float ar, Mods mods)
+        {
+            ar = ModApproachRate(ar, mods);
 
             if (ar <= 5)
             {
@@ -136,17 +137,56 @@ namespace UniCircle.Difficulty.Standard.Skills
             }
         }
 
+
         /// <summary>
-        /// Hit window in ms with passed mods
+        /// Approach rate with passed mods
         /// </summary>
-        /// <param name="od"></param>
-        /// <param name="mods"></param>
-        /// <returns>Approach rate in milliseconds</returns>
-        public static double ModHitWindow(double od, Mods mods)
+        /// <param name="ar">Original AR</param>
+        /// <param name="mods">Mods to apply</param>
+        /// <returns>Modded approach rate</returns>
+        public static float ModApproachRate(float ar, Mods mods)
         {
             if (mods.HasFlag(Mods.HardRock))
             {
-                od *= 1.4;
+                ar *= 1.4f;
+
+                if (ar > 10)
+                {
+                    ar = 10;
+                }
+            }
+            else if (mods.HasFlag(Mods.Easy))
+            {
+                ar *= 0.5f;
+            }
+
+            return ar;
+        }
+
+        /// <summary>
+        /// Hit window in ms with passed mods
+        /// </summary>
+        /// <param name="od">Original OD</param>
+        /// <param name="mods">Mods to apply</param>
+        /// <returns>Hit window in milliseconds</returns>
+        public static double ModHitWindow(float od, Mods mods)
+        {
+            od = ModOverallDifficulty(od, mods);
+
+            return 79.5 - (od * 6);
+        }
+
+        /// <summary>
+        /// Overall difficulty with passed mods
+        /// </summary>
+        /// <param name="od">Original OD</param>
+        /// <param name="mods">Mods to apply</param>
+        /// <returns>Modded overall difficulty</returns>
+        public static float ModOverallDifficulty(float od, Mods mods)
+        {
+            if (mods.HasFlag(Mods.HardRock))
+            {
+                od *= 1.4f;
 
                 if (od > 10)
                 {
@@ -155,10 +195,10 @@ namespace UniCircle.Difficulty.Standard.Skills
             }
             else if (mods.HasFlag(Mods.Easy))
             {
-                od *= 0.5;
+                od *= 0.5f;
             }
 
-            return 79.5 - (od * 6);
+            return od;
         }
     }
 }
