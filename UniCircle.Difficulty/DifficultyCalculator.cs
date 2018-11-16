@@ -17,7 +17,7 @@ namespace UniCircle.Difficulty
         /// <summary>
         /// List of <see cref="ISkill"/> this calculator is processing objects with
         /// </summary>
-        protected readonly List<ISkill> Skills = new List<ISkill>();
+        public List<ISkill> Skills { get; } = new List<ISkill>();
 
         /// <summary>
         /// List of <see cref="DifficultyPoint"/> this calculator has processed

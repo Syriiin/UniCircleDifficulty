@@ -48,8 +48,8 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="250" />
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <Border Grid.Column="0" Grid.Row="0" BorderThickness="1" BorderBrush="Gainsboro">
@@ -77,22 +77,20 @@
                         <Label Grid.Row="0" Grid.Column="0" FontWeight="Bold">Aiming</Label>
                     
                         <!--Skill variables-->
-                        <Label Grid.Row="1" Grid.Column="0">Skill multiplier</Label>
-                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.SkillMultiplier, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="2" Grid.Column="0">Speed recovery</Label>
-                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.MaxSpeedRecoveryRate, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="3" Grid.Column="0">Stamina recovery</Label>
-                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.MaxStaminaRecoveryRate, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="4" Grid.Column="0">Speed weight</Label>
-                        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.SpeedWeight, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="5" Grid.Column="0">Stamina weight</Label>
-                        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.StaminaWeight, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="7" Grid.Column="0">Snap Force Threshold</Label>
-                        <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.SnapForceThreshold, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="8" Grid.Column="0">Flow Force Threshold</Label>
-                        <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.FlowForceThreshold, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="9" Grid.Column="0">Snap Force Volatility Recovery Rate</Label>
-                        <TextBox Grid.Row="9" Grid.Column="1" Text="{Binding Path=Calculator.Aiming.SnapForceVolatilityRecoveryRate, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="1" Grid.Column="0">Speed recovery</Label>
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Calculator.Skills[0].MaxSpeedRecoveryRate, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="2" Grid.Column="0">Stamina recovery</Label>
+                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Calculator.Skills[0].MaxStaminaRecoveryRate, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="3" Grid.Column="0">Speed weight</Label>
+                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=Calculator.Skills[0].SpeedWeight, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="4" Grid.Column="0">Stamina weight</Label>
+                        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Path=Calculator.Skills[0].StaminaWeight, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="5" Grid.Column="0">Snap Force Threshold</Label>
+                        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Path=Calculator.Skills[0].SnapForceThreshold, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="6" Grid.Column="0">Flow Force Threshold</Label>
+                        <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Path=Calculator.Skills[0].FlowForceThreshold, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="7" Grid.Column="0">Snap Force Volatility Recovery Rate</Label>
+                        <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Path=Calculator.Skills[0].SnapForceVolatilityRecoveryRate, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
                     </Grid>
                 </ScrollViewer>
             </Border>
@@ -122,16 +120,14 @@
                         <Label Grid.Row="0" Grid.Column="0" FontWeight="Bold">Clicking</Label>
 
                         <!--Skill variables-->
-                        <Label Grid.Row="1" Grid.Column="0">Skill multiplier</Label>
-                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Calculator.Clicking.SkillMultiplier, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="2" Grid.Column="0">Speed recovery</Label>
-                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Calculator.Clicking.MaxSpeedRecoveryRate, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="3" Grid.Column="0">Stamina recovery</Label>
-                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=Calculator.Clicking.MaxStaminaRecoveryRate, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="4" Grid.Column="0">Speed weight</Label>
-                        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Path=Calculator.Clicking.SpeedWeight, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="5" Grid.Column="0">Stamina weight</Label>
-                        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Path=Calculator.Clicking.StaminaWeight, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="1" Grid.Column="0">Speed recovery</Label>
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Calculator.Skills[1].MaxSpeedRecoveryRate, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="2" Grid.Column="0">Stamina recovery</Label>
+                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Calculator.Skills[1].MaxStaminaRecoveryRate, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="3" Grid.Column="0">Speed weight</Label>
+                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=Calculator.Skills[1].SpeedWeight, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="4" Grid.Column="0">Stamina weight</Label>
+                        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Path=Calculator.Skills[1].StaminaWeight, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
                     </Grid>
                 </ScrollViewer>
             </Border>
@@ -161,54 +157,42 @@
                         <Label Grid.Row="0" Grid.Column="0" FontWeight="Bold">Reading</Label>
 
                         <!--Skill variables-->
-                        <Label Grid.Row="1" Grid.Column="0">Skill multiplier</Label>
-                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Calculator.Reading.SkillMultiplier, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="2" Grid.Column="0">Aim reading weight</Label>
-                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Calculator.Reading.AimReadingWeight, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="3" Grid.Column="0">Rhythm reading weight</Label>
-                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=Calculator.Reading.RhythmicReadingWeight, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="4" Grid.Column="0">Focal distance threshold</Label>
-                        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Path=Calculator.Reading.FocalDistanceThreshold, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="5" Grid.Column="0">Focal distance harshness</Label>
-                        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Path=Calculator.Reading.FocalDistanceCurveHarshness, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="6" Grid.Column="0">Overlap threshold</Label>
-                        <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Path=Calculator.Reading.OverlapThreshold, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="7" Grid.Column="0">Overlap harshness</Label>
-                        <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Path=Calculator.Reading.OverlapCurveHarshness, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="8" Grid.Column="0">Rhythm distance harshness</Label>
-                        <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Path=Calculator.Reading.RhythmDistanceCurveHarshness, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
-                        <Label Grid.Row="9" Grid.Column="0">Rhythm delay harshness</Label>
-                        <TextBox Grid.Row="9" Grid.Column="1" Text="{Binding Path=Calculator.Reading.RhythmDelayCurveHarshness, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="1" Grid.Column="0">Aim reading weight</Label>
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Calculator.Skills[2].AimReadingWeight, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="2" Grid.Column="0">Rhythm reading weight</Label>
+                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Calculator.Skills[2].RhythmicReadingWeight, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="3" Grid.Column="0">Focal distance threshold</Label>
+                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=Calculator.Skills[2].FocalDistanceThreshold, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="4" Grid.Column="0">Focal distance harshness</Label>
+                        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Path=Calculator.Skills[2].FocalDistanceCurveHarshness, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="5" Grid.Column="0">Overlap threshold</Label>
+                        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Path=Calculator.Skills[2].OverlapThreshold, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="6" Grid.Column="0">Overlap harshness</Label>
+                        <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Path=Calculator.Skills[2].OverlapCurveHarshness, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="7" Grid.Column="0">Rhythm distance harshness</Label>
+                        <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Path=Calculator.Skills[2].RhythmDistanceCurveHarshness, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
+                        <Label Grid.Row="8" Grid.Column="0">Rhythm delay harshness</Label>
+                        <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Path=Calculator.Skills[2].RhythmDelayCurveHarshness, Mode=TwoWay, NotifyOnSourceUpdated=True}" SourceUpdated="SkillSetting_SourceUpdated"></TextBox>
                     </Grid>
                 </ScrollViewer>
             </Border>
 
             <DataGrid Grid.Column="1" Grid.Row="0" Name="DataGridAimPoint" IsReadOnly="True" AutoGenerateColumns="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Offset" Binding="{Binding Offset, StringFormat={}{0:0}}" SortDirection="Ascending" />
-                    <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="Speed" Binding="{Binding CurrentSpeed, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="Stamina" Binding="{Binding CurrentStamina, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="ActualForceVolatility" Binding="{Binding ActualForceVolatility, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="SnapForceVolatility" Binding="{Binding SnapForceVolatility, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="Snappiness" Binding="{Binding Snappiness, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="Imprecision" Binding="{Binding Imprecision, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="Offset" Binding="{Binding BaseHitObject.Time, StringFormat={}{0:0}}" SortDirection="Ascending" />
+                    <DataGridTextColumn Header="Difficulty" Binding="{Binding SkillDatas[0].Difficulty, StringFormat={}{0:n3}}" />
                 </DataGrid.Columns>
             </DataGrid>
             <DataGrid Grid.Column="1" Grid.Row="1" Name="DataGridClickPoint" IsReadOnly="True" AutoGenerateColumns="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Offset" Binding="{Binding Offset, StringFormat={}{0:0}}" SortDirection="Ascending" />
-                    <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="Speed" Binding="{Binding CurrentSpeed, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="Stamina" Binding="{Binding CurrentStamina, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="Offset" Binding="{Binding BaseHitObject.Time, StringFormat={}{0:0}}" SortDirection="Ascending" />
+                    <DataGridTextColumn Header="Difficulty" Binding="{Binding SkillDatas[1].Difficulty, StringFormat={}{0:n3}}" />
                 </DataGrid.Columns>
             </DataGrid>
             <DataGrid Grid.Column="1" Grid.Row="2" Name="DataGridVisualPoint" IsReadOnly="True" AutoGenerateColumns="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Offset" Binding="{Binding Offset, StringFormat={}{0:0}}" SortDirection="Ascending" />
-                    <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="Density Weight" Binding="{Binding FocalWeight, StringFormat={}{0:n3}}" />
-                    <DataGridTextColumn Header="Rhythmic Weight" Binding="{Binding RhythmicFocalWeight, StringFormat={}{0:n3}}" />
+                    <DataGridTextColumn Header="Offset" Binding="{Binding BaseHitObject.Time, StringFormat={}{0:0}}" SortDirection="Ascending" />
+                    <DataGridTextColumn Header="Difficulty" Binding="{Binding SkillDatas[2].Difficulty, StringFormat={}{0:n3}}" />
                 </DataGrid.Columns>
             </DataGrid>
 

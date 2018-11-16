@@ -101,6 +101,7 @@ namespace UniCircle.Difficulty.Skills.Physical
             // Data points
             DataPoints.Add("Current Speed", _speed);
             DataPoints.Add("Current Stamina", _stamina);
+            DataPoints.Add("Imprecision", imprecision);
 
             return rawDifficulty * (1 + semanticBonus) * (1 + speedBonus) * (1 + staminaBonus);
         }
