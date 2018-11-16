@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Linq;
 using System.Windows;
 using Microsoft.Win32;
 
@@ -8,10 +9,8 @@ using LiveCharts.Configurations;
 
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
-using UniCircle.Difficulty.Standard;
-using UniCircle.Difficulty.Standard.Skills.Physical.Aiming;
-using UniCircle.Difficulty.Standard.Skills.Physical.Clicking;
-using UniCircle.Difficulty.Standard.Skills.Reading;
+using UniCircle.Difficulty;
+using DifficultyCalculator = UniCircle.Difficulty.Standard.DifficultyCalculator;
 
 namespace UniCircle.Visualiser
 {
@@ -22,9 +21,9 @@ namespace UniCircle.Visualiser
     {
         public DifficultyCalculator Calculator { get; set; } = new DifficultyCalculator();
 
-        public SeriesCollection AimingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<AimPoint>().X(p => p.Offset).Y(p => p.Difficulty));
-        public SeriesCollection ClickingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<ClickPoint>().X(p => p.Offset).Y(p => p.Difficulty));
-        public SeriesCollection ReadingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<ReadingPoint>().X(p => p.Offset).Y(p => p.Difficulty));
+        public SeriesCollection AimingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<DifficultyPoint>().X(p => p.BaseHitObject.Time).Y(p => p.SkillDatas[0].Difficulty));
+        public SeriesCollection ClickingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<DifficultyPoint>().X(p => p.BaseHitObject.Time).Y(p => p.SkillDatas[1].Difficulty));
+        public SeriesCollection ReadingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<DifficultyPoint>().X(p => p.BaseHitObject.Time).Y(p => p.SkillDatas[2].Difficulty));
 
         public Func<double, string> XFormatter => ms => TimeSpan.FromMilliseconds(ms).ToString(@"mm\:ss\:fff");
 
@@ -36,9 +35,9 @@ namespace UniCircle.Visualiser
             // Disable hitobject data button by default
             HitObjectDataButton.IsEnabled = false;
 
-            DataGridAimPoint.ItemsSource = Calculator.Aiming.CalculatedPoints;
-            DataGridClickPoint.ItemsSource = Calculator.Clicking.CalculatedPoints;
-            DataGridVisualPoint.ItemsSource = Calculator.Reading.CalculatedPoints;
+            DataGridAimPoint.ItemsSource = Calculator.DifficultyPoints;
+            DataGridClickPoint.ItemsSource = Calculator.DifficultyPoints;
+            DataGridVisualPoint.ItemsSource = Calculator.DifficultyPoints;
         }
 
         private Mods GetMods()
@@ -96,11 +95,10 @@ namespace UniCircle.Visualiser
         {
             // Populate Difficulty labels
             labelTotalDifficulty.Content = String.Format("Total: {0:0.##} stars", Calculator.Difficulty);
-            labelAimingDifficulty.Content = String.Format("Aiming: {0:0.##} stars", Calculator.Aiming.Value);
-            labelClickingDifficulty.Content = String.Format("Clicking: {0:0.##} stars", Calculator.Clicking.Value);
-            labelReadingDifficulty.Content = String.Format("Reading: {0:0.##} stars", Calculator.Reading.Value);
+            labelAimingDifficulty.Content = String.Format("Aiming: {0:0.##} stars", Calculator.DifficultyPoints.Where(p => p.SkillDatas.Count > 0).Max(p => p.SkillDatas[0].Difficulty));
+            labelClickingDifficulty.Content = String.Format("Clicking: {0:0.##} stars", Calculator.DifficultyPoints.Where(p => p.SkillDatas.Count > 0).Max(p => p.SkillDatas[1].Difficulty));
+            labelReadingDifficulty.Content = String.Format("Reading: {0:0.##} stars", Calculator.DifficultyPoints.Where(p => p.SkillDatas.Count > 0).Max(p => p.SkillDatas[2].Difficulty));
 
-            // Refresh datagrids
             DataGridAimPoint.Items.Refresh();
             DataGridClickPoint.Items.Refresh();
             DataGridVisualPoint.Items.Refresh();
@@ -110,7 +108,7 @@ namespace UniCircle.Visualiser
             AimingChartSeries.Add(
                 new LineSeries
                 {
-                    Values = new ChartValues<AimPoint>(Calculator.Aiming.CalculatedPoints),
+                    Values = new ChartValues<DifficultyPoint>(Calculator.DifficultyPoints.Where(p => p.SkillDatas.Count > 0)),
                     PointGeometry = null
                 }
             );
@@ -118,7 +116,7 @@ namespace UniCircle.Visualiser
             ClickingChartSeries.Add(
                 new LineSeries
                 {
-                    Values = new ChartValues<ClickPoint>(Calculator.Clicking.CalculatedPoints),
+                    Values = new ChartValues<DifficultyPoint>(Calculator.DifficultyPoints.Where(p => p.SkillDatas.Count > 0)),
                     PointGeometry = null
                 }
             );
@@ -126,7 +124,7 @@ namespace UniCircle.Visualiser
             ReadingChartSeries.Add(
                 new LineSeries
                 {
-                    Values = new ChartValues<ReadingPoint>(Calculator.Reading.CalculatedPoints),
+                    Values = new ChartValues<DifficultyPoint>(Calculator.DifficultyPoints.Where(p => p.SkillDatas.Count > 0)),
                     PointGeometry = null
                 }
             );
@@ -150,7 +148,7 @@ namespace UniCircle.Visualiser
 
         private void HitObjectData_Click(object sender, RoutedEventArgs e)
         {
-            new HitObjectData(Calculator.DifficultyHitObjects).Show();
+            new HitObjectData(Calculator.DifficultyPoints).Show();
         }
 
         private void LoadBeatmap(string filePath)

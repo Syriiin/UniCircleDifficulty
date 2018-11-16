@@ -1,48 +1,75 @@
 ﻿using System;
 
+using UniCircleTools.Beatmaps;
+
 namespace UniCircle.Difficulty.Skills.Physical.Dimensional
 {
-    public abstract class DimensionalSkill<TDiffPoint> : PhysicalSkill<TDiffPoint>
-        where TDiffPoint : DimensionalPoint
+    /// <summary>
+    /// Abstract class to assist when creating a skill centered around dimensional physical exertion (eg. aiming)
+    /// </summary>
+    public abstract class DimensionalSkill : PhysicalSkill
     {
         private Vector _previousSnapForce;
         private Vector _previousActualForce;
         private double _snapForceVolatility;
         private double _actualForceVolatility;
 
-        // Shortcut for readability
-        private DimensionalPoint DimensionalPointA => GetDifficultyPoint(0);
-
+        /// <summary>
+        /// Snappiness higher than this value is considered full snap
+        /// </summary>
         public abstract double SnapForceThreshold { get; set; }
+
+        /// <summary>
+        /// Snappiness lower than this value is considered full flow
+        /// </summary>
         public abstract double FlowForceThreshold { get; set; }
 
+        /// <summary>
+        /// Percent of snap force volatility value that will decay in 1 second
+        /// </summary>
         public abstract double SnapForceVolatilityRecoveryRate { get; set; }
 
+        // TODO: refactor this. i dont like it
+        private HitObject _previousHitObject;
+        private double _deltaTime;
+
+        /// <inheritdoc />
+        public override bool ProcessHitObject(HitObject hitObject)
+        {
+            _deltaTime = hitObject.Time - _previousHitObject?.Time ?? hitObject.Time;
+
+            _previousHitObject = hitObject;
+
+            return base.ProcessHitObject(hitObject);
+        }
+
+        /// <inheritdoc />
         protected override double CalculateEnergyExerted()
         {
             // Recover
-            _snapForceVolatility *= 1 - ForceVolatilityRecovery(DimensionalPointA.DeltaTime);
-            _actualForceVolatility *= 1 - ForceVolatilityRecovery(DimensionalPointA.DeltaTime);
+            _snapForceVolatility *= 1 - ForceVolatilityRecovery(_deltaTime);
+            _actualForceVolatility *= 1 - ForceVolatilityRecovery(_deltaTime);
 
             // Calculate snappiness
             double snappiness = CalculateSnappiness();
 
             // Calculate snap and flow energy
             double snapEnergy = CalculateSnappingEnergy(snappiness);    // for now, snap needs to be done first, because flowing uses _previousSnapForce, which is set in snapping
-            double flowEnergy = CalculateFlowingEnergy(snappiness);
-
-            // Calculate imprecision
-            DimensionalPointA.Imprecision = Imprecision(DimensionalPointA.IncomingForce.Length, DimensionalPointA.TargetErrorRange, DimensionalPointA.DeltaTime, snappiness);
+            double flowEnergy = CalculateFlowingEnergy(snappiness);     // TODO: refactor to fix that ^
 
             // Data points
-            DimensionalPointA.SnapForceVolatility = _snapForceVolatility;
-            DimensionalPointA.ActualForceVolatility = _actualForceVolatility;
-            DimensionalPointA.Snappiness = CalculateSnappiness();
+            DataPoints.Add("Snap Force Volatility", _snapForceVolatility);
+            DataPoints.Add("Actual Force Volatility", _actualForceVolatility);
+            DataPoints.Add("Snappiness", snappiness);
 
             // Sum up parts with weights
             return snapEnergy + flowEnergy;
         }
 
+        /// <summary>
+        /// Calculates the snappiness of the current action
+        /// </summary>
+        /// <returns>The snappiness</returns>
         private double CalculateSnappiness()
         {
             double snappiness;
@@ -63,13 +90,18 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
             return snappiness;
         }
 
+        /// <summary>
+        /// Calculate energy of the current action assuming the player is snapping the action
+        /// </summary>
+        /// <param name="snappiness">Current snappiness value</param>
+        /// <returns>Snapping energy</returns>
         private double CalculateSnappingEnergy(double snappiness)
         {
             // Moving and stopping force are both proportional to the vector length
             //  ie. the larger the jump, the higher the amount of force to get there and thus higher force to cancel it out
 
-            Vector movingForce = DimensionalPointA.IncomingForce;
-            Vector stoppingForce = -DimensionalPointA.IncomingForce;
+            Vector movingForce = CalculateIncomingForce();
+            Vector stoppingForce = -CalculateIncomingForce();
 
             // Add force flux values
             if (_previousSnapForce != null)
@@ -86,10 +118,15 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
             return (movingForce.Length + stoppingForce.Length) * snappiness;
         }
 
+        /// <summary>
+        /// Calculate energy of current action assuming the player is flowing the action
+        /// </summary>
+        /// <param name="snappiness">Current snappiness value</param>
+        /// <returns>Flowing energy</returns>
         private double CalculateFlowingEnergy(double snappiness)
         {
             // Just distance right?
-            Vector movingForce = DimensionalPointA.IncomingForce;
+            Vector movingForce = CalculateIncomingForce();
 
             // Add force flux values
             if (_previousActualForce != null)
@@ -103,14 +140,24 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
             return movingForce.Length * (1 - snappiness);
         }
 
+        /// <summary>
+        /// Percent of force volatility that should be decayed after the given amount of time
+        /// </summary>
+        /// <param name="time">Decay time</param>
+        /// <returns>Percert to decay</returns>
         private double ForceVolatilityRecovery(double time) => 1 - Math.Pow(1 - SnapForceVolatilityRecoveryRate, time / 1000);
-        
-        private double Imprecision(double distance, double targetRange, double time, double snappiness)
+
+        /// <inheritdoc />
+        protected override double CalculateImprecision()
         {
+            double distance = CalculateIncomingForce().Length;
+            double targetRange = CalculateTargetErrorRange();
+            double snappiness = CalculateSnappiness();
+
             if (distance < targetRange)
             {
                 // target range touches the expected current cursor position so from the moment the next action begins you are already in the range
-                return time;
+                return _deltaTime;
             }
 
             double targetPortion = targetRange / distance;  // circle radius to distance ratio
@@ -120,8 +167,20 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
             double timeToThresholdPortion = snappiness * (Math.Acos(-2 * targetThreshold + 1) / Math.PI) + (1 - snappiness) * targetThreshold;  // time to reach edge of target circle
             double targetTimePortion = 1 - timeToThresholdPortion;  // time within target circle
 
-            return time * targetTimePortion;
+            return _deltaTime * targetTimePortion;
         }
+
+        /// <summary>
+        /// Calculates the accelerative force of the current action
+        /// </summary>
+        /// <returns></returns>
+        protected abstract Vector CalculateIncomingForce();
+
+        /// <summary>
+        /// Calculates
+        /// </summary>
+        /// <returns></returns>
+        protected abstract double CalculateTargetErrorRange();
 
         /// <inheritdoc />
         public override void Reset()
@@ -130,6 +189,8 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
             _actualForceVolatility = 0;
             _previousSnapForce = null;
             _previousActualForce = null;
+            _previousHitObject = null;
+            _deltaTime = 0;
 
             base.Reset();
         }

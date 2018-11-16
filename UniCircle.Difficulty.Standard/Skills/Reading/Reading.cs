@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
-using UniCircle.Difficulty.Skills;
-using UniCircleTools;
 using UniCircleTools.Beatmaps;
+
+using UniCircle.Difficulty.Skills;
 
 namespace UniCircle.Difficulty.Standard.Skills.Reading
 {
     /// <summary>
     /// Skill representing the difficulty of identifying rhythmic and visual patterns in notes
     /// </summary>
-    public class Reading : Skill<ReadingPoint>
+    public class Reading : ISkill
     {
         // Curve constants
         public double FocalDistanceThreshold { get; set; } = 100;
@@ -22,71 +23,69 @@ namespace UniCircle.Difficulty.Standard.Skills.Reading
         public double RhythmDistanceCurveHarshness { get; set; } = 7;
         public double RhythmDelayCurveHarshness { get; set; } = 10;
 
-        // Shortcuts for readability
-        private ReadingPoint ReadingPointA => GetDifficultyPoint(0);
-        private ReadingPoint ReadingPointB => GetDifficultyPoint(1);
-        private ReadingPoint ReadingPointC => GetDifficultyPoint(2);
+        private List<ReadingPoint> CurrentReadingPoints = new List<ReadingPoint>();
 
-        private double FocalTotal => CurrentDiffPoints.Sum(rp => rp.FocalWeight);
-        private double RhythmicFocalTotal => CurrentDiffPoints.Sum(rp => rp.RhythmicFocalWeight);
+        // Shortcuts for readability
+        private ReadingPoint ReadingPointA => CurrentReadingPoints[CurrentReadingPoints.Count - 1];
+        private ReadingPoint ReadingPointB => CurrentReadingPoints[CurrentReadingPoints.Count - 2];
+        private ReadingPoint ReadingPointC => CurrentReadingPoints[CurrentReadingPoints.Count - 3];
+
+        private double FocalTotal => CurrentReadingPoints.Sum(rp => rp.FocalWeight);
+        private double RhythmicFocalTotal => CurrentReadingPoints.Sum(rp => rp.RhythmicFocalWeight);
 
         public double AimReadingWeight { get; set; } = 1;
         public double RhythmicReadingWeight { get; set; } = 1;
 
-        public override double SkillMultiplier { get; set; } = 0.1;
+        public Dictionary<string, double> DataPoints { get; set; } = new Dictionary<string, double>();
 
-        public override void ProcessHitObject(HitObject hitObject)
+        public bool ProcessHitObject(HitObject hitObject)
         {
             if (hitObject is Spinner)
             {
                 // Spinners are not considered in reading
-                return;
+                return false;
             }
 
-            // Construct visual points from hitobject and call ProcessDifficultyPoint with them
             var readingPoint = new ReadingPoint
             {
-                BaseObject = hitObject,
-                Offset = hitObject.Time / Utils.ModClockRate(Mods),
-                ApproachTime = Utils.ModApproachTime(hitObject.Difficulty.AR, Mods) / Utils.ModClockRate(Mods),
-                X = hitObject.X,
-                Y = hitObject.Y,
-                Radius = Utils.ModRadius(hitObject.Difficulty.CS, Mods)
+                HitObject = hitObject
             };
 
-            if (Mods.HasFlag(Mods.HardRock))
-            {
-                readingPoint.Y = -readingPoint.Y + 384; // Flip notes (even though it technically doesnt matter since EVERYTHING is flipped)
-            }
+            // Construct visual points from hitobject and call ProcessDifficultyPoint with them
+            UpdateDifficultyPoints(readingPoint);
 
-            ProcessDifficultyPoint(readingPoint);
+            return true;
         }
 
-        protected override void UpdateDifficultyPoints(ReadingPoint readingPoint)
+        private void UpdateDifficultyPoints(ReadingPoint readingPoint)
         {
             // Add readingPoint to currentDiffPoints
-            CurrentDiffPoints.Add(readingPoint);
+            CurrentReadingPoints.Add(readingPoint);
 
             // Remove points that are no longer visible
-            double currentTime = readingPoint.Offset - readingPoint.ApproachTime;   // Visual points are processed at the moment they first appear
-            CurrentDiffPoints.RemoveAll(rp => rp.Offset < currentTime);
+            double currentTime = readingPoint.HitObject.Time - readingPoint.HitObject.ApproachTime;   // Visual points are processed at the moment they first appear
+            CurrentReadingPoints.RemoveAll(rp => rp.HitObject.Time < currentTime);
         }
 
-        protected override void CalculateDifficulty()
+        public double CalculateDifficulty()
         {
-            var readingPoint = ReadingPointA;
-
-            if (CurrentDiffPoints.Count < 2)   // Not enough visual points to cause difficulty
+            if (CurrentReadingPoints.Count < 2)   // Not enough visual points to cause difficulty
             {
-                readingPoint.Difficulty = 0;
-                return;
+                return 0;
             }
+
+            var readingPoint = ReadingPointA;
 
             double aimReading = AimReading() * AimReadingWeight;
             double rhythmicReading = RhythmicReading() * RhythmicReadingWeight;
-            double speedBonus = SpeedBonus(readingPoint.ApproachTime);
+            double speedBonus = SpeedBonus(readingPoint.HitObject.ApproachTime);
 
-            readingPoint.Difficulty = speedBonus * (aimReading + rhythmicReading);
+            // Data Points
+            DataPoints.Add("Aim Reading", aimReading);
+            DataPoints.Add("Rhythmic Reading", rhythmicReading);
+            DataPoints.Add("Speed bonus", speedBonus);
+
+            return speedBonus * (aimReading + rhythmicReading);
         }
 
         /// <summary>
@@ -96,33 +95,33 @@ namespace UniCircle.Difficulty.Standard.Skills.Reading
         private double AimReading()
         {
             // Step 1: Assign point a focal weight
-            ReadingPointA.FocalWeight = FocalWeight(ReadingPointA, ReadingPointB);
+            ReadingPointA.FocalWeight = FocalWeight(ReadingPointA.HitObject, ReadingPointB.HitObject);
 
             // Step 2: Search for nearest note
-            var nearestPoint = CurrentDiffPoints.Take(CurrentDiffPoints.Count - 1).OrderBy(rp => NormalisedDistance(rp, ReadingPointA)).FirstOrDefault();
+            var nearestPoint = CurrentReadingPoints.Take(CurrentReadingPoints.Count - 1).OrderBy(rp => NormalisedDistance(ReadingPointA.HitObject, rp.HitObject)).FirstOrDefault();
 
             // Step 3: Calculate overlap bonus
-            double overlapBonus = OverlapBonus(ReadingPointA, nearestPoint);
+            double overlapBonus = OverlapBonus(ReadingPointA.HitObject, nearestPoint.HitObject);
             
             return FocalTotal * ReadingPointA.FocalWeight * overlapBonus;
         }
 
         // Focal weight of visual point A. Scales from 0 to 1 with distance
-        private double FocalWeight(ReadingPoint readingPointA, ReadingPoint readingPointB)
+        private double FocalWeight(HitObject hitObjectA, HitObject hitObjectB)
         {
-            double distance = NormalisedDistance(readingPointA, readingPointB);
+            double distance = NormalisedDistance(hitObjectA, hitObjectB);
 
             return Math.Tanh((distance - FocalDistanceThreshold) * FocalDistanceCurveHarshness) / 2 + 0.5;
         }
 
-        private double OverlapBonus(ReadingPoint readingPointA, ReadingPoint readingPointB)
+        private double OverlapBonus(HitObject hitObjectA, HitObject hitObjectB)
         {
-            if (readingPointB == null)
+            if (hitObjectB == null)
             {
                 return 1;
             }
 
-            double distance = NormalisedDistance(readingPointA, readingPointB);
+            double distance = NormalisedDistance(hitObjectA, hitObjectB);
 
             return Math.Tanh((distance - OverlapThreshold) * OverlapCurveHarshness) / -2 + 1.5;
         }
@@ -140,13 +139,13 @@ namespace UniCircle.Difficulty.Standard.Skills.Reading
             // NOTE: I am unsure if this fits into the idea of map difficulty since identifying rhythm is intended to be done through music. 
             //          However time-distance proportions are something that are a staple in almost all maps; so I'm not really sure if it should be relevent or not.
             
-            if (CurrentDiffPoints.Count < 3)   // Not enough visual points to cause rhythmic difficulty
+            if (CurrentReadingPoints.Count < 3)   // Not enough visual points to cause rhythmic difficulty
             {
                 return 0;
             }
 
             // Calculate and set rhythmic focal weight of the visual point
-            ReadingPointA.RhythmicFocalWeight = RhythmicFocalWeight(ReadingPointA, ReadingPointB, ReadingPointC);
+            ReadingPointA.RhythmicFocalWeight = RhythmicFocalWeight(ReadingPointA.HitObject, ReadingPointB.HitObject, ReadingPointC.HitObject);
 
             // TODO: Currently notes that have a back forth where the middle note is a slider cause false positives for timing change since slider bodies are ignored.
             //          To fix, could give ReadingPoints an end point that would be the same as start point for normal circles, but coords of slidertail for sliders
@@ -154,16 +153,16 @@ namespace UniCircle.Difficulty.Standard.Skills.Reading
             return RhythmicFocalTotal * ReadingPointA.RhythmicFocalWeight;
         }
 
-        private double RhythmicFocalWeight(ReadingPoint readingPointA, ReadingPoint readingPointB, ReadingPoint readingPointC)
+        private double RhythmicFocalWeight(HitObject hitObjectA, HitObject hitObjectB, HitObject hitObjectC)
         {
             // Step 1: Determine distance change weight (low distance change = high, decreases and drops off exponentially)
-            double distanceAB = NormalisedDistance(readingPointA, readingPointB);
-            double distanceBC = NormalisedDistance(readingPointB, readingPointC);
+            double distanceAB = NormalisedDistance(hitObjectA, hitObjectB);
+            double distanceBC = NormalisedDistance(hitObjectB, hitObjectC);
             double distanceChangeWeight = DistanceChangeWeight(distanceAB, distanceBC);
 
             // Step 2: Determine timing change weight (low timing change = low, increases and caps out exponentially)
-            double delayAB = readingPointA.Offset - readingPointB.Offset;
-            double delayBC = readingPointB.Offset - readingPointC.Offset;
+            double delayAB = hitObjectA.Time - hitObjectB.Time;
+            double delayBC = hitObjectB.Time - hitObjectC.Time;
             double delayChangeWeight = DelayChangeWeight(delayAB, delayBC);
 
             // Step 3: Return diff
@@ -201,19 +200,24 @@ namespace UniCircle.Difficulty.Standard.Skills.Reading
         }
 
         /// <summary>
-        /// Calculate normalised distance of 2 circles with circle size 52
+        /// Calculate normalised distance of 2 circles with circle radius 52
         /// </summary>
-        /// <param name="circleA">1st circle</param>
-        /// <param name="circleB">2nd circle</param>
+        /// <param name="hitObjectA">1st circle</param>
+        /// <param name="hitObjectB">2nd circle</param>
         /// <returns>Normalised distance</returns>
-        private static double NormalisedDistance(ICircle circleA, ICircle circleB)
+        private static double NormalisedDistance(HitObject hitObjectA, HitObject hitObjectB)
         {
             // Average CS (to support possible lazer variable CS) 
-            double avgRadius = (circleB.Radius + circleA.Radius) / 2;
+            double avgRadius = (hitObjectB.Radius + hitObjectA.Radius) / 2;
             // Ratio of distance to CS
-            double distanceRatio = Utils.Distance(circleB, circleA) / avgRadius;
+            double distanceRatio = Utils.Distance(hitObjectB, hitObjectA) / avgRadius;
             // Normalised distance at radius 52
             return distanceRatio * 52;
+        }
+
+        public void Reset()
+        {
+            CurrentReadingPoints.Clear();
         }
     }
 }

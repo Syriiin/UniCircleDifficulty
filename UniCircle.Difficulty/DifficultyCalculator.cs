@@ -15,16 +15,24 @@ namespace UniCircle.Difficulty
     public abstract class DifficultyCalculator
     {
         /// <summary>
-        /// List of skills this calculator is processing with
+        /// List of <see cref="ISkill"/> this calculator is processing objects with
         /// </summary>
-        protected List<ISkill> Skills = new List<ISkill>();
+        public List<ISkill> Skills { get; } = new List<ISkill>();
 
-        public List<DifficultyHitObject> DifficultyHitObjects = new List<DifficultyHitObject>();
+        /// <summary>
+        /// List of <see cref="DifficultyPoint"/> this calculator has processed
+        /// </summary>
+        public List<DifficultyPoint> DifficultyPoints { get; } = new List<DifficultyPoint>();
 
         /// <summary>
         /// <see cref="UniCircleTools.Beatmaps.Beatmap"/> to calculator difficulty for
         /// </summary>
         public Beatmap Beatmap { get; private set; }
+
+        /// <summary>
+        /// <see cref="UniCircleTools.Mods"/> to apply to <see cref="HitObject"/>
+        /// </summary>
+        public Mods Mods { get; private set; } = Mods.None;
 
         /// <summary>
         /// Calculated difficulty of beatmap
@@ -33,27 +41,11 @@ namespace UniCircle.Difficulty
         {
             get
             {
-                // TODO: refactor out of difficulty point model since we want each hit object to have only 1 difficulty point per skill
-                //  (might not need to refactor entirly. just enforce single difficulty points)
-                //  - would be better to have a list of objects in this class that held references to the specific skill difficulty points or something
-
-                // Add all skills' difficulty points
-                var difficulties = Skills[0].CalculatedDifficulties;
-                foreach (var skill in Skills.Skip(1))
-                {
-                    for (int i = 1; i < difficulties.Count; i++)
-                    {
-                        difficulties[i] += skill.CalculatedDifficulties[i];
-                    }
-                }
-
-                // Order difficulties
-                difficulties = difficulties.OrderByDescending(d => d).ToList();
-
                 // Determine beatmap difficulty
-                double total = difficulties.Max();  // Literal *difficulty* (not performance required) of a map is the difficulty of its most difficulty point
+                // Literal *difficulty* (not necessarily performance required) of a map is the difficulty of its most difficulty point
+                double total = DifficultyPoints.Max(d => d.Difficulty);
 
-                // Apply difficulty curve and normalise with multiplier
+                // Apply difficulty curve
                 return Math.Sqrt(total);
             }
         }
@@ -75,20 +67,19 @@ namespace UniCircle.Difficulty
         public void SetMods(Mods mods)
         {
             Reset();
-            foreach (var skill in Skills)
-            {
-                skill.SetMods(mods);
-            }
+            Mods = mods;
         }
 
         /// <summary>
-        /// Clears skills of calculation data
+        /// Clears <see cref="Skills"/> of calculation data
         /// </summary>
         public void Reset()
         {
+            DifficultyPoints.Clear();
             foreach (var skill in Skills)
             {
                 skill.Reset();
+                skill.DataPoints = null;
             }
         }
 
@@ -97,23 +88,45 @@ namespace UniCircle.Difficulty
         /// </summary>
         public void CalculateDifficulty()
         {
+            // Check for beatmap
             if (Beatmap == null)
             {
                 return;
             }
 
+            // Reset skills
+            Reset();
+
             // Process HitObjects
             foreach (var hitObject in Beatmap.HitObjects)
             {
-                var diffHitObject = new DifficultyHitObject(hitObject);
+                var difficultyPoint = new DifficultyPoint(hitObject);
 
                 foreach (var skill in Skills)
                 {
-                    diffHitObject.DifficultyPoints.Add(skill.CalculateDifficultyPoint(hitObject));
+                    if (skill.ProcessHitObject(HitObjectWithMods(difficultyPoint.BaseHitObject, Mods)))
+                    {
+                        skill.DataPoints = new Dictionary<string, double>();
+                        difficultyPoint.SkillDatas.Add(new SkillData
+                        {
+                            SkillType = skill.GetType(),
+                            Difficulty = skill.CalculateDifficulty(),
+                            DataPoints = skill.DataPoints
+                        });
+                    }
                 }
 
-                DifficultyHitObjects.Add(diffHitObject);
+                DifficultyPoints.Add(difficultyPoint);
             }
         }
+
+        /// <summary>
+        /// Helper method for applying <see cref="UniCircleTools.Mods"/> to <see cref="HitObject"/>
+        /// (this should really be part of <see cref="HitObject"/> itself, but isn't for now)
+        /// </summary>
+        /// <param name="baseHitObject">Base <see cref="HitObject"/></param>
+        /// <param name="mods"><see cref="UniCircleTools.Mods"/> to apply</param>
+        /// <returns><see cref="HitObject"/> with <see cref="UniCircleTools.Mods"/> applied</returns>
+        protected abstract HitObject HitObjectWithMods(HitObject baseHitObject, Mods mods);
     }
 }
