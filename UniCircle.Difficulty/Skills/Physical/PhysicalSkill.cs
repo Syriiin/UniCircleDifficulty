@@ -113,6 +113,8 @@ namespace UniCircle.Difficulty.Skills.Physical
         {
             _speed = 0;
             _stamina = 0;
+            _deltaTime = 0;
+            _previousHitObject = null;
         }
     }
 }

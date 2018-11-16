@@ -46,5 +46,14 @@ namespace UniCircle.Difficulty.Standard.Skills.Physical.Aiming
         protected override Vector CalculateIncomingForce() => _currentPosition - (_previousPosition ?? _currentPosition);
 
         protected override double CalculateTargetErrorRange() => _currentHitObject.Radius;
+
+        public override void Reset()
+        {
+            _previousPosition = null;
+            _currentPosition = null;
+            _currentHitObject = null;
+
+            base.Reset();
+        }
     }
 }

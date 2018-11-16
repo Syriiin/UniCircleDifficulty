@@ -49,7 +49,7 @@ namespace UniCircle.Difficulty.Standard
             {
                 foreach (var curvePoint in ((Slider)baseHitObject).CurvePoints.ToArray())
                 {
-                    ((Slider)baseHitObject).CurvePoints.Add(new CurvePoint
+                    ((Slider)hitObject).CurvePoints.Add(new CurvePoint
                     {
                         type = curvePoint.type,
                         x = curvePoint.x,

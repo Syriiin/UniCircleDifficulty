@@ -189,6 +189,8 @@ namespace UniCircle.Difficulty.Skills.Physical.Dimensional
             _actualForceVolatility = 0;
             _previousSnapForce = null;
             _previousActualForce = null;
+            _previousHitObject = null;
+            _deltaTime = 0;
 
             base.Reset();
         }

@@ -75,6 +75,7 @@ namespace UniCircle.Difficulty
         /// </summary>
         public void Reset()
         {
+            DifficultyPoints.Clear();
             foreach (var skill in Skills)
             {
                 skill.Reset();
