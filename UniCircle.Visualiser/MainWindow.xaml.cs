@@ -3,13 +3,11 @@ using System.Linq;
 using System.Windows;
 using Microsoft.Win32;
 
-using LiveCharts;
-using LiveCharts.Wpf;
-using LiveCharts.Configurations;
+using CefSharp;
+using Newtonsoft.Json.Linq;
 
 using UniCircleTools;
 using UniCircleTools.Beatmaps;
-using UniCircle.Difficulty;
 using DifficultyCalculator = UniCircle.Difficulty.Standard.DifficultyCalculator;
 
 namespace UniCircle.Visualiser
@@ -20,10 +18,6 @@ namespace UniCircle.Visualiser
     public partial class MainWindow : Window
     {
         public DifficultyCalculator Calculator { get; set; } = new DifficultyCalculator();
-
-        public SeriesCollection AimingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<DifficultyPoint>().X(p => p.BaseHitObject.Time).Y(p => p.SkillDatas[0].Difficulty));
-        public SeriesCollection ClickingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<DifficultyPoint>().X(p => p.BaseHitObject.Time).Y(p => p.SkillDatas[1].Difficulty));
-        public SeriesCollection ReadingChartSeries { get; set; } = new SeriesCollection(Mappers.Xy<DifficultyPoint>().X(p => p.BaseHitObject.Time).Y(p => p.SkillDatas[2].Difficulty));
 
         public Func<double, string> XFormatter => ms => TimeSpan.FromMilliseconds(ms).ToString(@"mm\:ss\:fff");
 
@@ -103,34 +97,11 @@ namespace UniCircle.Visualiser
             DataGridClickPoint.Items.Refresh();
             DataGridVisualPoint.Items.Refresh();
             
-            // Draw charts
-            AimingChartSeries.Clear();
-            AimingChartSeries.Add(
-                new LineSeries
-                {
-                    Values = new ChartValues<DifficultyPoint>(Calculator.DifficultyPoints.Where(p => p.SkillDatas.Count > 0)),
-                    PointGeometry = null
-                }
-            );
-            ClickingChartSeries.Clear();
-            ClickingChartSeries.Add(
-                new LineSeries
-                {
-                    Values = new ChartValues<DifficultyPoint>(Calculator.DifficultyPoints.Where(p => p.SkillDatas.Count > 0)),
-                    PointGeometry = null
-                }
-            );
-            ReadingChartSeries.Clear();
-            ReadingChartSeries.Add(
-                new LineSeries
-                {
-                    Values = new ChartValues<DifficultyPoint>(Calculator.DifficultyPoints.Where(p => p.SkillDatas.Count > 0)),
-                    PointGeometry = null
-                }
-            );
-            
             // Enable hitobject data button
             HitObjectDataButton.IsEnabled = true;
+
+            // Load d3 graphs
+            LoadGraphs();
         }
 
         private void OpenButton_Click(object sender, RoutedEventArgs e)
@@ -200,6 +171,49 @@ namespace UniCircle.Visualiser
 
                 LoadBeatmap(files[0]);
             }
+        }
+
+        private void GraphBrowser_FrameLoadEnd(object sender, FrameLoadEndEventArgs e)
+        {
+        }
+
+        private void GraphBrowser_IsBrowserInitializedChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (GraphBrowser.IsBrowserInitialized)
+            {
+                GraphBrowser.LoadHtml(Properties.Resources.VisualiserGraphs, "https://syrin.me/unicircle-visualiser");
+            }
+        }
+
+        private void LoadGraphs()
+        {
+            JObject beatmapSettings = new JObject(
+                new JProperty("cs", Calculator.Beatmap.Difficulty.CS),
+                new JProperty("ar", Calculator.Beatmap.Difficulty.AR)
+            );
+
+            JArray hitObjects = new JArray(Calculator.DifficultyPoints.Where(p => p.BaseHitObject.GetType() != typeof(Spinner)).Select(p => new JObject(
+                new JProperty("x", p.BaseHitObject.X),
+                new JProperty("y", p.BaseHitObject.Y),
+                new JProperty("time", p.BaseHitObject.Time),
+                new JProperty("newCombo", p.BaseHitObject.NewCombo)
+            )));
+
+            JArray dataPoints = new JArray( // array of skill
+                Calculator.DifficultyPoints[0].SkillDatas.Select((skillData, i) => new JObject(
+                    new JProperty("name", skillData.SkillType.Name),
+                    new JProperty("dataSets", new JArray(   // array of datapoint type
+                        skillData.DataPoints.Keys.Select(dataPointName => new JObject(
+                            new JProperty("name", dataPointName),
+                            new JProperty("dataPoints", new JArray(
+                                Calculator.DifficultyPoints.Where(p => p.BaseHitObject.GetType() != typeof(Spinner)).Select(difficultyPoint => new JValue(difficultyPoint.SkillDatas[i].DataPoints[dataPointName]))
+                            ))
+                        ))
+                    ))
+                ))
+            );
+
+            GraphBrowser.ExecuteScriptAsync($"setData({beatmapSettings.ToString()}, {hitObjects.ToString()}, {dataPoints.ToString()});");
         }
     }
 }
