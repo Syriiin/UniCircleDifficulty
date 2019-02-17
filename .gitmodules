@@ -1,3 +1,6 @@
 [submodule "UniCircleTools"]
 	path = UniCircleTools
 	url = https://github.com/Syriiin/UniCircleTools.git
+[submodule "unicircle-visualiser"]
+	path = unicircle-visualiser
+	url = https://github.com/Syriiin/unicircle-visualiser.git
